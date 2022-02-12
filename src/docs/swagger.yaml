@@ -1,0 +1,163 @@
+definitions:
+  models.Content:
+    properties:
+      content:
+        type: string
+      content_id:
+        type: integer
+      created_at:
+        type: string
+      summary:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user:
+        type: integer
+    type: object
+  models.ContentData:
+    properties:
+      content:
+        type: string
+      summary:
+        type: string
+      title:
+        type: string
+    type: object
+  models.ContentItem:
+    properties:
+      content_id:
+        type: integer
+      summary:
+        type: string
+      title:
+        type: string
+    type: object
+  models.ContentList:
+    properties:
+      count:
+        type: integer
+      next:
+        type: string
+      previous:
+        type: string
+      results:
+        items:
+          $ref: '#/definitions/models.ContentItem'
+        type: array
+    type: object
+info:
+  contact: {}
+paths:
+  /content:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Content id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Content'
+      summary: Content 삭제
+      tags:
+      - Content
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Content id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Content Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.ContentData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Content'
+      summary: Content 수정
+      tags:
+      - Content
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Content Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.ContentData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Content'
+      summary: Content 생성
+      tags:
+      - Content
+  /content/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Content 상세 조회
+      parameters:
+      - description: Content id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Content'
+      summary: Content 상세 조회
+      tags:
+      - Content
+  /content/list:
+    get:
+      consumes:
+      - application/json
+      description: Content 목록 조회
+      parameters:
+      - description: Page Number
+        in: query
+        name: page
+        type: integer
+      - description: Page Size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ContentList'
+      summary: Content 목록 조회
+      tags:
+      - Content
+swagger: "2.0"

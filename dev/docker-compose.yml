@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  dev-go-api:
+    build:
+      context: ../
+      dockerfile: ./dev/DevDockerfile  
+    volumes:
+      - ../src:/root/src
+      - ../dev/.vscode:/root/.vscode
+    env_file:
+      - ../.env
+    ports:
+      - 8000:8000
+    stdin_open: true
+    tty: true
