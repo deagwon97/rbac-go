@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  dev-go-api:
+  rbac-go:
     build:
       context: ../
       dockerfile: ./dev/DevDockerfile  

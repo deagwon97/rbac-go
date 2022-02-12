@@ -1,6 +1,4 @@
-# CRUD api on Go
-
-<a href = "https://velog.io/@curiosity806/Go-Gin-Web-Framework-CRUD-%EB%A7%9B%EB%B3%B4%EA%B8%B0">[Go] Gin Web Framework CRUD 맛보기</a>
+# RBAC api with Go
 
 ## Development
 
@@ -23,9 +21,9 @@ $ docker-compose up
 ## Build deployment image
 
 ```
-$ docker build -t go-api:latest .
+$ docker build -t rbac-go:latest .
 
-$ docker run -p 8000:8000 --env-file .env go-api:latest
+$ docker run -p 8000:8000 --env-file .env rbac-go:latest
 ```
 
 ## Reference
