@@ -1,5 +1,7 @@
 # RBAC api with Go
 
+## API endpoints
+
 ## Development
 
 ### 1. docker-compose up

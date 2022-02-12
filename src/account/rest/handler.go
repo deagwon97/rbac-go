@@ -208,7 +208,7 @@ func (h *Handler) IsValid(c *gin.Context) {
 	var accesToken string
 	accesToken = data["access_token"]
 	var valid bool
-	accessSecret := "refresh" + os.Getenv("SECRET")
+	accessSecret := "access" + os.Getenv("SECRET")
 	valid, _, err = DecodeToken(accesToken, accessSecret)
 
 	if valid == true {
