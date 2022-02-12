@@ -1,4 +1,18 @@
 definitions:
+  models.AddUserData:
+    properties:
+      email:
+        type: string
+      login_id:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - login_id
+    - password
+    type: object
   models.Content:
     properties:
       content:
@@ -47,10 +61,144 @@ definitions:
           $ref: '#/definitions/models.ContentItem'
         type: array
     type: object
+  models.LoginRequest:
+    properties:
+      login_id:
+        type: string
+      password:
+        type: string
+    required:
+    - login_id
+    - password
+    type: object
+  models.LoginResult:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  rest.accessToken:
+    properties:
+      access_token:
+        type: string
+    type: object
+  rest.refreshToken:
+    properties:
+      refresh_token:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
+  /account:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 회원가입 정보
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddUserData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LoginResult'
+      summary: User 생성
+      tags:
+      - Account
+  /account/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 로그인 정보
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: access token & refresh token
+          schema:
+            $ref: '#/definitions/models.LoginResult'
+      summary: 로그인
+      tags:
+      - Account
+  /account/renew:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Refresh Token
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rest.refreshToken'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: access token
+          schema:
+            type: string
+      summary: access token 재발급
+      tags:
+      - Account
+  /account/valid:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Access Token
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rest.accessToken'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 유효성 검증 결과
+          schema:
+            type: boolean
+      summary: access token 인증
+      tags:
+      - Account
   /content:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Content Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.ContentData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Content'
+      summary: Content 생성
+      tags:
+      - Content
+  /content/{id}:
     delete:
       consumes:
       - application/json
@@ -68,6 +216,26 @@ paths:
           schema:
             $ref: '#/definitions/models.Content'
       summary: Content 삭제
+      tags:
+      - Content
+    get:
+      consumes:
+      - application/json
+      description: Content 상세 조회
+      parameters:
+      - description: Content id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Content'
+      summary: Content 상세 조회
       tags:
       - Content
     patch:
@@ -93,47 +261,6 @@ paths:
           schema:
             $ref: '#/definitions/models.Content'
       summary: Content 수정
-      tags:
-      - Content
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Content Data
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/models.ContentData'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Content'
-      summary: Content 생성
-      tags:
-      - Content
-  /content/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Content 상세 조회
-      parameters:
-      - description: Content id
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Content'
-      summary: Content 상세 조회
       tags:
       - Content
   /content/list:

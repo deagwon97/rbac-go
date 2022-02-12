@@ -18,6 +18,15 @@ $ docker-compose up
     <img src="ref/run-debug.png" style="width:60%;"></img>
 </div>
 
+### 4. Create docs
+
+```
+$ swag
+$ cd /root/src/
+$ swag init
+```
+
+
 ## Build deployment image
 
 ```
@@ -29,3 +38,4 @@ $ docker run -p 8000:8000 --env-file .env rbac-go:latest
 ## Reference
   - Hands-On Full-Stack Development with Go
   - https://github.com/gin-gonic/gin
+  - https://github.com/golang-jwt/jwt

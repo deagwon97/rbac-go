@@ -8,7 +8,8 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	content_rest "rbac/content/rest"
+	accountRest "rbac/account/rest"
+	contentRest "rbac/content/rest"
 )
 
 func Run(address string) error {
@@ -18,7 +19,8 @@ func Run(address string) error {
 	docs.SwaggerInfo_swagger.BasePath = "/"
 
 	v1 := router.Group("/")
-	content_rest.AddContentRoutes(v1)
+	contentRest.AddContentRoutes(v1)
+	accountRest.AddAccountRoutes(v1)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return router.Run(address)

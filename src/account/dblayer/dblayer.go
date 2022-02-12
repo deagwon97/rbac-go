@@ -1,13 +1,16 @@
 package dblayer
 
+import "rbac/account/models"
+
 type DBLayer interface {
-	Login()
-	Logout()
-	IsLogIn()
-	AddUser()
-	UpdateUser()
-	DeleteUser()
-	FindLoginId()
-	FindPassword()
-	ChangePassword()
+	AddUser(models.User) (models.User, error)
+	GetPassword(string) (models.User, error)
+	// Login()
+	// Logout()
+	// IsLogIn()
+	// UpdateUser()
+	// DeleteUser()
+	// FindLoginId()
+	// FindPassword()
+	// ChangePassword()
 }
