@@ -1,3 +1,4 @@
 *.env*
 !.env-example
 __debug_bin
+.DS_store
