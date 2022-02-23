@@ -4,10 +4,11 @@ services:
   rbac-go:
     build:
       context: ../
-      dockerfile: ./dev/DevDockerfile  
+      dockerfile: ./Dockerfile  
+      target: builder
     volumes:
       - ../src:/root/src
-      - ../dev/.vscode:/root/.vscode
+      - ../.devcontainer/.vscode:/root/.vscode
     env_file:
       - ../.env
     ports:

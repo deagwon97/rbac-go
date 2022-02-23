@@ -4,9 +4,9 @@ ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux
 
-WORKDIR /src
+WORKDIR /root/src
 
-COPY ./src /src
+COPY ./src /root/src
 
 RUN go mod download
 
@@ -14,7 +14,7 @@ RUN go build -o main ./
 
 WORKDIR /dist
 
-RUN cp /src/main .
+RUN cp /root/src/main .
 
 FROM scratch
 
