@@ -1,33 +1,29 @@
 # RBAC api with Go
 
-## API endpoints
-
 ## Development
 
-### 1. docker-compose up
-```shell
-$ cd dev
-$ docker-compose up
-```
-### 2. Attatch vscode
+### 1. Run docker compose and Attach the container
 <div align="center">
-    <img src="ref/attatch-vscode.png" style="width:60%;" />
+    <img src="ref/open-devcontainer.png" style="width:60%;" />
 </div>
 
-### 3. Run main.go on debug
+### 2. Run main.go on debugger
 
 <div align="center">
     <img src="ref/run-debug.png" style="width:60%;"></img>
 </div>
 
-### 4. Create docs
+### 3. Create docs
 
 ```
-$ swag
 $ cd /root/src/
 $ swag init
 ```
 
+### 4. Open Browser
+<div align="center">
+    <img src="ref/swagger.png" style="width:60%;"></img>
+</div>
 
 ## Build deployment image
 
