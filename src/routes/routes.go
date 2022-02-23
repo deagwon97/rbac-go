@@ -16,7 +16,7 @@ func Run(address string) error {
 
 	router := gin.Default()
 
-	docs.SwaggerInfo_swagger.BasePath = "/"
+	docs.SwaggerInfo.BasePath = "/"
 
 	v1 := router.Group("/")
 	contentRest.AddContentRoutes(v1)

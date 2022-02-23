@@ -1,5 +1,18 @@
 package models
 
+// CREATE TABLE `content_content` (
+// 	`content_id` int NOT NULL AUTO_INCREMENT,
+// 	`title` varchar(500) NOT NULL,
+// 	`summary` varchar(1000) NOT NULL,
+// 	`content` longtext,
+// 	`created_at` datetime(6) NOT NULL,
+// 	`updated_at` datetime(6) NOT NULL,
+// 	`user` bigint NOT NULL,
+// 	PRIMARY KEY (`content_id`),
+// 	KEY `content_content_user_fe2e0079_fk_users_id` (`user`),
+// 	CONSTRAINT `content_content_user_fe2e0079_fk_users_id` FOREIGN KEY (`user`) REFERENCES `users` (`id`)
+//   ) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
+
 type Content struct {
 	ID        int    `gorm:"column:content_id" json:"content_id"`
 	Title     string `gorm:"column:title"      json:"title"`
