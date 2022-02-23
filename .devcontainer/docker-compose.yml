@@ -15,3 +15,15 @@ services:
       - 8000:8000
     stdin_open: true
     tty: true
+  database:
+    image: mariadb
+    container_name: database
+    ports:
+      - 3306:3306
+    restart: always
+    env_file:
+      - .env.db
+    volumes:
+      - ./db-data/conf.d:/etc/mysql/conf.d
+      - ./db-data/data:/var/lib/mysql
+      - ./db-data/initdb.d:/docker-entrypoint-initdb.d

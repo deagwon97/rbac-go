@@ -1,4 +1,10 @@
 *.env*
 !.env-example
+!.env.db-example
+
+*/db-data/*
+!db-data
+
+
 __debug_bin
 .DS_Store
