@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"strconv"
 
-	"rbac/content/models"
+	"rbac-go/content/models"
 
 	"time"
 

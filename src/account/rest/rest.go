@@ -2,14 +2,14 @@ package rest
 
 import "github.com/gin-gonic/gin"
 
-func AddAccountRoutes(rg *gin.RouterGroup) {
-	account := rg.Group("/account")
+func AddRoutes(rg *gin.RouterGroup) {
+	router := rg.Group("/account")
 	h, _ := NewHandler()
-	account.POST("", h.AddUser)
-	account.POST("/login", h.Login)
-	account.POST("/valid", h.IsValid)
-	account.POST("/renew", h.RenewToken)
-	// account.GET("/list", )
-	// account.PATCH("/:id", )
-	// account.DELETE("/:id", )
+	router.POST("", h.AddUser)
+	router.POST("/login", h.Login)
+	router.POST("/valid", h.IsValid)
+	router.POST("/renew", h.RenewToken)
+	// router.GET("/list", )
+	// router.PATCH("/:id", )
+	// router.DELETE("/:id", )
 }

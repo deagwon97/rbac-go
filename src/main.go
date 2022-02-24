@@ -1,7 +1,7 @@
 package main
 
 import (
-	"rbac/routes"
+	"rbac-go/routes"
 )
 
 func main() {

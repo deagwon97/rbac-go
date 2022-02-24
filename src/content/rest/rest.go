@@ -2,13 +2,13 @@ package rest
 
 import "github.com/gin-gonic/gin"
 
-func AddContentRoutes(rg *gin.RouterGroup) {
-	content := rg.Group("/content")
+func AddRoutes(rg *gin.RouterGroup) {
+	router := rg.Group("/content")
 	h, _ := NewHandler()
-	content.GET("/list", h.GetContents)
+	router.GET("/list", h.GetContents)
 
-	content.GET("/:id", h.GetContent)
-	content.POST("", h.AddContent)
-	content.PATCH("/:id", h.UpdateContent)
-	content.DELETE("/:id", h.DeleteContent)
+	router.GET("/:id", h.GetContent)
+	router.POST("", h.AddContent)
+	router.PATCH("/:id", h.UpdateContent)
+	router.DELETE("/:id", h.DeleteContent)
 }

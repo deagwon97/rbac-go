@@ -3,7 +3,7 @@ package dblayer
 import (
 	"database/sql"
 
-	"rbac/account/models"
+	"rbac-go/account/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -27,7 +27,10 @@ func NewORM(dbengine string, dsn string) (*DBORM, error) {
 }
 
 func (db *DBORM) AddUser(
-	user models.User) (models.User, error) {
+	user models.User,
+) (
+	models.User, error,
+) {
 	err := db.Create(&user).Error
 	return user, err
 }

@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"net/http"
-	"rbac/account/dblayer"
-	"rbac/account/models"
-	"rbac/database"
+	"rbac-go/account/dblayer"
+	"rbac-go/account/models"
+	"rbac-go/database"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"

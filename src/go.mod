@@ -1,4 +1,4 @@
-module rbac
+module rbac-go
 
 go 1.17
 
@@ -31,7 +31,7 @@ require (
 
 require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
-	gorm.io/driver/mysql v1.2.3
+	gorm.io/driver/mysql v1.3.2
 )
 
 require (
@@ -48,10 +48,10 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/ugorji/go/codec v1.2.6 // indirect
-	golang.org/x/crypto v0.0.0-20220209195652-db638375bc3a // indirect
-	golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c // indirect
+	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
+	golang.org/x/sys v0.0.0-20220224003255-dbe011f71a99 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gorm.io/gorm v1.22.5
+	gorm.io/gorm v1.23.1
 )

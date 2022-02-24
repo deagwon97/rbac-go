@@ -1,6 +1,6 @@
 package dblayer
 
-import "rbac/content/models"
+import "rbac-go/content/models"
 
 type DBLayer interface {
 	GetAllContents(int, int, string) (models.ContentList, error)

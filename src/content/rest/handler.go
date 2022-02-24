@@ -2,9 +2,11 @@ package rest
 
 import (
 	"net/http"
-	"rbac/content/dblayer"
-	"rbac/content/models"
-	"rbac/database"
+	"rbac-go/content/dblayer"
+	"rbac-go/content/models"
+	"rbac-go/database"
+
+	"rbac-go/rbac/checker"
 
 	"github.com/gin-gonic/gin"
 
@@ -15,6 +17,13 @@ type Handler struct {
 	db dblayer.DBLayer
 }
 
+var permission checker.Permission
+
+// permission.NewPermissions(
+// 	Name = "게시판",
+// 	Actions = ["", ""],
+// 	Objects = []
+// )
 // @BasePath /
 
 // Go API godoc
@@ -29,6 +38,9 @@ type Handler struct {
 // @Success 200 {object} models.ContentList
 // @Router /content/list [get]
 func (h *Handler) GetContents(c *gin.Context) {
+
+	// rbac := checker.Rbac
+
 	page, _ := strconv.Atoi(c.Query("page"))
 	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
 
