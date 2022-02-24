@@ -2,6 +2,7 @@ package dblayer
 
 import (
 	"database/sql"
+	"fmt"
 
 	"rbac-go/rbac/models"
 
@@ -35,14 +36,20 @@ func (db *DBORM) GetObjects(
 	err error,
 ) {
 	var permissionObject []models.PermissionObject
-	err = db.Raw(`
-			SELECT pa.permission_object
-			FROM permission_assignment pa
-			INNER JOIN role r
-				ON r.id = pa.role_id
-			INNER JOIN subject s
-				ON r.id = s.role_id
-			`).Scan(&permissionObject).Error
+
+	query := fmt.Sprintf(`
+	SELECT pa.permission_object
+	FROM permission_assignment pa
+	INNER JOIN role r
+		ON r.id = pa.role_id
+	INNER JOIN subject_assignment s
+		ON r.id = s.role_id
+	WHERE s.id = %d 
+	AND pa.permission_name ='%s' 
+	AND pa.permission_action = '%s' 
+	`, subjectID, permissionName, permissionAction)
+
+	err = db.Raw(query).Scan(&permissionObject).Error
 	if err != nil {
 		return objects, err
 	}

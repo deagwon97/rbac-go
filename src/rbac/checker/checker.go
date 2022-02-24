@@ -1,7 +1,7 @@
 package checker
 
 import (
-	"database/sql"
+	"rbac-go/database"
 	"rbac-go/rbac/dblayer"
 	// "github.com/gin-gonic/gin"
 )
@@ -9,18 +9,15 @@ import (
 type Permission struct {
 	Name   string
 	Action string
-	Object sql.NullString
+	Object string
 }
 
-func (Permission) NewPermissions(
-	Name string,
-	Actions []string,
-	Objects []string,
-) {
-	//RBAC에 Permission 추가
+type RBAC struct {
+	Permissions []Permission
+	db          dblayer.DBLayer
 }
 
-type RBAC interface {
+type RBACInterface interface {
 	CheckPermission(
 		subjectID int,
 		permissionName string,
@@ -30,21 +27,28 @@ type RBAC interface {
 		objects []string,
 		err error,
 	)
-}
-
-type innerRBAC struct {
-	Permissions []Permission
-	db          dblayer.DBLayer
+	AddPermission(
+		Name string,
+		Actions []string,
+		Objects []string,
+	)
 }
 
 // 생성자
-func NewRBAC() RBAC {
+func NewRBAC() *RBAC {
+	// DBORM 초기화
+	dsn := database.DataSource
+	db, _ := dblayer.NewORM("mysql", dsn)
+	// permission list 초기화
 	var permissions []Permission
-	rbac := &innerRBAC{Permissions: permissions}
+	rbac := &RBAC{
+		Permissions: permissions,
+		db:          db,
+	}
 	return rbac
 }
 
-func (rbac *innerRBAC) CheckPermission(
+func (rbac *RBAC) CheckPermission(
 	subjectID int,
 	permissionName string,
 	permissionAction string,
@@ -53,7 +57,11 @@ func (rbac *innerRBAC) CheckPermission(
 	objects []string,
 	err error,
 ) {
-	objects, err = rbac.db.GetObjects(subjectID, permissionName, permissionAction)
+	objects, err = rbac.db.GetObjects(
+		subjectID,
+		permissionName,
+		permissionAction,
+	)
 	if len(objects) > 0 {
 		isAllowed = true
 	} else {
@@ -62,6 +70,25 @@ func (rbac *innerRBAC) CheckPermission(
 	return isAllowed, objects, err
 }
 
-func (rbac *innerRBAC) AddPermission()
+func (rbac *RBAC) AddPermission(
+	Name string,
+	Actions []string,
+	Objects []string,
+) {
+
+	for _, action := range Actions {
+		for _, object := range Objects {
+			permission := Permission{
+				Name:   Name,
+				Action: action,
+				Object: object,
+			}
+			rbac.Permissions = append(
+				rbac.Permissions,
+				permission)
+		}
+	}
+
+}
 
 var Rbac = NewRBAC()

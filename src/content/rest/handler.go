@@ -2,28 +2,55 @@ package rest
 
 import (
 	"net/http"
+	"strconv"
+
 	"rbac-go/content/dblayer"
 	"rbac-go/content/models"
 	"rbac-go/database"
-
 	"rbac-go/rbac/checker"
 
 	"github.com/gin-gonic/gin"
-
-	"strconv"
 )
 
 type Handler struct {
-	db dblayer.DBLayer
+	db   dblayer.DBLayer
+	rbac *checker.RBAC
 }
 
-var permission checker.Permission
+type HandlerInterface interface {
+	GetContents(c *gin.Context)
+	GetContent(c *gin.Context)
+	AddContent(c *gin.Context)
+	UpdateContent(c *gin.Context)
+	DeleteContent(c *gin.Context)
+}
 
-// permission.NewPermissions(
-// 	Name = "게시판",
-// 	Actions = ["", ""],
-// 	Objects = []
-// )
+// HandlerInterface의 생성자
+func NewHandler() (HandlerInterface, error) {
+	rbac := checker.Rbac
+
+	Name := "게시판"
+	Actions := []string{"조회", "생성"}
+	Objects := []string{"전체", "관리자"}
+
+	rbac.AddPermission(
+		Name,
+		Actions,
+		Objects,
+	)
+
+	// DBORM 초기화
+	dsn := database.DataSource
+	db, err := dblayer.NewORM("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
+	return &Handler{
+		db:   db,
+		rbac: rbac,
+	}, nil
+}
+
 // @BasePath /
 
 // Go API godoc
@@ -39,7 +66,13 @@ var permission checker.Permission
 // @Router /content/list [get]
 func (h *Handler) GetContents(c *gin.Context) {
 
-	// rbac := checker.Rbac
+	isAllowed, objects, err := h.rbac.CheckPermission(
+		2,
+		"게시판",
+		"조회",
+	)
+	print(isAllowed)
+	print(objects)
 
 	page, _ := strconv.Atoi(c.Query("page"))
 	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
@@ -163,25 +196,4 @@ func (h *Handler) DeleteContent(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, content)
-}
-
-type HandlerInterface interface {
-	GetContents(c *gin.Context)
-	GetContent(c *gin.Context)
-	AddContent(c *gin.Context)
-	UpdateContent(c *gin.Context)
-	DeleteContent(c *gin.Context)
-}
-
-// HandlerInterface의 생성자
-func NewHandler() (HandlerInterface, error) {
-	dsn := database.DataSource
-	// DBORM 초기화
-	db, err := dblayer.NewORM("mysql", dsn)
-	if err != nil {
-		return nil, err
-	}
-	return &Handler{
-		db: db,
-	}, nil
 }
