@@ -11,5 +11,34 @@ type DBLayer interface {
 		objects []string,
 		err error,
 	)
-	GetRoles(int, int, string) ([]models.Role, error)
+	GetRoleList() (
+		roleList RoleList,
+		err error,
+	)
+	GetRolesPage(
+		page int,
+		pageSize int,
+		hostUrl string,
+	) (
+		rolePage RolePage,
+		err error,
+	)
+	AddRole(
+		roleData RoleData,
+	) (
+		role models.Role, err error,
+	)
+	UpdateRole(
+		id int,
+		rolData RoleData,
+	) (
+		role models.Role,
+		err error,
+	)
+	DeleteRole(
+		id int,
+	) (
+		role models.Role,
+		err error,
+	)
 }

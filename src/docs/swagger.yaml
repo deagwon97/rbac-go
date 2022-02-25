@@ -1,4 +1,24 @@
 definitions:
+  dblayer.RoleData:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  dblayer.RolePage:
+    properties:
+      count:
+        type: integer
+      next:
+        type: string
+      previous:
+        type: string
+      results:
+        items:
+          $ref: '#/definitions/models.Role'
+        type: array
+    type: object
   models.AddUserData:
     properties:
       email:
@@ -80,6 +100,15 @@ definitions:
       user_id:
         type: integer
     type: object
+  models.Role:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   rest.accessToken:
     properties:
       access_token:
@@ -92,6 +121,9 @@ definitions:
     type: object
 info:
   contact: {}
+  description: This is a RBAC server.
+  title: RBAC GO API
+  version: "1.0"
 paths:
   /account:
     post:
@@ -287,4 +319,93 @@ paths:
       summary: Content 목록 조회
       tags:
       - Content
+  /rbac/role:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.RoleData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Role'
+      summary: Role 생성
+      tags:
+      - RBAC
+  /rbac/role/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Role'
+      summary: Role 삭제
+      tags:
+      - RBAC
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update에 사용할 Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.RoleData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 삭제된 Role 데이터
+          schema:
+            $ref: '#/definitions/models.Role'
+      summary: Role Update
+      tags:
+      - RBAC
+  /rbac/role/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Page Number
+        in: query
+        name: page
+        type: integer
+      - description: Page Size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dblayer.RolePage'
+      summary: Role 목록 조회
+      tags:
+      - RBAC
 swagger: "2.0"

@@ -18,7 +18,6 @@ func Run(address string) error {
 	router := gin.New()
 
 	docs.SwaggerInfo.BasePath = "/"
-
 	v1 := router.Group("/")
 	rbacRest.AddRoutes(v1)
 	contentRest.AddRoutes(v1)
