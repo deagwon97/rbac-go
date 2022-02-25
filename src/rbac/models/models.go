@@ -31,11 +31,3 @@ type PermissionAssignment struct {
 func (PermissionAssignment) TableName() string {
 	return "permission_assignment"
 }
-
-type PermissionObject struct {
-	PermissionObject string `gorm:"column:permission_object" json:"permission_object"`
-}
-
-func (PermissionObject) TableName() string {
-	return "permission_object"
-}
