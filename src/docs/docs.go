@@ -409,7 +409,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "삭제된 Role 데이터",
                         "schema": {
                             "$ref": "#/definitions/models.Role"
                         }
@@ -447,7 +447,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "삭제된 Role 데이터",
+                        "description": "수정된 Role 데이터",
                         "schema": {
                             "$ref": "#/definitions/models.Role"
                         }
