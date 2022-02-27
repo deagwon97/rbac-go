@@ -8,5 +8,5 @@
     "settings": {
         "swagger.tpl" : "// @Summary {desc} \n// @Tags {tag_name} \n// @Accept json \n// @Produce json \n// @Param page query {type}  {require_bool}  \"{desc string}\" \n// @Param data body {type} {require_bool} \"{desc string}\" \n// @Success 200 {object} {type} \n// @Router /path/path [post]"
     },
-    "workspaceFolder": "/root"
+    "workspaceFolder": "/root/workdir"
 }

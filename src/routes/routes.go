@@ -22,7 +22,6 @@ func Run(address string) error {
 	rbacRest.AddRoutes(v1)
 	contentRest.AddRoutes(v1)
 	accountRest.AddRoutes(v1)
-
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return router.Run(address)
 }
