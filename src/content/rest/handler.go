@@ -29,11 +29,13 @@ type HandlerInterface interface {
 func NewHandler() (HandlerInterface, error) {
 	rbac := checker.Rbac
 
+	ServiceName := "블로그"
 	Name := "게시판"
 	Actions := []string{"조회", "생성"}
 	Objects := []string{"전체", "관리자"}
 
 	rbac.AddPermission(
+		ServiceName,
 		Name,
 		Actions,
 		Objects,
@@ -68,9 +70,14 @@ func (h *Handler) GetContents(c *gin.Context) {
 
 	isAllowed, objects, err := h.rbac.CheckPermission(
 		2,
+		"블로그",
 		"게시판",
 		"조회",
 	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 	print(isAllowed)
 	print(objects)
 

@@ -3,23 +3,19 @@ package checker
 import (
 	"rbac-go/database"
 	"rbac-go/rbac/dblayer"
+	"rbac-go/rbac/models"
 	// "github.com/gin-gonic/gin"
 )
 
-type Permission struct {
-	Name   string
-	Action string
-	Object string
-}
-
 type RBAC struct {
-	Permissions []Permission
+	Permissions []models.Permission
 	db          dblayer.DBLayer
 }
 
 type RBACInterface interface {
 	CheckPermission(
 		subjectID int,
+		permissionServiceName string,
 		permissionName string,
 		permissionAction string,
 	) (
@@ -40,7 +36,7 @@ func NewRBAC() *RBAC {
 	dsn := database.DataSource
 	db, _ := dblayer.NewORM("mysql", dsn)
 	// permission list 초기화
-	var permissions []Permission
+	var permissions []models.Permission
 	rbac := &RBAC{
 		Permissions: permissions,
 		db:          db,
@@ -50,6 +46,7 @@ func NewRBAC() *RBAC {
 
 func (rbac *RBAC) CheckPermission(
 	subjectID int,
+	permissionServiceName string,
 	permissionName string,
 	permissionAction string,
 ) (
@@ -59,6 +56,7 @@ func (rbac *RBAC) CheckPermission(
 ) {
 	objects, err = rbac.db.GetObjects(
 		subjectID,
+		permissionServiceName,
 		permissionName,
 		permissionAction,
 	)
@@ -71,6 +69,7 @@ func (rbac *RBAC) CheckPermission(
 }
 
 func (rbac *RBAC) AddPermission(
+	ServiceName string,
 	Name string,
 	Actions []string,
 	Objects []string,
@@ -78,10 +77,11 @@ func (rbac *RBAC) AddPermission(
 
 	for _, action := range Actions {
 		for _, object := range Objects {
-			permission := Permission{
-				Name:   Name,
-				Action: action,
-				Object: object,
+			permission := models.Permission{
+				ServiceName: ServiceName,
+				Name:        Name,
+				Action:      action,
+				Object:      object,
 			}
 			rbac.Permissions = append(
 				rbac.Permissions,

@@ -1,14 +1,7 @@
 package models
 
-type Role struct {
-	ID          int    `gorm:"primaryKey;column:id"  json:"id"`
-	Name        string `gorm:"column:name"           json:"name"`
-	Description string `gorm:"column:description"    json:"description"`
-}
-
-func (Role) TableName() string {
-	return "role"
-}
+// Subject: Service users.
+// RBAC system is dependent on User service that is Subject to this system.
 
 type SubjectAssignment struct {
 	ID        int `gorm:"primaryKey;column:id" json:"id"`
@@ -20,14 +13,34 @@ func (SubjectAssignment) TableName() string {
 	return "subject_assignment"
 }
 
+type Role struct {
+	ID          int    `gorm:"primaryKey;column:id"  json:"id"`
+	Name        string `gorm:"column:name"           json:"name"`
+	Description string `gorm:"column:description"    json:"description"`
+}
+
+func (Role) TableName() string {
+	return "role"
+}
+
 type PermissionAssignment struct {
-	ID               int    `gorm:"primaryKey;column:id"     json:"id"`
-	RoleID           int    `gorm:"column:role_id"           json:"role_id"`
-	PermissionName   string `gorm:"column:permission_name"   json:"subject_name"`
-	PermissionAction string `gorm:"column:permission_action" json:"permission_action"`
-	PermissionObject string `gorm:"column:permission_object" json:"permission_object"`
+	ID           int    `gorm:"primaryKey;column:id"   json:"id"`
+	RoleID       int    `gorm:"column:role_id"         json:"role_id"`
+	PermissionID string `gorm:"column:permission_id"   json:"spermission_id"`
 }
 
 func (PermissionAssignment) TableName() string {
 	return "permission_assignment"
+}
+
+type Permission struct {
+	ID          int    `gorm:"primaryKey;column:id" json:"id"`
+	ServiceName string `gorm:"column:subject_name"  json:"subject_name"`
+	Name        string `gorm:"column:name"          json:"name"`
+	Action      string `gorm:"column:action"        json:"action"`
+	Object      string `gorm:"column:object"        json:"object"`
+}
+
+func (Permission) TableName() string {
+	return "permission"
 }
