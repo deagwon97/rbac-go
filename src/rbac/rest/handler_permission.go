@@ -83,3 +83,40 @@ func (h *Handler) DeletePermission(c *gin.Context) {
 	ce.GinError(c, err)
 	c.JSON(http.StatusOK, permission)
 }
+
+type PermissionKey struct {
+	SubjectID   int    `gorm:"column:subject_id"    json:"subject_id"`
+	ServiceName string `gorm:"column:permission_service_name"  json:"service_name"`
+	Name        string `gorm:"column:permission_name"          json:"name"`
+	Action      string `gorm:"column:permission_action"        json:"action"`
+}
+
+// @Summary Permission 에 해당하는 objects 조회
+// @Tags RBAC permission
+// @Accept json
+// @Produce json
+// @Param data body PermissionKey true "Object를 구하는데 필요한 permission 정보"
+// @Success 200 {object} []string "허용된 object list"
+// @Router /rbac/permission/objects [post]
+func (h *Handler) GetAllowedObjects(c *gin.Context) {
+
+	var permissionKey PermissionKey
+
+	err := c.ShouldBindJSON(&permissionKey)
+	ce.GinError(c, err)
+
+	subjectID := permissionKey.SubjectID
+	permissionServiceName := permissionKey.ServiceName
+	permissionName := permissionKey.Name
+	permissionAction := permissionKey.Action
+
+	var objects []string
+	objects, err = h.db.GetAllowedObjects(
+		subjectID,
+		permissionServiceName,
+		permissionName,
+		permissionAction,
+	)
+	ce.GinError(c, err)
+	c.JSON(http.StatusOK, objects)
+}

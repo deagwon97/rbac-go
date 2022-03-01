@@ -17,6 +17,34 @@ definitions:
       service_name:
         type: string
     type: object
+  dblayer.PermissionOfRole:
+    properties:
+      action:
+        type: string
+      name:
+        type: string
+      object:
+        type: string
+      permission_id:
+        type: integer
+      role_id:
+        type: integer
+      service_name:
+        type: string
+    type: object
+  dblayer.PermissionsOfRolePage:
+    properties:
+      count:
+        type: integer
+      next:
+        type: string
+      previous:
+        type: string
+      results:
+        items:
+          $ref: '#/definitions/dblayer.PermissionOfRole'
+        type: array
+    type: object
   dblayer.PermissionsPage:
     properties:
       count:
@@ -56,6 +84,19 @@ definitions:
         type: integer
       subject_id:
         type: integer
+    type: object
+  dblayer.SubjectsOfRolePage:
+    properties:
+      count:
+        type: integer
+      next:
+        type: string
+      previous:
+        type: string
+      results:
+        items:
+          $ref: '#/definitions/models.SubjectAssignment'
+        type: array
     type: object
   models.AddUserData:
     properties:
@@ -155,9 +196,9 @@ definitions:
     properties:
       id:
         type: integer
-      role_id:
+      permission_id:
         type: integer
-      spermission_id:
+      role_id:
         type: integer
     type: object
   models.Role:
@@ -175,6 +216,17 @@ definitions:
         type: integer
       role_id:
         type: integer
+      subject_id:
+        type: integer
+    type: object
+  rest.PermissionKey:
+    properties:
+      action:
+        type: string
+      name:
+        type: string
+      service_name:
+        type: string
       subject_id:
         type: integer
     type: object
@@ -409,6 +461,72 @@ paths:
       summary: Permission 생성
       tags:
       - RBAC permission
+  /rbac/permission-assignment:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.PermissionAssignmentData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PermissionAssignment'
+      summary: PermissionAssignment 생성
+      tags:
+      - RBAC permissionAssignment
+  /rbac/permission-assignment/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: PermissionAssignment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 삭제된 PermissionAssignment 데이터
+          schema:
+            $ref: '#/definitions/models.PermissionAssignment'
+      summary: PermissionAssignment 삭제
+      tags:
+      - RBAC permissionAssignment
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: PermissionAssignment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update에 사용할 Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.PermissionAssignmentData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 수정된 PermissionAssignment 데이터
+          schema:
+            $ref: '#/definitions/models.PermissionAssignment'
+      summary: PermissionAssignment Update
+      tags:
+      - RBAC permissionAssignment
   /rbac/permission/{id}:
     delete:
       consumes:
@@ -477,72 +595,29 @@ paths:
       summary: Permission 목록 조회
       tags:
       - RBAC permission
-  /rbac/permissionAssignment:
+  /rbac/permission/objects:
     post:
       consumes:
       - application/json
       parameters:
-      - description: Data
+      - description: Object를 구하는데 필요한 permission 정보
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/dblayer.PermissionAssignmentData'
+          $ref: '#/definitions/rest.PermissionKey'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: 허용된 object list
           schema:
-            $ref: '#/definitions/models.PermissionAssignment'
-      summary: PermissionAssignment 생성
+            items:
+              type: string
+            type: array
+      summary: Permission 에 해당하는 objects 조회
       tags:
-      - RBAC permissionAssignment
-  /rbac/permissionAssignment/{id}:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: PermissionAssignment ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 삭제된 PermissionAssignment 데이터
-          schema:
-            $ref: '#/definitions/models.PermissionAssignment'
-      summary: PermissionAssignment 삭제
-      tags:
-      - RBAC permissionAssignment
-    patch:
-      consumes:
-      - application/json
-      parameters:
-      - description: PermissionAssignment ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Update에 사용할 Data
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dblayer.PermissionAssignmentData'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 수정된 PermissionAssignment 데이터
-          schema:
-            $ref: '#/definitions/models.PermissionAssignment'
-      summary: PermissionAssignment Update
-      tags:
-      - RBAC permissionAssignment
+      - RBAC permission
   /rbac/role:
     post:
       consumes:
@@ -609,6 +684,62 @@ paths:
       summary: Role Update
       tags:
       - RBAC role
+  /rbac/role/{id}/permission:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Page Number
+        in: query
+        name: page
+        type: integer
+      - description: Page Size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dblayer.PermissionsOfRolePage'
+      summary: Role에 속하는 Permission들의 id 목록 조회
+      tags:
+      - RBAC role
+  /rbac/role/{id}/subject:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Role ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Page Number
+        in: query
+        name: page
+        type: integer
+      - description: Page Size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dblayer.SubjectsOfRolePage'
+      summary: Role에 속하는 Subject들의 id 목록 조회
+      tags:
+      - RBAC role
   /rbac/role/list:
     get:
       consumes:
@@ -632,7 +763,7 @@ paths:
       summary: Role 목록 조회
       tags:
       - RBAC role
-  /rbac/subjectAssignment:
+  /rbac/subject-assignment:
     post:
       consumes:
       - application/json
@@ -653,7 +784,7 @@ paths:
       summary: SubjectAssignment 생성
       tags:
       - RBAC subjectAssignment
-  /rbac/subjectAssignment/{id}:
+  /rbac/subject-assignment/{id}:
     delete:
       consumes:
       - application/json

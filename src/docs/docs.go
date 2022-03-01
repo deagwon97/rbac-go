@@ -350,6 +350,108 @@ const docTemplate = `{
                 }
             }
         },
+        "/rbac/permission-assignment": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permissionAssignment"
+                ],
+                "summary": "PermissionAssignment 생성",
+                "parameters": [
+                    {
+                        "description": "Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionAssignmentData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.PermissionAssignment"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/permission-assignment/{id}": {
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permissionAssignment"
+                ],
+                "summary": "PermissionAssignment 삭제",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PermissionAssignment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "삭제된 PermissionAssignment 데이터",
+                        "schema": {
+                            "$ref": "#/definitions/models.PermissionAssignment"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permissionAssignment"
+                ],
+                "summary": "PermissionAssignment Update",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PermissionAssignment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update에 사용할 Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionAssignmentData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "수정된 PermissionAssignment 데이터",
+                        "schema": {
+                            "$ref": "#/definitions/models.PermissionAssignment"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/permission/list": {
             "get": {
                 "consumes": [
@@ -381,6 +483,42 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dblayer.PermissionsPage"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/permission/objects": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permission"
+                ],
+                "summary": "Permission 에 해당하는 objects 조회",
+                "parameters": [
+                    {
+                        "description": "Object를 구하는데 필요한 permission 정보",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rest.PermissionKey"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "허용된 object list",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -450,108 +588,6 @@ const docTemplate = `{
                         "description": "수정된 Permission 데이터",
                         "schema": {
                             "$ref": "#/definitions/models.Permission"
-                        }
-                    }
-                }
-            }
-        },
-        "/rbac/permissionAssignment": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RBAC permissionAssignment"
-                ],
-                "summary": "PermissionAssignment 생성",
-                "parameters": [
-                    {
-                        "description": "Data",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dblayer.PermissionAssignmentData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.PermissionAssignment"
-                        }
-                    }
-                }
-            }
-        },
-        "/rbac/permissionAssignment/{id}": {
-            "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RBAC permissionAssignment"
-                ],
-                "summary": "PermissionAssignment 삭제",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "PermissionAssignment ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "삭제된 PermissionAssignment 데이터",
-                        "schema": {
-                            "$ref": "#/definitions/models.PermissionAssignment"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RBAC permissionAssignment"
-                ],
-                "summary": "PermissionAssignment Update",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "PermissionAssignment ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Update에 사용할 Data",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dblayer.PermissionAssignmentData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "수정된 PermissionAssignment 데이터",
-                        "schema": {
-                            "$ref": "#/definitions/models.PermissionAssignment"
                         }
                     }
                 }
@@ -695,7 +731,93 @@ const docTemplate = `{
                 }
             }
         },
-        "/rbac/subjectAssignment": {
+        "/rbac/role/{id}/permission": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC role"
+                ],
+                "summary": "Role에 속하는 Permission들의 id 목록 조회",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Role ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionsOfRolePage"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/role/{id}/subject": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC role"
+                ],
+                "summary": "Role에 속하는 Subject들의 id 목록 조회",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Role ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.SubjectsOfRolePage"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/subject-assignment": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -728,7 +850,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/rbac/subjectAssignment/{id}": {
+        "/rbac/subject-assignment/{id}": {
             "delete": {
                 "consumes": [
                     "application/json"
@@ -827,6 +949,49 @@ const docTemplate = `{
                 }
             }
         },
+        "dblayer.PermissionOfRole": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "object": {
+                    "type": "string"
+                },
+                "permission_id": {
+                    "type": "integer"
+                },
+                "role_id": {
+                    "type": "integer"
+                },
+                "service_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dblayer.PermissionsOfRolePage": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "next": {
+                    "type": "string"
+                },
+                "previous": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dblayer.PermissionOfRole"
+                    }
+                }
+            }
+        },
         "dblayer.PermissionsPage": {
             "type": "object",
             "properties": {
@@ -886,6 +1051,26 @@ const docTemplate = `{
                 },
                 "subject_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "dblayer.SubjectsOfRolePage": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "next": {
+                    "type": "string"
+                },
+                "previous": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.SubjectAssignment"
+                    }
                 }
             }
         },
@@ -1039,10 +1224,10 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "role_id": {
+                "permission_id": {
                     "type": "integer"
                 },
-                "spermission_id": {
+                "role_id": {
                     "type": "integer"
                 }
             }
@@ -1069,6 +1254,23 @@ const docTemplate = `{
                 },
                 "role_id": {
                     "type": "integer"
+                },
+                "subject_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "rest.PermissionKey": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "service_name": {
+                    "type": "string"
                 },
                 "subject_id": {
                     "type": "integer"

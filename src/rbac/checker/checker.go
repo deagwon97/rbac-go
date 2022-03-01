@@ -54,7 +54,7 @@ func (rbac *RBAC) CheckPermission(
 	objects []string,
 	err error,
 ) {
-	objects, err = rbac.db.GetObjects(
+	objects, err = rbac.db.GetAllowedObjects(
 		subjectID,
 		permissionServiceName,
 		permissionName,

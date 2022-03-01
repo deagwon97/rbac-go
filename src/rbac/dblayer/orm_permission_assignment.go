@@ -6,7 +6,6 @@ import (
 	"rbac-go/rbac/models"
 )
 
-// PermissionAssignment
 func (db *DBORM) GetPermissionAssignments() (
 	items []models.PermissionAssignment, err error,
 ) {

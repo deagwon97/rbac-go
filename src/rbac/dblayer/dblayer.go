@@ -12,7 +12,7 @@ type DBLayer interface {
 }
 
 type PermissionDBLayer interface {
-	GetObjects(
+	GetAllowedObjects(
 		subjectID int,
 		permissionServiceName string,
 		permissionName string,
@@ -82,6 +82,24 @@ type RoleDBLayer interface {
 		id int,
 	) (
 		role models.Role,
+		err error,
+	)
+	GetSubjectsOfRolePage(
+		roleID int,
+		page int,
+		pageSize int,
+		hostUrl string,
+	) (
+		itemsPage SubjectsOfRolePage,
+		err error,
+	)
+	GetPermissionsOfRolePage(
+		roleID int,
+		page int,
+		pageSize int,
+		hostUrl string,
+	) (
+		itemsPage PermissionsOfRolePage,
 		err error,
 	)
 }

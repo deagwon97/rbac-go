@@ -9,10 +9,10 @@ import (
 )
 
 type PermissionObject struct {
-	PermissionObject string `gorm:"column:permission_object" json:"permission_object"`
+	Object string `gorm:"column:object" json:"object"`
 }
 
-func (db *DBORM) GetObjects(
+func (db *DBORM) GetAllowedObjects(
 	subjectID int,
 	permissionServiceName string,
 	permissionName string,
@@ -21,27 +21,30 @@ func (db *DBORM) GetObjects(
 	objects []string,
 	err error,
 ) {
-	var permissionObject []PermissionObject
 
 	query := fmt.Sprintf(`
-	SELECT pa.permission_object
-	FROM permission_assignment pa
-	INNER JOIN permission r
-		ON r.id = pa.permission_id
-	INNER JOIN subject_assignment s
-		ON r.id = s.permission_id
-	WHERE s.id = %d 
-	AND pa.permission_name ='%s' 
-	AND pa.permission_action = '%s' 
-	`, subjectID, permissionName, permissionAction)
+	SELECT p.object
+	FROM role as r
+	INNER JOIN permission_assignment as pa
+		ON r.id = pa.role_id
+	INNER JOIN permission as p
+		ON pa.permission_id = p.id
+	INNER JOIN subject_assignment as sa
+		ON r.id = sa.role_id
+	WHERE sa.subject_id = %d 
+	AND p.service_name ='%s' 
+	AND p.name ='%s' 
+	AND p.action = '%s' 
+	`, subjectID, permissionServiceName, permissionName, permissionAction)
 
+	var permissionObject []PermissionObject
 	err = db.Raw(query).Scan(&permissionObject).Error
 	if err != nil {
-		return objects, err
+		return
 	}
 
 	for _, item := range permissionObject {
-		objects = append(objects, item.PermissionObject)
+		objects = append(objects, item.Object)
 	}
 	return objects, err
 }
