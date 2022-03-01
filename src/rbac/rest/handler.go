@@ -2,10 +2,11 @@ package rest
 
 import (
 	"net/http"
+	ce "rbac-go/common/error"
+	"rbac-go/common/paginate"
 	"rbac-go/rbac/dblayer"
 
 	"rbac-go/database"
-	"rbac-go/rbac/models"
 
 	"rbac-go/rbac/checker"
 
@@ -34,9 +35,7 @@ func NewHandler() (HandlerInterface, error) {
 	// DBORM 초기화
 	dsn := database.DataSource
 	db, err := dblayer.NewORM("mysql", dsn)
-	if err != nil {
-		return nil, err
-	}
+	ce.PanicIfError(err)
 	return &Handler{
 		db: db,
 	}, nil
@@ -51,27 +50,9 @@ func NewHandler() (HandlerInterface, error) {
 // @Success 200 {object} dblayer.RolePage
 // @Router /rbac/role/list [get]
 func (h *Handler) GetRolesPage(c *gin.Context) {
-	page, _ := strconv.Atoi(c.Query("page"))
-	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
-
-	hostName := c.Request.Host + "/role/list"
-	scheme := "http://"
-	if c.Request.TLS != nil {
-		scheme = "https://"
-	}
-	hostUrl := scheme + hostName
-
-	if h.db == nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "dsn 오류"})
-		return
-	}
-	var roles dblayer.RolePage
-	var err error
-	roles, err = h.db.GetRolesPage(page, pageSize, hostUrl)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	page, pageSize, hostUrl := paginate.ParsePageUrl(c)
+	roles, err := h.db.GetRolesPage(page, pageSize, hostUrl)
+	ce.GinError(c, err)
 	c.JSON(http.StatusOK, roles)
 }
 
@@ -83,23 +64,13 @@ func (h *Handler) GetRolesPage(c *gin.Context) {
 // @Success 200 {object} models.Role
 // @Router /rbac/role [post]
 func (h *Handler) AddRole(c *gin.Context) {
-
 	var roleData dblayer.RoleData
 
 	err := c.ShouldBindJSON(&roleData)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	ce.GinError(c, err)
 
 	role, err := h.db.AddRole(roleData)
-	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			gin.H{"error": err.Error()},
-		)
-		return
-	}
+	ce.GinError(c, err)
 	c.JSON(http.StatusOK, role)
 }
 
@@ -115,24 +86,14 @@ func (h *Handler) UpdateRole(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
+	ce.GinError(c, err)
 	var roleData dblayer.RoleData
 
 	err = c.ShouldBindJSON(&roleData)
-	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			gin.H{"error": err.Error()})
-		return
-	}
+	ce.GinError(c, err)
 
-	var role models.Role
-	role, err = h.db.UpdateRole(id, roleData)
-	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			gin.H{"error": err.Error()})
-		return
-	}
+	role, err := h.db.UpdateRole(id, roleData)
+	ce.GinError(c, err)
 	c.JSON(http.StatusOK, role)
 }
 
@@ -144,14 +105,11 @@ func (h *Handler) UpdateRole(c *gin.Context) {
 // @Success 200 {object} models.Role "삭제된 Role 데이터"
 // @Router /rbac/role/{id} [delete]
 func (h *Handler) DeleteRole(c *gin.Context) {
-
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
+	ce.GinError(c, err)
 
 	role, err := h.db.DeleteRole(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	ce.GinError(c, err)
 	c.JSON(http.StatusOK, role)
 }

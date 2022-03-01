@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	ge "rbac-go/common/error"
 	"rbac-go/content/dblayer"
 	"rbac-go/content/models"
 	"rbac-go/database"
@@ -68,18 +69,13 @@ func NewHandler() (HandlerInterface, error) {
 // @Router /content/list [get]
 func (h *Handler) GetContents(c *gin.Context) {
 
-	isAllowed, objects, err := h.rbac.CheckPermission(
-		2,
-		"블로그",
-		"게시판",
-		"조회",
-	)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	print(isAllowed)
-	print(objects)
+	// isAllowed, objects, err := h.rbac.CheckPermission(
+	// 	2,
+	// 	"블로그",
+	// 	"게시판",
+	// 	"조회",
+	// )
+	// ge.GinError(c, err)
 
 	page, _ := strconv.Atoi(c.Query("page"))
 	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
@@ -96,10 +92,7 @@ func (h *Handler) GetContents(c *gin.Context) {
 		return
 	}
 	contents, err := h.db.GetAllContents(page, pageSize, hostUrl)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	ge.GinError(c, err)
 	c.JSON(http.StatusOK, contents)
 }
 
@@ -117,12 +110,10 @@ func (h *Handler) GetContent(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
+	ge.GinError(c, err)
 
 	content, err := h.db.GetContent(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	ge.GinError(c, err)
 	c.JSON(http.StatusOK, content)
 }
 
@@ -138,18 +129,11 @@ func (h *Handler) GetContent(c *gin.Context) {
 func (h *Handler) AddContent(c *gin.Context) {
 
 	var contentData models.ContentData
-
 	err := c.ShouldBindJSON(&contentData)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	ge.GinError(c, err)
 
 	content, err := h.db.AddContent(contentData)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	ge.GinError(c, err)
 	c.JSON(http.StatusOK, content)
 }
 
@@ -167,19 +151,13 @@ func (h *Handler) UpdateContent(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
+	ge.GinError(c, err)
 	var contentData models.ContentData
-
 	err = c.ShouldBindJSON(&contentData)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	ge.GinError(c, err)
 
 	content, err := h.db.UpdateContent(id, contentData)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	ge.GinError(c, err)
 	c.JSON(http.StatusOK, content)
 }
 
@@ -196,11 +174,9 @@ func (h *Handler) DeleteContent(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
+	ge.GinError(c, err)
 
 	content, err := h.db.DeleteContent(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	ge.GinError(c, err)
 	c.JSON(http.StatusOK, content)
 }

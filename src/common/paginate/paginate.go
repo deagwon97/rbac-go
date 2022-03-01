@@ -3,8 +3,23 @@ package paginate
 import (
 	"strconv"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
+
+func ParsePageUrl(c *gin.Context) (
+	page int, pageSize int, hostUrl string) {
+
+	page, _ = strconv.Atoi(c.Query("page"))
+	pageSize, _ = strconv.Atoi(c.Query("pageSize"))
+
+	hostName := c.Request.Host + c.Request.URL.Path
+	protocol := c.Request.Header.Get("X-Forwarded-Proto")
+	hostUrl = protocol + "://" + hostName
+
+	return page, pageSize, hostUrl
+
+}
 
 func Paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
