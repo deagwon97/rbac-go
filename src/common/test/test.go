@@ -2,6 +2,7 @@ package test
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 
 	"encoding/json"
@@ -49,11 +50,17 @@ func Reqeust(
 
 	defer resp.Body.Close()
 
-	respBody, err := ioutil.ReadAll(resp.Body)
-	NotNil(err)
+	respBody, _ := ioutil.ReadAll(resp.Body)
+	// NotNil(err)
 	var prettyJSON bytes.Buffer
 	err = json.Indent(&prettyJSON, respBody, "", "\t")
-	NotNil(err)
+	if err != nil {
+		fmt.Println(err)
+		var decodeRes interface{}
+		json.Unmarshal([]byte(respBody), &decodeRes)
+		fmt.Println(decodeRes)
+	}
+	// NotNil(err)
 	str := prettyJSON.String()
 	println(str)
 
