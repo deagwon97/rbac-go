@@ -455,6 +455,144 @@ const docTemplate = `{
                 }
             }
         },
+        "/rbac/permissionAssignment": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permissionAssignment"
+                ],
+                "summary": "PermissionAssignment 생성",
+                "parameters": [
+                    {
+                        "description": "Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionAssignmentData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.PermissionAssignment"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/permissionAssignment/list": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permissionAssignment"
+                ],
+                "summary": "PermissionAssignment 목록 조회",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page Number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionAssignmentsPage"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/permissionAssignment/{id}": {
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permissionAssignment"
+                ],
+                "summary": "PermissionAssignment 삭제",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PermissionAssignment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "삭제된 PermissionAssignment 데이터",
+                        "schema": {
+                            "$ref": "#/definitions/models.PermissionAssignment"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permissionAssignment"
+                ],
+                "summary": "PermissionAssignment Update",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "PermissionAssignment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update에 사용할 Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionAssignmentData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "수정된 PermissionAssignment 데이터",
+                        "schema": {
+                            "$ref": "#/definitions/models.PermissionAssignment"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/role": {
             "post": {
                 "consumes": [
@@ -595,6 +733,40 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dblayer.PermissionAssignmentData": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "role_id": {
+                    "type": "integer"
+                },
+                "spermission_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dblayer.PermissionAssignmentsPage": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "next": {
+                    "type": "string"
+                },
+                "previous": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PermissionAssignment"
+                    }
+                }
+            }
+        },
         "dblayer.PermissionData": {
             "type": "object",
             "properties": {
@@ -803,6 +975,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "subject_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.PermissionAssignment": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "role_id": {
+                    "type": "integer"
+                },
+                "spermission_id": {
                     "type": "string"
                 }
             }
