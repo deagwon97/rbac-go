@@ -70,7 +70,7 @@ func GetPageInfo(
 // func (db *DBORM) GetRolesPage(
 // 	page int, pageSize int, hostUrl string,
 // ) (
-// 	rolePage RolePage, err error,
+// 	rolesPage RolesPage, err error,
 // ) {
 
 // 	var count int64
@@ -78,16 +78,16 @@ func GetPageInfo(
 
 // 	page, pageSize, nextPage, previousPage :=
 // 		paginate.GetPageInfo(page, pageSize, hostUrl, count)
-// 	rolePage.Count = int(count)
-// 	rolePage.NextPage = nextPage
-// 	rolePage.PreviousPage = previousPage
+// 	rolesPage.Count = int(count)
+// 	rolesPage.NextPage = nextPage
+// 	rolesPage.PreviousPage = previousPage
 
 // 	err = db.
 // 		Select("id", "name", "description").
 // 		Order("id desc").
 // 		Scopes(paginate.Paginate(page, pageSize)).
-// 		Find(&rolePage.Roles).
+// 		Find(&rolesPage.Roles).
 // 		Error
 
-// 	return rolePage, err
+// 	return rolesPage, err
 // }

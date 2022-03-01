@@ -63,7 +63,7 @@ type RoleDBLayer interface {
 		pageSize int,
 		hostUrl string,
 	) (
-		rolePage RolePage,
+		rolesPage RolesPage,
 		err error,
 	)
 	AddRole(
@@ -92,7 +92,7 @@ type SubjectAssignmentDBLayer interface {
 		pageSize int,
 		hostUrl string,
 	) (
-		rolePage RolePage,
+		rolesPage RolesPage,
 		err error,
 	)
 	GetSubjectsInRole(
@@ -100,7 +100,7 @@ type SubjectAssignmentDBLayer interface {
 		pageSize int,
 		hostUrl string,
 	) (
-		rolePage RolePage,
+		rolesPage RolesPage,
 		err error,
 	)
 	AddSubjectAssignment(
@@ -129,7 +129,7 @@ type PermissionAssignmentDBLayer interface {
 		pageSize int,
 		hostUrl string,
 	) (
-		rolePage RolePage,
+		rolesPage RolesPage,
 		err error,
 	)
 	GetPermissionsInRole(
@@ -137,7 +137,7 @@ type PermissionAssignmentDBLayer interface {
 		pageSize int,
 		hostUrl string,
 	) (
-		rolePage RolePage,
+		rolesPage RolesPage,
 		err error,
 	)
 	AddPermissionAssignment(

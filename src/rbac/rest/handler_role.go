@@ -12,12 +12,12 @@ import (
 )
 
 // @Summary Role 목록 조회
-// @Tags RBAC
+// @Tags RBAC role
 // @Accept json
 // @Produce json
 // @Param page query int false  "Page Number"
 // @Param pageSize query int false  "Page Size"
-// @Success 200 {object} dblayer.RolePage
+// @Success 200 {object} dblayer.RolesPage
 // @Router /rbac/role/list [get]
 func (h *Handler) GetRolesPage(c *gin.Context) {
 	page, pageSize, hostUrl := paginate.ParsePageUrl(c)
@@ -27,7 +27,7 @@ func (h *Handler) GetRolesPage(c *gin.Context) {
 }
 
 // @Summary Role 생성
-// @Tags RBAC
+// @Tags RBAC role
 // @Accept json
 // @Produce json
 // @Param data body dblayer.RoleData true "Data"
@@ -45,7 +45,7 @@ func (h *Handler) AddRole(c *gin.Context) {
 }
 
 // @Summary Role Update
-// @Tags RBAC
+// @Tags RBAC role
 // @Accept json
 // @Produce json
 // @Param id path int  true  "Role ID"
@@ -68,7 +68,7 @@ func (h *Handler) UpdateRole(c *gin.Context) {
 }
 
 // @Summary Role 삭제
-// @Tags RBAC
+// @Tags RBAC role
 // @Accept json
 // @Produce json
 // @Param id path int true  "Role ID"

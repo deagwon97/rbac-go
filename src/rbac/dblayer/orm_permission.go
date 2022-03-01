@@ -98,7 +98,11 @@ type PermissionData struct {
 func (db *DBORM) AddPermission(permissionData PermissionData) (
 	permission models.Permission, err error,
 ) {
-	err = db.Model(&permission).Create(&permissionData).Error
+	permission.ServiceName = permissionData.ServiceName
+	permission.Name = permissionData.Name
+	permission.Action = permissionData.Action
+	permission.Object = permissionData.Object
+	err = db.Create(&permissionData).Error
 	return permission, err
 }
 
@@ -109,11 +113,11 @@ func (db *DBORM) UpdatePermission(
 	permission models.Permission,
 	err error,
 ) {
-	// permission.ID = id
-	// permission.ServiceName = permissionData.ServiceName
-	// permission.Name = permissionData.Name
-	// permission.Action = permissionData.Action
-	// permission.Object = permissionData.Object
+	permission.ID = id
+	permission.ServiceName = permissionData.ServiceName
+	permission.Name = permissionData.Name
+	permission.Action = permissionData.Action
+	permission.Object = permissionData.Object
 
 	var count int64
 	db.Model(&models.Permission{}).

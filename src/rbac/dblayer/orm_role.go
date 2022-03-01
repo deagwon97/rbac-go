@@ -17,7 +17,7 @@ func (db *DBORM) GetRoles() (
 	return
 }
 
-type RolePage struct {
+type RolesPage struct {
 	Count        int           `json:"count"`
 	NextPage     string        `json:"next"`
 	PreviousPage string        `json:"previous"`
@@ -27,7 +27,7 @@ type RolePage struct {
 func (db *DBORM) GetRolesPage(
 	page int, pageSize int, hostUrl string,
 ) (
-	rolePage RolePage, err error,
+	rolesPage RolesPage, err error,
 ) {
 
 	var count int64
@@ -35,18 +35,18 @@ func (db *DBORM) GetRolesPage(
 
 	page, pageSize, nextPage, previousPage :=
 		paginate.GetPageInfo(page, pageSize, hostUrl, count)
-	rolePage.Count = int(count)
-	rolePage.NextPage = nextPage
-	rolePage.PreviousPage = previousPage
+	rolesPage.Count = int(count)
+	rolesPage.NextPage = nextPage
+	rolesPage.PreviousPage = previousPage
 
 	err = db.
 		Select("id", "name", "description").
 		Order("id desc").
 		Scopes(paginate.Paginate(page, pageSize)).
-		Find(&rolePage.Roles).
+		Find(&rolesPage.Roles).
 		Error
 
-	return rolePage, err
+	return rolesPage, err
 }
 
 type RoleData struct {
@@ -59,7 +59,6 @@ func (db *DBORM) AddRole(roleData RoleData) (
 ) {
 	role.Name = roleData.Name
 	role.Description = roleData.Description
-	// err = db.Model(models.Role{}).Create(roleData).Error
 
 	err = db.Create(&role).Error
 	return role, err
