@@ -3,7 +3,6 @@ package dblayer
 import (
 	"errors"
 
-	"rbac-go/common/paginate"
 	"rbac-go/rbac/models"
 )
 
@@ -17,42 +16,9 @@ func (db *DBORM) GetPermissionAssignments() (
 	return
 }
 
-type PermissionAssignmentsPage struct {
-	Count        int                           `json:"count"`
-	NextPage     string                        `json:"next"`
-	PreviousPage string                        `json:"previous"`
-	Items        []models.PermissionAssignment `json:"results"`
-}
-
-func (db *DBORM) GetPermissionAssignmentsPage(
-	page int, pageSize int, hostUrl string,
-) (
-	itemsPage PermissionAssignmentsPage, err error,
-) {
-
-	var count int64
-	db.Model(&models.PermissionAssignment{}).Count(&count)
-
-	page, pageSize, nextPage, previousPage :=
-		paginate.GetPageInfo(page, pageSize, hostUrl, count)
-	itemsPage.Count = int(count)
-	itemsPage.NextPage = nextPage
-	itemsPage.PreviousPage = previousPage
-
-	err = db.
-		Select("id", "role_id", "permission_id").
-		Order("id desc").
-		Scopes(paginate.Paginate(page, pageSize)).
-		Find(&itemsPage.Items).
-		Error
-
-	return itemsPage, err
-}
-
 type PermissionAssignmentData struct {
-	Name         string `gorm:"column:name"           json:"name"`
-	RoleID       int    `gorm:"column:role_id"         json:"role_id"`
-	PermissionID string `gorm:"column:permission_id"   json:"spermission_id"`
+	RoleID       int `gorm:"column:role_id"         json:"role_id"`
+	PermissionID int `gorm:"column:permission_id"   json:"permission_id"`
 }
 
 func (db *DBORM) AddPermissionAssignment(
@@ -83,7 +49,7 @@ func (db *DBORM) UpdatePermissionAssignment(
 		itemData.PermissionID
 
 	var count int64
-	db.Model(&models.PermissionAssignment{}).Where("id = ?", id).Count(&count)
+	db.Model(item).Where("id = ?", id).Count(&count)
 	if count == 0 {
 		return item, errors.New("item dosen't exist")
 	}

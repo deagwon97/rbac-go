@@ -3,28 +3,12 @@ package rest
 import (
 	"net/http"
 	ce "rbac-go/common/error"
-	"rbac-go/common/paginate"
 	"rbac-go/rbac/dblayer"
 
 	"github.com/gin-gonic/gin"
 
 	"strconv"
 )
-
-// @Summary PermissionAssignment 목록 조회
-// @Tags RBAC permissionAssignment
-// @Accept json
-// @Produce json
-// @Param page query int false  "Page Number"
-// @Param pageSize query int false  "Page Size"
-// @Success 200 {object} dblayer.PermissionAssignmentsPage
-// @Router /rbac/permissionAssignment/list [get]
-func (h *Handler) GetPermissionAssignmentsPage(c *gin.Context) {
-	page, pageSize, hostUrl := paginate.ParsePageUrl(c)
-	permissionAssignments, err := h.db.GetPermissionAssignmentsPage(page, pageSize, hostUrl)
-	ce.GinError(c, err)
-	c.JSON(http.StatusOK, permissionAssignments)
-}
 
 // @Summary PermissionAssignment 생성
 // @Tags RBAC permissionAssignment

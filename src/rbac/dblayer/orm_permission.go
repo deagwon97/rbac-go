@@ -78,7 +78,7 @@ func (db *DBORM) GetPermissionsPage(
 	permissionPage.PreviousPage = previousPage
 
 	err = db.
-		Select("id", "subject_name",
+		Select("id", "service_name",
 			"name", "action", "object").
 		Order("id desc").
 		Scopes(paginate.Paginate(page, pageSize)).
@@ -89,7 +89,7 @@ func (db *DBORM) GetPermissionsPage(
 }
 
 type PermissionData struct {
-	ServiceName string `gorm:"column:subject_name"  json:"subject_name"`
+	ServiceName string `gorm:"column:service_name"  json:"service_name"`
 	Name        string `gorm:"column:name"          json:"name"`
 	Action      string `gorm:"column:action"        json:"action"`
 	Object      string `gorm:"column:object"        json:"object"`
@@ -102,7 +102,7 @@ func (db *DBORM) AddPermission(permissionData PermissionData) (
 	permission.Name = permissionData.Name
 	permission.Action = permissionData.Action
 	permission.Object = permissionData.Object
-	err = db.Create(&permissionData).Error
+	err = db.Create(&permission).Error
 	return permission, err
 }
 
@@ -127,8 +127,8 @@ func (db *DBORM) UpdatePermission(
 		return permission,
 			errors.New("item dosen't exist")
 	}
-	err = db.Model(&models.Permission{}).
-		Updates(permissionData).Error
+	err = db.Model(permission).
+		Updates(permission).Error
 
 	db.Where("id = ?", id).First(&permission)
 	return permission, err

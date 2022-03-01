@@ -24,9 +24,9 @@ func (Role) TableName() string {
 }
 
 type PermissionAssignment struct {
-	ID           int    `gorm:"primaryKey;column:id"   json:"id"`
-	RoleID       int    `gorm:"column:role_id"         json:"role_id"`
-	PermissionID string `gorm:"column:permission_id"   json:"spermission_id"`
+	ID           int `gorm:"primaryKey;column:id"   json:"id"`
+	RoleID       int `gorm:"column:role_id"         json:"role_id"`
+	PermissionID int `gorm:"column:permission_id"   json:"spermission_id"`
 }
 
 func (PermissionAssignment) TableName() string {
@@ -35,7 +35,7 @@ func (PermissionAssignment) TableName() string {
 
 type Permission struct {
 	ID          int    `gorm:"primaryKey;column:id" json:"id"`
-	ServiceName string `gorm:"column:subject_name"  json:"subject_name"`
+	ServiceName string `gorm:"column:service_name"  json:"service_name"`
 	Name        string `gorm:"column:name"          json:"name"`
 	Action      string `gorm:"column:action"        json:"action"`
 	Object      string `gorm:"column:object"        json:"object"`

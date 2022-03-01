@@ -18,8 +18,11 @@ func AddRoutes(rg *gin.RouterGroup) {
 	router.PATCH("/permission/:id", h.UpdatePermission)
 	router.DELETE("/permission/:id", h.DeletePermission)
 
-	router.GET("/permissionAssignment/list", h.GetPermissionAssignmentsPage)
 	router.POST("/permissionAssignment", h.AddPermissionAssignment)
 	router.PATCH("/permissionAssignment/:id", h.UpdatePermissionAssignment)
 	router.DELETE("/permissionAssignment/:id", h.DeletePermissionAssignment)
+
+	router.POST("/subjectAssignment", h.AddSubjectAssignment)
+	router.PATCH("/subjectAssignment/:id", h.UpdateSubjectAssignment)
+	router.DELETE("/subjectAssignment/:id", h.DeleteSubjectAssignment)
 }
