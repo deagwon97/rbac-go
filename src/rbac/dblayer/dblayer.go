@@ -8,7 +8,7 @@ type DBLayer interface {
 	PermissionDBLayer
 	RoleDBLayer
 	// SubjectAssignmentDBLayer
-	// PermissionAssignmentDBLayer
+	PermissionAssignmentDBLayer
 }
 
 type PermissionDBLayer interface {
@@ -124,38 +124,31 @@ type SubjectAssignmentDBLayer interface {
 }
 
 type PermissionAssignmentDBLayer interface {
-	GetRolesInPermission(
+	GetPermissionAssignmentsPage(
 		page int,
 		pageSize int,
 		hostUrl string,
 	) (
-		rolesPage RolesPage,
-		err error,
-	)
-	GetPermissionsInRole(
-		page int,
-		pageSize int,
-		hostUrl string,
-	) (
-		rolesPage RolesPage,
-		err error,
+		PermissionAssignmentsPage,
+		error,
 	)
 	AddPermissionAssignment(
-		roleData RoleData,
+		PermissionAssignmentData,
 	) (
-		role models.Role, err error,
+		models.PermissionAssignment,
+		error,
 	)
 	UpdatePermissionAssignment(
-		id int,
-		roleData RoleData,
+		int,
+		PermissionAssignmentData,
 	) (
-		role models.Role,
-		err error,
+		models.PermissionAssignment,
+		error,
 	)
 	DeletePermissionAssignment(
-		id int,
+		int,
 	) (
-		role models.Role,
-		err error,
+		models.PermissionAssignment,
+		error,
 	)
 }

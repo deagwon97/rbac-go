@@ -20,6 +20,16 @@ type HandlerInterface interface {
 	AddRole(c *gin.Context)
 	UpdateRole(c *gin.Context)
 	DeleteRole(c *gin.Context)
+
+	GetPermissionsPage(c *gin.Context)
+	AddPermission(c *gin.Context)
+	UpdatePermission(c *gin.Context)
+	DeletePermission(c *gin.Context)
+
+	GetPermissionAssignmentsPage(c *gin.Context)
+	AddPermissionAssignment(c *gin.Context)
+	UpdatePermissionAssignment(c *gin.Context)
+	DeletePermissionAssignment(c *gin.Context)
 }
 
 // HandlerInterface의 생성자
