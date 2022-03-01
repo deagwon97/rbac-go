@@ -16,7 +16,7 @@ func parseId(data interface{}) (IDstring string) {
 	IDstring = strconv.Itoa(IDint)
 	return IDstring
 }
-func TestRbac(t *testing.T) {
+func TestRoleCrud(t *testing.T) {
 	HostUrl := "https://rbac.dev.deagwon.com"
 
 	fmt.Println("----role 생성 테스트-----")
@@ -39,6 +39,15 @@ func TestRbac(t *testing.T) {
 	roleIDStr2 := parseId(data)
 	data = test.Post(HostUrl+"/rbac/role", roleData3)
 	roleIDStr3 := parseId(data)
+
+	// for i := 0; i < 100; i++ {
+	// 	str := strconv.Itoa(i)
+	// 	roleData := dblayer.RoleData{
+	// 		Name:        "일반사용자" + str,
+	// 		Description: "일반사용자 그룹",
+	// 	}
+	// 	test.Post(HostUrl+"/rbac/role", roleData)
+	// }
 
 	fmt.Println("----role 목록 테스트-----")
 	test.Get(HostUrl + "/rbac/role/list")
