@@ -488,42 +488,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/rbac/permissionAssignment/list": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RBAC permissionAssignment"
-                ],
-                "summary": "PermissionAssignment 목록 조회",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Page Number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page Size",
-                        "name": "pageSize",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dblayer.PermissionAssignmentsPage"
-                        }
-                    }
-                }
-            }
-        },
         "/rbac/permissionAssignment/{id}": {
             "delete": {
                 "consumes": [
@@ -730,40 +694,119 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/rbac/subjectAssignment": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC subjectAssignment"
+                ],
+                "summary": "SubjectAssignment 생성",
+                "parameters": [
+                    {
+                        "description": "Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.SubjectAssignmentData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.SubjectAssignment"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/subjectAssignment/{id}": {
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC subjectAssignment"
+                ],
+                "summary": "SubjectAssignment 삭제",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "SubjectAssignment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "삭제된 SubjectAssignment 데이터",
+                        "schema": {
+                            "$ref": "#/definitions/models.SubjectAssignment"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC subjectAssignment"
+                ],
+                "summary": "SubjectAssignment Update",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "SubjectAssignment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update에 사용할 Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.SubjectAssignmentData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "수정된 SubjectAssignment 데이터",
+                        "schema": {
+                            "$ref": "#/definitions/models.SubjectAssignment"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "dblayer.PermissionAssignmentData": {
             "type": "object",
             "properties": {
-                "name": {
-                    "type": "string"
+                "permission_id": {
+                    "type": "integer"
                 },
                 "role_id": {
                     "type": "integer"
-                },
-                "spermission_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "dblayer.PermissionAssignmentsPage": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "next": {
-                    "type": "string"
-                },
-                "previous": {
-                    "type": "string"
-                },
-                "results": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.PermissionAssignment"
-                    }
                 }
             }
         },
@@ -779,7 +822,7 @@ const docTemplate = `{
                 "object": {
                     "type": "string"
                 },
-                "subject_name": {
+                "service_name": {
                     "type": "string"
                 }
             }
@@ -832,6 +875,17 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.Role"
                     }
+                }
+            }
+        },
+        "dblayer.SubjectAssignmentData": {
+            "type": "object",
+            "properties": {
+                "role_id": {
+                    "type": "integer"
+                },
+                "subject_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -974,7 +1028,7 @@ const docTemplate = `{
                 "object": {
                     "type": "string"
                 },
-                "subject_name": {
+                "service_name": {
                     "type": "string"
                 }
             }
@@ -989,7 +1043,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "spermission_id": {
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
@@ -1004,6 +1058,20 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "models.SubjectAssignment": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "role_id": {
+                    "type": "integer"
+                },
+                "subject_id": {
+                    "type": "integer"
                 }
             }
         },
