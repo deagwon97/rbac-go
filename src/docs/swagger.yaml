@@ -1,4 +1,28 @@
 definitions:
+  dblayer.PermissionData:
+    properties:
+      action:
+        type: string
+      name:
+        type: string
+      object:
+        type: string
+      subject_name:
+        type: string
+    type: object
+  dblayer.PermissionsPage:
+    properties:
+      count:
+        type: integer
+      next:
+        type: string
+      previous:
+        type: string
+      results:
+        items:
+          $ref: '#/definitions/models.Permission'
+        type: array
+    type: object
   dblayer.RoleData:
     properties:
       description:
@@ -6,7 +30,7 @@ definitions:
       name:
         type: string
     type: object
-  dblayer.RolePage:
+  dblayer.RolesPage:
     properties:
       count:
         type: integer
@@ -99,6 +123,19 @@ definitions:
         type: string
       user_id:
         type: integer
+    type: object
+  models.Permission:
+    properties:
+      action:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      object:
+        type: string
+      subject_name:
+        type: string
     type: object
   models.Role:
     properties:
@@ -319,6 +356,95 @@ paths:
       summary: Content 목록 조회
       tags:
       - Content
+  /rbac/permission:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.PermissionData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Permission'
+      summary: Permission 생성
+      tags:
+      - RBAC permission
+  /rbac/permission/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Permission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 삭제된 Permission 데이터
+          schema:
+            $ref: '#/definitions/models.Permission'
+      summary: Permission 삭제
+      tags:
+      - RBAC permission
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Permission ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update에 사용할 Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.PermissionData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 수정된 Permission 데이터
+          schema:
+            $ref: '#/definitions/models.Permission'
+      summary: Permission Update
+      tags:
+      - RBAC permission
+  /rbac/permission/list:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Page Number
+        in: query
+        name: page
+        type: integer
+      - description: Page Size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dblayer.PermissionsPage'
+      summary: Permission 목록 조회
+      tags:
+      - RBAC permission
   /rbac/role:
     post:
       consumes:
@@ -339,7 +465,7 @@ paths:
             $ref: '#/definitions/models.Role'
       summary: Role 생성
       tags:
-      - RBAC
+      - RBAC role
   /rbac/role/{id}:
     delete:
       consumes:
@@ -359,7 +485,7 @@ paths:
             $ref: '#/definitions/models.Role'
       summary: Role 삭제
       tags:
-      - RBAC
+      - RBAC role
     patch:
       consumes:
       - application/json
@@ -384,7 +510,7 @@ paths:
             $ref: '#/definitions/models.Role'
       summary: Role Update
       tags:
-      - RBAC
+      - RBAC role
   /rbac/role/list:
     get:
       consumes:
@@ -404,8 +530,8 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dblayer.RolePage'
+            $ref: '#/definitions/dblayer.RolesPage'
       summary: Role 목록 조회
       tags:
-      - RBAC
+      - RBAC role
 swagger: "2.0"

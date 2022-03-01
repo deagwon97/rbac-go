@@ -317,6 +317,144 @@ const docTemplate = `{
                 }
             }
         },
+        "/rbac/permission": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permission"
+                ],
+                "summary": "Permission 생성",
+                "parameters": [
+                    {
+                        "description": "Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Permission"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/permission/list": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permission"
+                ],
+                "summary": "Permission 목록 조회",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page Number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionsPage"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/permission/{id}": {
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permission"
+                ],
+                "summary": "Permission 삭제",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Permission ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "삭제된 Permission 데이터",
+                        "schema": {
+                            "$ref": "#/definitions/models.Permission"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permission"
+                ],
+                "summary": "Permission Update",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Permission ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update에 사용할 Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "수정된 Permission 데이터",
+                        "schema": {
+                            "$ref": "#/definitions/models.Permission"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/role": {
             "post": {
                 "consumes": [
@@ -326,7 +464,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RBAC"
+                    "RBAC role"
                 ],
                 "summary": "Role 생성",
                 "parameters": [
@@ -359,7 +497,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RBAC"
+                    "RBAC role"
                 ],
                 "summary": "Role 목록 조회",
                 "parameters": [
@@ -380,7 +518,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dblayer.RolePage"
+                            "$ref": "#/definitions/dblayer.RolesPage"
                         }
                     }
                 }
@@ -395,7 +533,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RBAC"
+                    "RBAC role"
                 ],
                 "summary": "Role 삭제",
                 "parameters": [
@@ -424,7 +562,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RBAC"
+                    "RBAC role"
                 ],
                 "summary": "Role Update",
                 "parameters": [
@@ -457,6 +595,43 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dblayer.PermissionData": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "object": {
+                    "type": "string"
+                },
+                "subject_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dblayer.PermissionsPage": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "next": {
+                    "type": "string"
+                },
+                "previous": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Permission"
+                    }
+                }
+            }
+        },
         "dblayer.RoleData": {
             "type": "object",
             "properties": {
@@ -468,7 +643,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dblayer.RolePage": {
+        "dblayer.RolesPage": {
             "type": "object",
             "properties": {
                 "count": {
@@ -609,6 +784,26 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.Permission": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "object": {
+                    "type": "string"
+                },
+                "subject_name": {
+                    "type": "string"
                 }
             }
         },
