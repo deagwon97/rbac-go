@@ -22,7 +22,9 @@ import (
 func (h *Handler) GetPermissionsPage(c *gin.Context) {
 	page, pageSize, hostUrl := paginate.ParsePageUrl(c)
 	permissions, err := h.db.GetPermissionsPage(page, pageSize, hostUrl)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, permissions)
 }
 
@@ -37,10 +39,14 @@ func (h *Handler) AddPermission(c *gin.Context) {
 	var permissionData dblayer.PermissionData
 
 	err := c.ShouldBindJSON(&permissionData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	permission, err := h.db.AddPermission(permissionData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, permission)
 }
 
@@ -56,14 +62,20 @@ func (h *Handler) UpdatePermission(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	var permissionData dblayer.PermissionData
 
 	err = c.ShouldBindJSON(&permissionData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	permission, err := h.db.UpdatePermission(id, permissionData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, permission)
 }
 
@@ -77,14 +89,18 @@ func (h *Handler) UpdatePermission(c *gin.Context) {
 func (h *Handler) DeletePermission(c *gin.Context) {
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	permission, err := h.db.DeletePermission(id)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, permission)
 }
 
-type PermissionKey struct {
+type PermissionQuery struct {
 	SubjectID   int    `gorm:"column:subject_id"    json:"subject_id"`
 	ServiceName string `gorm:"column:permission_service_name"  json:"service_name"`
 	Name        string `gorm:"column:permission_name"          json:"name"`
@@ -100,23 +116,27 @@ type PermissionKey struct {
 // @Router /rbac/permission/objects [post]
 func (h *Handler) GetAllowedObjects(c *gin.Context) {
 
-	var permissionKey PermissionKey
+	var permissionKey PermissionQuery
 
 	err := c.ShouldBindJSON(&permissionKey)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	subjectID := permissionKey.SubjectID
 	permissionServiceName := permissionKey.ServiceName
 	permissionName := permissionKey.Name
 	permissionAction := permissionKey.Action
 
-	var objects []string
-	objects, err = h.db.GetAllowedObjects(
+	var permissionAnswer dblayer.PermissionAnswer
+	permissionAnswer, err = h.db.GetAllowedObjects(
 		subjectID,
 		permissionServiceName,
 		permissionName,
 		permissionAction,
 	)
-	ce.GinError(c, err)
-	c.JSON(http.StatusOK, objects)
+	if ce.GinError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, permissionAnswer)
 }

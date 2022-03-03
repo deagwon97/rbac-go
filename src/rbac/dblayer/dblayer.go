@@ -18,7 +18,7 @@ type PermissionDBLayer interface {
 		permissionName string,
 		permissionAction string,
 	) (
-		objects []string,
+		permissionAnswer PermissionAnswer,
 		err error,
 	)
 	GetPermissions() (

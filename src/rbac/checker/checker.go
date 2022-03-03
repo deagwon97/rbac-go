@@ -51,21 +51,21 @@ func (rbac *RBAC) CheckPermission(
 	permissionAction string,
 ) (
 	isAllowed bool,
-	objects []string,
+	permissionAnswer dblayer.PermissionAnswer,
 	err error,
 ) {
-	objects, err = rbac.db.GetAllowedObjects(
+	permissionAnswer, err = rbac.db.GetAllowedObjects(
 		subjectID,
 		permissionServiceName,
 		permissionName,
 		permissionAction,
 	)
-	if len(objects) > 0 {
-		isAllowed = true
-	} else {
-		isAllowed = false
-	}
-	return isAllowed, objects, err
+	// if len(permissionAnswer.objects) > 0 {
+	// 	isAllowed = true
+	// } else {
+	// 	isAllowed = false
+	// }
+	return isAllowed, permissionAnswer, err
 }
 
 func (rbac *RBAC) AddPermission(

@@ -22,7 +22,9 @@ import (
 func (h *Handler) GetRolesPage(c *gin.Context) {
 	page, pageSize, hostUrl := paginate.ParsePageUrl(c)
 	roles, err := h.db.GetRolesPage(page, pageSize, hostUrl)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, roles)
 }
 
@@ -38,11 +40,15 @@ func (h *Handler) GetRolesPage(c *gin.Context) {
 func (h *Handler) GetSubjectsOfRolePage(c *gin.Context) {
 	p := c.Param("id")
 	roleID, err := strconv.Atoi(p)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	page, pageSize, hostUrl := paginate.ParsePageUrl(c)
 	roles, err := h.db.GetSubjectsOfRolePage(roleID, page, pageSize, hostUrl)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, roles)
 }
 
@@ -58,11 +64,15 @@ func (h *Handler) GetSubjectsOfRolePage(c *gin.Context) {
 func (h *Handler) GetPermissionsOfRolePage(c *gin.Context) {
 	p := c.Param("id")
 	roleID, err := strconv.Atoi(p)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	page, pageSize, hostUrl := paginate.ParsePageUrl(c)
 	roles, err := h.db.GetPermissionsOfRolePage(roleID, page, pageSize, hostUrl)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, roles)
 }
 
@@ -77,10 +87,14 @@ func (h *Handler) AddRole(c *gin.Context) {
 	var roleData dblayer.RoleData
 
 	err := c.ShouldBindJSON(&roleData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	role, err := h.db.AddRole(roleData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, role)
 }
 
@@ -96,14 +110,20 @@ func (h *Handler) UpdateRole(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	var roleData dblayer.RoleData
 
 	err = c.ShouldBindJSON(&roleData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	role, err := h.db.UpdateRole(id, roleData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, role)
 }
 
@@ -117,9 +137,13 @@ func (h *Handler) UpdateRole(c *gin.Context) {
 func (h *Handler) DeleteRole(c *gin.Context) {
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	role, err := h.db.DeleteRole(id)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, role)
 }

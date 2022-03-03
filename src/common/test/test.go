@@ -55,10 +55,8 @@ func Reqeust(
 	var prettyJSON bytes.Buffer
 	err = json.Indent(&prettyJSON, respBody, "", "\t")
 	if err != nil {
-		fmt.Println(err)
-		var decodeRes interface{}
-		json.Unmarshal([]byte(respBody), &decodeRes)
-		fmt.Println(decodeRes)
+		fmt.Println(string(respBody))
+		return
 	}
 	// NotNil(err)
 	str := prettyJSON.String()

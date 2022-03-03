@@ -98,11 +98,15 @@ func (db *DBORM) DeleteRole(
 	return role, db.Delete(&role).Error
 }
 
+type SubjectsOfRole struct {
+	SubjectID int `json:"subject_id"`
+}
+
 type SubjectsOfRolePage struct {
-	Count        int                        `json:"count"`
-	NextPage     string                     `json:"next"`
-	PreviousPage string                     `json:"previous"`
-	Items        []models.SubjectAssignment `json:"results"`
+	Count        int              `json:"count"`
+	NextPage     string           `json:"next"`
+	PreviousPage string           `json:"previous"`
+	Items        []SubjectsOfRole `json:"results"`
 }
 
 func (db *DBORM) GetSubjectsOfRolePage(
@@ -111,7 +115,11 @@ func (db *DBORM) GetSubjectsOfRolePage(
 	itemsPage SubjectsOfRolePage, err error,
 ) {
 	var count int64
-	db.Model(&models.Permission{}).Count(&count)
+	err = db.Table("subject_assignment").
+		Select("subject_id").
+		Where("role_id = ?", roleID).
+		Count(&count).
+		Error
 
 	page, pageSize, nextPage, previousPage :=
 		paginate.GetPageInfo(page, pageSize, hostUrl, count)
@@ -119,10 +127,9 @@ func (db *DBORM) GetSubjectsOfRolePage(
 	itemsPage.NextPage = nextPage
 	itemsPage.PreviousPage = previousPage
 
-	err = db.
-		Select("id", "role_id", "subject_id").
+	err = db.Table("subject_assignment").
+		Select("subject_id").
 		Where("role_id = ?", roleID).
-		Order("subject_id desc").
 		Scopes(paginate.Paginate(page, pageSize)).
 		Find(&itemsPage.Items).
 		Error
@@ -130,7 +137,6 @@ func (db *DBORM) GetSubjectsOfRolePage(
 }
 
 type PermissionOfRole struct {
-	RoleID       int    `gorm:"column:role_id"       json:"role_id"`
 	PermissionID int    `gorm:"column:permission_id"   json:"permission_id"`
 	ServiceName  string `gorm:"column:service_name"  json:"service_name"`
 	Name         string `gorm:"column:name"          json:"name"`
@@ -153,6 +159,18 @@ func (db *DBORM) GetPermissionsOfRolePage(
 	var count int64
 	db.Model(&models.Permission{}).Count(&count)
 
+	err = db.Table("permission_assignment").
+		Select("permission_id",
+			"service_name", "name",
+			"action", "object").
+		Where("role_id = ?", roleID).
+		Order("permission_id desc").
+		Joins(`left join 
+		permission on 
+		permission.id = permission_assignment.permission_id`).
+		Count(&count).
+		Error
+
 	page, pageSize, nextPage, previousPage :=
 		paginate.GetPageInfo(page, pageSize, hostUrl, count)
 	itemsPage.Count = int(count)
@@ -165,7 +183,9 @@ func (db *DBORM) GetPermissionsOfRolePage(
 			"action", "object").
 		Where("role_id = ?", roleID).
 		Order("permission_id desc").
-		Joins("left join permission on permission.id = permission_assignment.permission_id").
+		Joins(`left join 
+	permission on 
+	permission.id = permission_assignment.permission_id`).
 		Scopes(paginate.Paginate(page, pageSize)).
 		Scan(&itemsPage.Items).
 		Error

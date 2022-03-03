@@ -6,14 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GinError(c *gin.Context, err error) {
+func GinError(c *gin.Context, err error) bool {
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
 			gin.H{"error": err.Error()},
 		)
-		panic(err)
+		return true
 	}
+	return false
 }
 
 func PanicIfError(err error) {

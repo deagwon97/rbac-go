@@ -21,10 +21,14 @@ func (h *Handler) AddPermissionAssignment(c *gin.Context) {
 	var permissionAssignmentData dblayer.PermissionAssignmentData
 
 	err := c.ShouldBindJSON(&permissionAssignmentData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	permissionAssignment, err := h.db.AddPermissionAssignment(permissionAssignmentData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, permissionAssignment)
 }
 
@@ -40,14 +44,20 @@ func (h *Handler) UpdatePermissionAssignment(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	var permissionAssignmentData dblayer.PermissionAssignmentData
 
 	err = c.ShouldBindJSON(&permissionAssignmentData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	permissionAssignment, err := h.db.UpdatePermissionAssignment(id, permissionAssignmentData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, permissionAssignment)
 }
 
@@ -61,9 +71,13 @@ func (h *Handler) UpdatePermissionAssignment(c *gin.Context) {
 func (h *Handler) DeletePermissionAssignment(c *gin.Context) {
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	permissionAssignment, err := h.db.DeletePermissionAssignment(id)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, permissionAssignment)
 }

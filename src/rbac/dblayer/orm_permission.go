@@ -12,13 +12,18 @@ type PermissionObject struct {
 	Object string `gorm:"column:object" json:"object"`
 }
 
+type PermissionAnswer struct {
+	Objects   []string `json:"objects"`
+	IsAllowed bool     `json:"is_allowed"`
+}
+
 func (db *DBORM) GetAllowedObjects(
 	subjectID int,
 	permissionServiceName string,
 	permissionName string,
 	permissionAction string,
 ) (
-	objects []string,
+	permissionAnswer PermissionAnswer,
 	err error,
 ) {
 
@@ -37,16 +42,20 @@ func (db *DBORM) GetAllowedObjects(
 	AND p.action = '%s' 
 	`, subjectID, permissionServiceName, permissionName, permissionAction)
 
-	var permissionObject []PermissionObject
-	err = db.Raw(query).Scan(&permissionObject).Error
+	var permissionObjects []PermissionObject
+	err = db.Raw(query).Scan(&permissionObjects).Error
 	if err != nil {
 		return
 	}
 
-	for _, item := range permissionObject {
-		objects = append(objects, item.Object)
+	if len(permissionObjects) > 0 {
+		permissionAnswer.IsAllowed = true
+		for _, item := range permissionObjects {
+			permissionAnswer.Objects =
+				append(permissionAnswer.Objects, item.Object)
+		}
 	}
-	return objects, err
+	return permissionAnswer, err
 }
 
 func (db *DBORM) GetPermissions() (

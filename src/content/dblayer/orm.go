@@ -3,7 +3,6 @@ package dblayer
 import (
 	"database/sql"
 
-	ce "rbac-go/common/error"
 	"rbac-go/common/paginate"
 	"rbac-go/content/models"
 
@@ -18,17 +17,20 @@ type DBORM struct {
 }
 
 // DBORM의 생성자
-func NewORM(dbengine string, dsn string) (*DBORM, error) {
+func NewORM(dbengine string, dsn string) (db *DBORM, err error) {
 	sqlDB, err := sql.Open(dbengine, dsn)
-	ce.PanicIfError(err)
+	if err != nil {
+		return
+	}
 	// gorm.Open은 *gorm.DB 타입을 초기화한다.
 	gormDB, err := gorm.Open(
 		mysql.New(mysql.Config{Conn: sqlDB}),
 		&gorm.Config{},
 	)
-	return &DBORM{
+	db = &DBORM{
 		DB: gormDB,
-	}, err
+	}
+	return
 }
 
 func (db *DBORM) GetAllContents(

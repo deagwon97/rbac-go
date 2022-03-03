@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	ge "rbac-go/common/error"
+	ce "rbac-go/common/error"
 	"rbac-go/content/dblayer"
 	"rbac-go/content/models"
 	"rbac-go/database"
@@ -75,7 +75,6 @@ func (h *Handler) GetContents(c *gin.Context) {
 	// 	"게시판",
 	// 	"조회",
 	// )
-	// ge.GinError(c, err)
 
 	page, _ := strconv.Atoi(c.Query("page"))
 	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
@@ -92,7 +91,9 @@ func (h *Handler) GetContents(c *gin.Context) {
 		return
 	}
 	contents, err := h.db.GetAllContents(page, pageSize, hostUrl)
-	ge.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, contents)
 }
 
@@ -110,10 +111,14 @@ func (h *Handler) GetContent(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ge.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	content, err := h.db.GetContent(id)
-	ge.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, content)
 }
 
@@ -130,10 +135,14 @@ func (h *Handler) AddContent(c *gin.Context) {
 
 	var contentData models.ContentData
 	err := c.ShouldBindJSON(&contentData)
-	ge.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	content, err := h.db.AddContent(contentData)
-	ge.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, content)
 }
 
@@ -151,13 +160,19 @@ func (h *Handler) UpdateContent(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ge.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	var contentData models.ContentData
 	err = c.ShouldBindJSON(&contentData)
-	ge.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	content, err := h.db.UpdateContent(id, contentData)
-	ge.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, content)
 }
 
@@ -174,9 +189,13 @@ func (h *Handler) DeleteContent(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ge.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	content, err := h.db.DeleteContent(id)
-	ge.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, content)
 }

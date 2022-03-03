@@ -21,10 +21,14 @@ func (h *Handler) AddSubjectAssignment(c *gin.Context) {
 	var itemData dblayer.SubjectAssignmentData
 
 	err := c.ShouldBindJSON(&itemData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	item, err := h.db.AddSubjectAssignment(itemData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, item)
 }
 
@@ -42,14 +46,20 @@ func (h *Handler) UpdateSubjectAssignment(c *gin.Context) {
 
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	var itemData dblayer.SubjectAssignmentData
 
 	err = c.ShouldBindJSON(&itemData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	item, err := h.db.UpdateSubjectAssignment(id, itemData)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, item)
 }
 
@@ -63,9 +73,13 @@ func (h *Handler) UpdateSubjectAssignment(c *gin.Context) {
 func (h *Handler) DeleteSubjectAssignment(c *gin.Context) {
 	p := c.Param("id")
 	id, err := strconv.Atoi(p)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 
 	item, err := h.db.DeleteSubjectAssignment(id)
-	ce.GinError(c, err)
+	if ce.GinError(c, err) {
+		return
+	}
 	c.JSON(http.StatusOK, item)
 }

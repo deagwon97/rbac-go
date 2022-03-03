@@ -1,7 +1,6 @@
 package rest
 
 import (
-	ce "rbac-go/common/error"
 	"rbac-go/rbac/dblayer"
 
 	"github.com/gin-gonic/gin"
@@ -39,15 +38,16 @@ type HandlerInterface interface {
 }
 
 // HandlerInterface의 생성자
-func NewHandler() (HandlerInterface, error) {
+func NewHandler() (h HandlerInterface, err error) {
 
 	// RBAC 초기화
 	checker.NewRBAC()
 	// DBORM 초기화
 	dsn := database.DataSource
 	db, err := dblayer.NewORM("mysql", dsn)
-	ce.PanicIfError(err)
-	return &Handler{
-		db: db,
-	}, nil
+	if err != nil {
+		return
+	}
+	h = &Handler{db: db}
+	return
 }
