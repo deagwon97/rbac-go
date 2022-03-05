@@ -127,6 +127,56 @@ func TestGetRoleList(t *testing.T) {
 	test.Get(hostUrl + "/rbac/" + itemName + "/list")
 }
 
+func TestAddRole(t *testing.T) {
+	hostUrl := "https://rbac.dev.deagwon.com"
+
+	// Role 생성
+	var roleRes interface{}
+	roleData := dblayer.RoleData{
+		Name:        "관리자",
+		Description: "관리자 그룹",
+	}
+	roleRes = test.Post(hostUrl+"/rbac/role/", roleData)
+	roleID := parseId(roleRes)
+
+	// Permission 생성
+	var permissionRes interface{}
+	permissionData := dblayer.PermissionData{
+		ServiceName: "로그인",
+		Name:        "관리2자",
+		Action:      "조회asdf2",
+		Object:      "asdf일반 사용자4",
+	}
+	permissionRes = test.Post(hostUrl+"/rbac/permission/", permissionData)
+	permissionID := parseId(permissionRes)
+
+	// Subject Assignment
+	var saRes interface{}
+	saData := dblayer.SubjectAssignmentData{
+		SubjectID: 0,
+		RoleID:    1,
+	}
+	saRes = test.Post(hostUrl+"/rbac/subject-assignment/", saData)
+	saID := parseId(saRes)
+	print(saID)
+
+	// Permission Assignment
+	var paRes interface{}
+	paData := dblayer.PermissionAssignmentData{
+		PermissionID: 0,
+		RoleID:       0,
+	}
+	paRes = test.Post(hostUrl+"/rbac/permission-assignment/", paData)
+	paID := parseId(paRes)
+	print(paID)
+
+	// Permission 삭제
+	test.Delete(hostUrl + "/rbac/permission/" + permissionID)
+
+	// Role 삭제
+	test.Delete(hostUrl + "/rbac/role/" + roleID)
+}
+
 func TestGetSubjectsOfRolePage(t *testing.T) {
 	hostUrl := "https://rbac.dev.deagwon.com"
 	roleID := 339
