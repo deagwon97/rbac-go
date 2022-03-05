@@ -25,6 +25,7 @@ type HandlerInterface interface {
 
 	GetPermissionsPage(c *gin.Context)
 	AddPermission(c *gin.Context)
+	AddPermissionSets(c *gin.Context)
 	UpdatePermission(c *gin.Context)
 	DeletePermission(c *gin.Context)
 

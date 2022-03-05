@@ -38,6 +38,11 @@ type PermissionDBLayer interface {
 	) (
 		permission models.Permission, err error,
 	)
+	AddPermissionSets(
+		permissionSetData PermissionSetData,
+	) (
+		permissions []TempPermission, err error,
+	)
 	UpdatePermission(
 		id int,
 		permissionData PermissionData,

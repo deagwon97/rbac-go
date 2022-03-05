@@ -50,6 +50,28 @@ func (h *Handler) AddPermission(c *gin.Context) {
 	c.JSON(http.StatusOK, permission)
 }
 
+// @Summary Permission Set 생성 및 동기화
+// @Tags RBAC permission
+// @Accept json
+// @Produce json
+// @Param data body dblayer.PermissionData true "Data"
+// @Success 200 {object} models.Permission
+// @Router /rbac/permission [post]
+func (h *Handler) AddPermissionSets(c *gin.Context) {
+	var permissionSetData dblayer.PermissionSetData
+
+	err := c.ShouldBindJSON(&permissionSetData)
+	if ce.GinError(c, err) {
+		return
+	}
+
+	permissions, err := h.db.AddPermissionSets(permissionSetData)
+	if ce.GinError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, permissions)
+}
+
 // @Summary Permission Update
 // @Tags RBAC permission
 // @Accept json

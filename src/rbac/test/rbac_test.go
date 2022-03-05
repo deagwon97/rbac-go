@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"rbac-go/database"
 	"strconv"
 	"testing"
 
@@ -126,6 +127,23 @@ func TestGetRoleList(t *testing.T) {
 	test.Get(hostUrl + "/rbac/" + itemName + "/list")
 }
 
+func TestDeleteData(t *testing.T) {
+	dsn := database.DataSource
+	db, _ := dblayer.NewORM("mysql", dsn)
+
+	result := map[string]interface{}{}
+
+	db.Raw("DELETE FROM permission_assignment").Scan(&result)
+	fmt.Println(result)
+	db.Raw("DELETE FROM subject_assignment").Scan(&result)
+	fmt.Println(result)
+	db.Raw("DELETE FROM role").Scan(&result)
+	fmt.Println(result)
+	db.Raw("DELETE FROM permission").Scan(&result)
+	fmt.Println(result)
+
+}
+
 func TestAddRole(t *testing.T) {
 	hostUrl := "https://rbac.dev.deagwon.com"
 
@@ -137,6 +155,7 @@ func TestAddRole(t *testing.T) {
 	}
 	roleRes = test.Post(hostUrl+"/rbac/role/", roleData)
 	roleID := parseId(roleRes)
+	roleIDInt, _ := strconv.Atoi(roleID)
 
 	// Permission 생성
 	var permissionRes interface{}
@@ -144,30 +163,46 @@ func TestAddRole(t *testing.T) {
 		ServiceName: "로그인",
 		Name:        "관리2자",
 		Action:      "조회asdf2",
-		Object:      "asdf일반 사용자4",
+		// Object:      "asdf일반 사용자4",
 	}
 	permissionRes = test.Post(hostUrl+"/rbac/permission/", permissionData)
 	permissionID := parseId(permissionRes)
+	permissionIDInt, _ := strconv.Atoi(permissionID)
 
 	// Subject Assignment
 	var saRes interface{}
 	saData := dblayer.SubjectAssignmentData{
 		SubjectID: 0,
-		RoleID:    1,
+		RoleID:    roleIDInt,
 	}
-	saRes = test.Post(hostUrl+"/rbac/subject-assignment/", saData)
+	saRes = test.Post(hostUrl+"/rbac/subject-assignment", saData)
 	saID := parseId(saRes)
 	print(saID)
 
 	// Permission Assignment
 	var paRes interface{}
 	paData := dblayer.PermissionAssignmentData{
-		PermissionID: 0,
-		RoleID:       0,
+		PermissionID: permissionIDInt,
+		RoleID:       roleIDInt,
 	}
-	paRes = test.Post(hostUrl+"/rbac/permission-assignment/", paData)
+	paRes = test.Post(hostUrl+"/rbac/permission-assignment", paData)
 	paID := parseId(paRes)
 	print(paID)
+
+	permissionQeury := rest.PermissionQuery{
+		SubjectID:   0,
+		ServiceName: "로그인",
+		Name:        "관리2자",
+		Action:      "조회asdf2",
+	}
+
+	test.Post(hostUrl+"/rbac/permission"+"/objects", permissionQeury)
+
+	// Permission 삭제
+	test.Delete(hostUrl + "/rbac/permission-assignment/" + paID)
+
+	// Permission 삭제
+	test.Delete(hostUrl + "/rbac/subject-assignment/" + saID)
 
 	// Permission 삭제
 	test.Delete(hostUrl + "/rbac/permission/" + permissionID)
@@ -190,6 +225,34 @@ func TestPermissionsOfRolePage(t *testing.T) {
 	fullUrl := fmt.Sprintf(
 		"%s/rbac/role/%d/permission", hostUrl, roleID)
 	test.Get(fullUrl)
+}
+
+func TestAddPermissionSet(t *testing.T) {
+	hostUrl := "https://rbac.dev.deagwon.com"
+
+	// Role 생성
+	permissionSet1 := dblayer.PermissionSet{
+		Name:    "게시판",
+		Actions: []string{"상세조회", "목록조회", "수정", "삭제"},
+		Objects: []string{"공지", "자유", "비밀"},
+	}
+
+	permissionSet2 := dblayer.PermissionSet{
+		Name:    "채팅",
+		Actions: []string{"상세조회", "목록조회", "수정", "삭제"},
+		Objects: []string{"VIP", "도매"},
+	}
+
+	permissionSetData := dblayer.PermissionSetData{
+		ServiceName: "bdg블로그",
+		PermissionSets: []dblayer.PermissionSet{
+			permissionSet1,
+			permissionSet2,
+		},
+	}
+
+	res := test.Post(hostUrl+"/rbac/permission/set", permissionSetData)
+	fmt.Println(res)
 }
 
 func TestGetObjectList(t *testing.T) {

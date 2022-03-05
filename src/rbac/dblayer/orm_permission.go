@@ -118,6 +118,112 @@ func (db *DBORM) AddPermission(permissionData PermissionData) (
 	return permission, err
 }
 
+type PermissionSet struct {
+	Name    string   `json:"name"`
+	Actions []string `json:"actions"`
+	Objects []string `json:"objects"`
+}
+
+type PermissionSetData struct {
+	ServiceName    string          `json:"service_name"`
+	PermissionSets []PermissionSet `json:"permission_sets"`
+}
+
+type TempPermission struct {
+	models.Permission
+}
+
+func (TempPermission) TableName() string {
+	return "temp_permission"
+}
+
+func (db *DBORM) AddPermissionSets(permissionSetData PermissionSetData) (
+	permissions []TempPermission, err error,
+) {
+	var permission TempPermission
+	permission.ServiceName = permissionSetData.ServiceName
+
+	if len(permissionSetData.PermissionSets) > 0 {
+		for _, permissionSet := range permissionSetData.PermissionSets {
+
+			permission.Name = permissionSet.Name
+
+			if len(permissionSet.Actions) > 0 {
+				for _, action := range permissionSet.Actions {
+
+					permission.Action = action
+
+					if len(permissionSet.Objects) > 0 {
+						for _, object := range permissionSet.Objects {
+
+							permission.Object = object
+							permissions = append(permissions, permission)
+						}
+					} else {
+						permissions = append(permissions, permission)
+					}
+				}
+			}
+		}
+
+		tx := db.Begin()
+
+		if err = tx.Exec(`
+		CREATE TEMPORARY TABLE temp_permission( 
+			service_name varchar(64) DEFAULT 'sdfasfd',
+			name varchar(64) DEFAULT NULL,
+			action varchar(64) DEFAULT NULL,
+			object varchar(64) DEFAULT NULL,
+			UNIQUE KEY service_name_name_action_object (
+			service_name, name, action, object)
+		  );`).Error; err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		if err = tx.CreateInBatches(&permissions, 100).Error; err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		if err = tx.Exec(`
+			INSERT IGNORE INTO permission(service_name, name, action, object) 
+			SELECT * FROM temp_permission;
+				`).Error; err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		if err = tx.Exec(`
+			DELETE FROM p USING permission AS p
+			WHERE NOT EXISTS(
+				SELECT * FROM temp_permission tp
+				WHERE
+				p.service_name = tp.service_name AND 
+				p.name = tp.name AND
+				p.action = tp.action AND
+				p.object = tp.object
+			);
+				`).Error; err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		if err = tx.Exec(`
+			DROP TABLE temp_permission;
+				`).Error; err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		tx.Commit()
+		return
+	}
+	// Permission Set -> Permission 생성
+	// 기존 Permission 비교하여 업데이트
+	return permissions, err
+}
+
 func (db *DBORM) UpdatePermission(
 	id int,
 	permissionData PermissionData,
