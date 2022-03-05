@@ -507,7 +507,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/rest.PermissionKey"
+                            "$ref": "#/definitions/rest.PermissionQuery"
                         }
                     }
                 ],
@@ -964,9 +964,6 @@ const docTemplate = `{
                 "permission_id": {
                     "type": "integer"
                 },
-                "role_id": {
-                    "type": "integer"
-                },
                 "service_name": {
                     "type": "string"
                 }
@@ -1054,6 +1051,14 @@ const docTemplate = `{
                 }
             }
         },
+        "dblayer.SubjectsOfRole": {
+            "type": "object",
+            "properties": {
+                "subject_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "dblayer.SubjectsOfRolePage": {
             "type": "object",
             "properties": {
@@ -1069,7 +1074,7 @@ const docTemplate = `{
                 "results": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SubjectAssignment"
+                        "$ref": "#/definitions/dblayer.SubjectsOfRole"
                     }
                 }
             }
@@ -1101,11 +1106,11 @@ const docTemplate = `{
                 "content": {
                     "type": "string"
                 },
-                "content_id": {
-                    "type": "integer"
-                },
                 "created_at": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "summary": {
                     "type": "string"
@@ -1138,7 +1143,7 @@ const docTemplate = `{
         "models.ContentItem": {
             "type": "object",
             "properties": {
-                "content_id": {
+                "id": {
                     "type": "integer"
                 },
                 "summary": {
@@ -1260,7 +1265,7 @@ const docTemplate = `{
                 }
             }
         },
-        "rest.PermissionKey": {
+        "rest.PermissionQuery": {
             "type": "object",
             "properties": {
                 "action": {

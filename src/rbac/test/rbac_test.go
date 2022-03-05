@@ -40,7 +40,7 @@ func Crud(
 	test.Get(hostUrl + "/rbac/" + itemName + "/list")
 
 	fmt.Println("---- 정보 수정 테스트-----")
-	test.Patch(hostUrl+"/rbac/"+itemName+"/"+"1", changeData)
+	test.Patch(hostUrl+"/rbac/"+itemName+"/"+"-1", changeData)
 	test.Patch(hostUrl+"/rbac/"+itemName+"/"+dataIDStr3, changeData)
 
 	fmt.Println("---- 목록 조회 -----")
@@ -77,7 +77,6 @@ func TestRoleCrud(t *testing.T) {
 	Crud(hostUrl, itemName,
 		data1, data2, data3,
 		changeData)
-
 }
 
 func TestPermissionCrud(t *testing.T) {

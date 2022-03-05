@@ -27,8 +27,6 @@ definitions:
         type: string
       permission_id:
         type: integer
-      role_id:
-        type: integer
       service_name:
         type: string
     type: object
@@ -85,6 +83,11 @@ definitions:
       subject_id:
         type: integer
     type: object
+  dblayer.SubjectsOfRole:
+    properties:
+      subject_id:
+        type: integer
+    type: object
   dblayer.SubjectsOfRolePage:
     properties:
       count:
@@ -95,7 +98,7 @@ definitions:
         type: string
       results:
         items:
-          $ref: '#/definitions/models.SubjectAssignment'
+          $ref: '#/definitions/dblayer.SubjectsOfRole'
         type: array
     type: object
   models.AddUserData:
@@ -116,10 +119,10 @@ definitions:
     properties:
       content:
         type: string
-      content_id:
-        type: integer
       created_at:
         type: string
+      id:
+        type: integer
       summary:
         type: string
       title:
@@ -140,7 +143,7 @@ definitions:
     type: object
   models.ContentItem:
     properties:
-      content_id:
+      id:
         type: integer
       summary:
         type: string
@@ -219,7 +222,7 @@ definitions:
       subject_id:
         type: integer
     type: object
-  rest.PermissionKey:
+  rest.PermissionQuery:
     properties:
       action:
         type: string
@@ -605,7 +608,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/rest.PermissionKey'
+          $ref: '#/definitions/rest.PermissionQuery'
       produces:
       - application/json
       responses:

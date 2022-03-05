@@ -498,7 +498,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/rest.PermissionKey"
+                            "$ref": "#/definitions/rest.PermissionQuery"
                         }
                     }
                 ],
@@ -955,9 +955,6 @@
                 "permission_id": {
                     "type": "integer"
                 },
-                "role_id": {
-                    "type": "integer"
-                },
                 "service_name": {
                     "type": "string"
                 }
@@ -1045,6 +1042,14 @@
                 }
             }
         },
+        "dblayer.SubjectsOfRole": {
+            "type": "object",
+            "properties": {
+                "subject_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "dblayer.SubjectsOfRolePage": {
             "type": "object",
             "properties": {
@@ -1060,7 +1065,7 @@
                 "results": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SubjectAssignment"
+                        "$ref": "#/definitions/dblayer.SubjectsOfRole"
                     }
                 }
             }
@@ -1092,11 +1097,11 @@
                 "content": {
                     "type": "string"
                 },
-                "content_id": {
-                    "type": "integer"
-                },
                 "created_at": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "summary": {
                     "type": "string"
@@ -1129,7 +1134,7 @@
         "models.ContentItem": {
             "type": "object",
             "properties": {
-                "content_id": {
+                "id": {
                     "type": "integer"
                 },
                 "summary": {
@@ -1251,7 +1256,7 @@
                 }
             }
         },
-        "rest.PermissionKey": {
+        "rest.PermissionQuery": {
             "type": "object",
             "properties": {
                 "action": {

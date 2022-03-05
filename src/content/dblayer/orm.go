@@ -46,8 +46,8 @@ func (db *DBORM) GetAllContents(
 	contents.PreviousPage = previousPage
 
 	err = db.
-		Select("content_id", "title", "summary").
-		Order("content_id desc").
+		Select("id", "title", "summary").
+		Order("id desc").
 		Scopes(paginate.Paginate(page, pageSize)).
 		Find(&contents.Results).
 		Error
@@ -84,12 +84,12 @@ func (db *DBORM) UpdateContent(
 	err := db.Model(&contentData).Updates(contentData).Error
 
 	var content models.Content
-	db.Where("content_id = ?", id).First(&content)
+	db.Where("id = ?", id).First(&content)
 	return content, err
 }
 
 func (db *DBORM) DeleteContent(id int) (models.Content, error) {
 	var content models.Content
-	db.Where("content_id = ?", id).First(&content)
+	db.Where("id = ?", id).First(&content)
 	return content, db.Delete(&content).Error
 }
