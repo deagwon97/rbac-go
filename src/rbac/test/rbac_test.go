@@ -253,6 +253,13 @@ func TestAddPermissionSet(t *testing.T) {
 
 	res := test.Post(hostUrl+"/rbac/permission/set", permissionSetData)
 	fmt.Println(res)
+
+	dsn := database.DataSource
+	db, _ := dblayer.NewORM("mysql", dsn)
+
+	result := map[string]interface{}{}
+	db.Raw("DELETE FROM permission").Scan(&result)
+	fmt.Println(result)
 }
 
 func TestGetObjectList(t *testing.T) {

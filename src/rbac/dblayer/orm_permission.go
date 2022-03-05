@@ -168,15 +168,17 @@ func (db *DBORM) AddPermissionSets(permissionSetData PermissionSetData) (
 
 		tx := db.Begin()
 
-		if err = tx.Exec(`
+		qeury := fmt.Sprintf(`
 		CREATE TEMPORARY TABLE temp_permission( 
-			service_name varchar(64) DEFAULT 'sdfasfd',
+			service_name varchar(64) DEFAULT NULL,
 			name varchar(64) DEFAULT NULL,
 			action varchar(64) DEFAULT NULL,
 			object varchar(64) DEFAULT NULL,
 			UNIQUE KEY service_name_name_action_object (
 			service_name, name, action, object)
-		  );`).Error; err != nil {
+		  );`)
+
+		if err = tx.Exec(qeury).Error; err != nil {
 			fmt.Println(err)
 			return
 		}
@@ -219,8 +221,6 @@ func (db *DBORM) AddPermissionSets(permissionSetData PermissionSetData) (
 		tx.Commit()
 		return
 	}
-	// Permission Set -> Permission 생성
-	// 기존 Permission 비교하여 업데이트
 	return permissions, err
 }
 
