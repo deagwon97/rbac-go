@@ -5,6 +5,7 @@ import (
 
 	docs "rbac-go/docs"
 
+	"github.com/gin-gonic/contrib/static"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
@@ -17,7 +18,10 @@ func Run(address string) error {
 
 	router := gin.New()
 
+	router.Use(static.Serve("/admin", static.LocalFile("./admin/build", true)))
+
 	docs.SwaggerInfo.BasePath = "/"
+
 	v1 := router.Group("/")
 	rbacRest.AddRoutes(v1)
 	contentRest.AddRoutes(v1)

@@ -27,7 +27,6 @@ func Crud(
 	data3 interface{},
 	changeData interface{},
 ) {
-
 	fmt.Println("---- 생성 테스트-----")
 	var resData interface{}
 	resData = test.Post(hostUrl+"/rbac/"+itemName, data1)

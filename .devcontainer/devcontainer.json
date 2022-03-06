@@ -1,12 +1,30 @@
 {
-    "name": "rbac-go",
-    "dockerComposeFile": ["./docker-compose.yml"],
-    "service": "rbac-go",
-    "shutdownAction": "stopCompose",
-    "extensions": ["golang.go","dunstontc.vscode-go-syntax", "skip1.go-swagger", "jinliming2.vscode-go-template"], 
-    "postCreateCommand": "go install -v golang.org/x/tools/gopls@latest && go install -v github.com/ramya-rao-a/go-outline@latest && go install -v github.com/go-delve/delve/cmd/dlv@latest && go install -v golang.org/x/tools/cmd/goimports@latest && go install -v github.com/uudashr/gopkgs/v2/cmd/gopkgs@latest && go install -v github.com/rogpeppe/godef@latest && go get -u github.com/swaggo/swag/cmd/swag && go install -v github.com/stamblerre/gocode@latest",
-    "settings": {
-        "swagger.tpl" : "// @Summary {desc} \n// @Tags {tag_name} \n// @Accept json \n// @Produce json \n// @Param page query {type}  {require_bool}  \"{desc string}\" \n// @Param data body {type} {require_bool} \"{desc string}\" \n// @Success 200 {object} {type} \n// @Router /path/path [post]"
+  "name": "rbac-go",
+  "dockerComposeFile": ["./docker-compose.yml"],
+  "service": "rbac-go",
+  "shutdownAction": "stopCompose",
+  "extensions": [
+    "golang.go",
+    "dunstontc.vscode-go-syntax",
+    "skip1.go-swagger",
+    "jinliming2.vscode-go-template",
+    "rvest.vs-code-prettier-eslint",
+    "esbenp.prettier-vscode"
+  ],
+  "postCreateCommand": "go install -v golang.org/x/tools/gopls@latest && go install -v github.com/ramya-rao-a/go-outline@latest && go install -v github.com/go-delve/delve/cmd/dlv@latest && go install -v golang.org/x/tools/cmd/goimports@latest && go install -v github.com/uudashr/gopkgs/v2/cmd/gopkgs@latest && go install -v github.com/rogpeppe/godef@latest && go get -u github.com/swaggo/swag/cmd/swag && go install -v github.com/stamblerre/gocode@latest",
+  "settings": {
+    "swagger.tpl": "// @Summary {desc} \n// @Tags {tag_name} \n// @Accept json \n// @Produce json \n// @Param page query {type}  {require_bool}  \"{desc string}\" \n// @Param data body {type} {require_bool} \"{desc string}\" \n// @Success 200 {object} {type} \n// @Router /path/path [post]",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "workspaceFolder": "/root/workdir"
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "editor.formatOnSave": true
+  },
+  "workspaceFolder": "/root/workdir"
 }
