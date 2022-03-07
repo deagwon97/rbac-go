@@ -148,17 +148,19 @@ export default function UnstyledTable() {
           </tr>
         </thead>
         <tbody>
-          {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map((row) => (
-            <tr key={row.name}>
-              <td>{row.name}</td>
-              <td style={{ width: 120 }} align="right">
-                {row.calories}
-              </td>
-              <td style={{ width: 120 }} align="right">
-                {row.fat}
-              </td>
-            </tr>
-          ))}
+          {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
+            (row, idx) => (
+              <tr key={idx}>
+                <td>{row.name}</td>
+                <td style={{ width: 120 }} align="right">
+                  {row.calories}
+                </td>
+                <td style={{ width: 120 }} align="right">
+                  {row.fat}
+                </td>
+              </tr>
+            ),
+          )}
 
           {emptyRows > 0 && (
             <tr style={{ height: 41 * emptyRows }}>

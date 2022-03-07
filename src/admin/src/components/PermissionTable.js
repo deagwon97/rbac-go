@@ -135,7 +135,7 @@ export default function PermissionTable() {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
@@ -158,7 +158,7 @@ export default function PermissionTable() {
         <tbody>
           {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
             (row, idx) => (
-              <tr key={row.idx}>
+              <tr key={idx}>
                 <td>{row.serviceName}</td>
                 <td style={{ width: 120 }} align="right">
                   {row.name}
