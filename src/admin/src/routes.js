@@ -1,12 +1,5 @@
 // import { Navigate } from 'react-router-dom';
 import MainPage from "pages/MainPage.js";
-// import ViewContentPage from 'pages/post/ViewContentPage';
-// import EditContentPage from 'pages/post/EditContentPage';
-// import CreateContentPage from 'pages/post/CreateContentPage';
-// import CreateRoomPage from 'pages/chat/CreateRoomPage';
-// import RoomPage from 'pages/chat/RoomPage';
-// import SignUpPage from 'pages/accounts/SignUpPage';
-// import KakaoLoginPage from 'pages/accounts/KakaoLoginPage';
 
 const routes = [
   {

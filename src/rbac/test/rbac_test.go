@@ -52,6 +52,50 @@ func Crud(
 	test.Delete(hostUrl + "/rbac/" + itemName + "/" + dataIDStr3)
 }
 
+
+func TestAddRoles(t *testing.T) {
+	hostUrl := "https://rbac.dev.deagwon.com"
+	itemName := "role"
+
+	data1 := dblayer.RoleData{
+		Name:        "관리자1",
+		Description: "관리자 그룹",
+	}
+	data2 := dblayer.RoleData{
+		Name:        "중간관리자2",
+		Description: "중간관리자 그룹",
+	}
+	data3 := dblayer.RoleData{
+		Name:        "일반사용3",
+		Description: "일반사용자 그룹",
+	}
+	data4 := dblayer.RoleData{
+		Name:        "일반사용자14",
+		Description: "일반사용자 그룹",
+	}
+	data5 := dblayer.RoleData{
+		Name:        "일반사용자25",
+		Description: "일반사용자 그룹",
+	}
+	data6 := dblayer.RoleData{
+		Name:        "일반사용자35",
+		Description: "일반사용자 그룹",
+	}
+
+	test.Post(hostUrl+"/rbac/"+itemName, data1)
+	
+	test.Post(hostUrl+"/rbac/"+itemName, data2)
+	
+	test.Post(hostUrl+"/rbac/"+itemName, data3)
+
+	test.Post(hostUrl+"/rbac/"+itemName, data4)
+
+	test.Post(hostUrl+"/rbac/"+itemName, data5)
+
+	test.Post(hostUrl+"/rbac/"+itemName, data6)
+	
+}
+
 func TestRoleCrud(t *testing.T) {
 	hostUrl := "https://rbac.dev.deagwon.com"
 	itemName := "role"
