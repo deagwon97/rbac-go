@@ -1,9 +1,9 @@
 FROM golang:latest AS builder
 
 RUN apt-get update -y &&\
-    apt-get upgrade &&\
-    curl -sL https://deb.nodesource.com/setup_12.x | bash - &&\
-    apt-get install nodejs
+    apt-get upgrade -y &&\
+    curl -sL https://deb.nodesource.com/setup_16.x | bash - &&\
+    apt-get install nodejs -y
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
