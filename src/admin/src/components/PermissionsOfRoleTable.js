@@ -7,21 +7,21 @@ function createData(id, serviceName, name, action, object, checked) {
 }
 
 const rows = [
-  createData("1", "bdg블로그", "게시판", "목록조회", "공지", false),
-  createData("2", "bdg블로그", "게시판", "목록조회", "비밀", false),
-  createData("3", "bdg블로그", "게시판", "목록조회", "자유", false),
+  createData("1", "bdg블로그", "게시판", "목록조회", "공지", true),
+  createData("2", "bdg블로그", "게시판", "목록조회", "비밀", true),
+  createData("3", "bdg블로그", "게시판", "목록조회", "자유", true),
   createData("4", "bdg블로그", "게시판", "삭제", "공지", false),
   createData("5", "bdg블로그", "게시판", "삭제", "비밀", false),
-  createData("6", "bdg블로그", "게시판", "삭제", "자유", false),
+  createData("6", "bdg블로그", "게시판", "삭제", "자유", true),
   createData("7", "bdg블로그", "게시판", "상세조회", "공지", false),
   createData("8", "bdg블로그", "게시판", "상세조회", "비밀", false),
   createData("9", "bdg블로그", "게시판", "상세조회", "자유", false),
-  createData("10", "bdg블로그", "게시판", "수정", "공지", false),
+  createData("10", "bdg블로그", "게시판", "수정", "공지", true),
   createData("11", "bdg블로그", "게시판", "수정", "비밀", false),
   createData("12", "bdg블로그", "게시판", "수정", "자유", false),
   createData("12", "bdg블로그", "채팅", "목록조회", "VIP", false),
   createData("13", "bdg블로그", "채팅", "목록조회", "도매", false),
-  createData("14", "bdg블로그", "채팅", "삭제", "VIP", false),
+  createData("14", "bdg블로그", "채팅", "삭제", "VIP", true),
   createData("15", "bdg블로그", "채팅", "삭제", "도매", false),
   createData("16", "bdg블로그", "채팅", "상세조회", "VIP", false),
   createData("17", "bdg블로그", "채팅", "상세조회", "도매", false),
@@ -64,12 +64,9 @@ const Root = styled("div")(
   `,
 );
 
-export default function PermissionsOfRoleTable() {
-  const page = React.useState(0)[0];
-  const setChecked = React.useState(0)[1];
-  const rowsPerPage = React.useState(-1)[0];
-
+function PermissionRow(props) {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
+  const [checked, setChecked] = React.useState(props.row.checked);
 
   const handleChange = (event, value) => {
     console.log(value);
@@ -77,10 +74,31 @@ export default function PermissionsOfRoleTable() {
     setChecked(event.target.checked);
   };
 
-  // const handleChange = function (value) {
-  //   console.log(value);
-  //   setChecked(event.target.checked);
-  // };
+  return (
+    <>
+      <tr key={props.idx}>
+        <td>{props.row.serviceName}</td>
+        <td style={{ width: 90 }} align="right">
+          {props.row.name}
+        </td>
+        <td style={{ width: 90 }} align="right">
+          {props.row.action}
+        </td>
+        <td style={{ width: 90 }} align="right">
+          {props.row.object}
+        </td>
+        <td style={{ width: 45, textAlign: "center" }}>
+          <Checkbox checked={checked} onChange={(e) => handleChange(e, props.row.id)} {...label} />
+        </td>
+      </tr>
+    </>
+  );
+}
+
+export default function PermissionsOfRoleTable() {
+  const page = React.useState(0)[0];
+  // const setChecked = React.useState(0)[1];
+  const rowsPerPage = React.useState(-1)[0];
 
   return (
     <Root sx={{ width: 500, maxWidth: "100%" }}>
@@ -97,21 +115,7 @@ export default function PermissionsOfRoleTable() {
         <tbody>
           {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
             (row, idx) => (
-              <tr key={idx}>
-                <td>{row.serviceName}</td>
-                <td style={{ width: 90 }} align="right">
-                  {row.name}
-                </td>
-                <td style={{ width: 90 }} align="right">
-                  {row.action}
-                </td>
-                <td style={{ width: 90 }} align="right">
-                  {row.object}
-                </td>
-                <td style={{ width: 45, textAlign: "center" }}>
-                  <Checkbox onChange={(e) => handleChange(e, row.id)} {...label} />
-                </td>
-              </tr>
+              <PermissionRow idx={idx} row={row}></PermissionRow>
             ),
           )}
         </tbody>

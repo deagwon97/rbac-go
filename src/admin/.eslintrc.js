@@ -14,7 +14,7 @@ module.exports = {
     // import 관련 규칙 모음
 
     "plugin:prettier/recommended",
-    "prettier",
+    // "prettier",
     // prettier 관련 규칙 모음
   ],
   settings: {
@@ -31,6 +31,6 @@ module.exports = {
   rules: {
     // 추가하고 싶은 rule을 더 추가해줍니다.
     "no-unused-vars": "warn",
-    "no-console": "off",
+    // "no-console": "off",
   },
 };

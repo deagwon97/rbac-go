@@ -328,7 +328,7 @@ const docTemplate = `{
                 "tags": [
                     "RBAC permission"
                 ],
-                "summary": "Permission 생성",
+                "summary": "Permission Set 생성 및 동기화",
                 "parameters": [
                     {
                         "description": "Data",

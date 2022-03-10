@@ -461,7 +461,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Permission'
-      summary: Permission 생성
+      summary: Permission Set 생성 및 동기화
       tags:
       - RBAC permission
   /rbac/permission-assignment:
