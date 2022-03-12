@@ -52,30 +52,6 @@ func (h *Handler) GetSubjectsOfRolePage(c *gin.Context) {
 	c.JSON(http.StatusOK, roles)
 }
 
-// @Summary Role에 속하는 Permission들의 id 목록 조회
-// @Tags RBAC role
-// @Accept json
-// @Produce json
-// @Param id path int  true  "Role ID"
-// @Param page query int false  "Page Number"
-// @Param pageSize query int false  "Page Size"
-// @Success 200 {object} dblayer.PermissionsOfRolePage
-// @Router /rbac/role/{id}/permission [get]
-func (h *Handler) GetPermissionsOfRolePage(c *gin.Context) {
-	p := c.Param("id")
-	roleID, err := strconv.Atoi(p)
-	if ce.GinError(c, err) {
-		return
-	}
-
-	page, pageSize, hostUrl := paginate.ParsePageUrl(c)
-	roles, err := h.db.GetPermissionsOfRolePage(roleID, page, pageSize, hostUrl)
-	if ce.GinError(c, err) {
-		return
-	}
-	c.JSON(http.StatusOK, roles)
-}
-
 // @Summary Permission의 유효성 검증
 // @Tags RBAC role
 // @Accept json

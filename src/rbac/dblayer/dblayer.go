@@ -104,15 +104,6 @@ type RoleDBLayer interface {
 		itemsPage SubjectsOfRolePage,
 		err error,
 	)
-	GetPermissionsOfRolePage(
-		roleID int,
-		page int,
-		pageSize int,
-		hostUrl string,
-	) (
-		itemsPage PermissionsOfRolePage,
-		err error,
-	)
 }
 
 type SubjectAssignmentDBLayer interface {

@@ -42,19 +42,6 @@ definitions:
       role_id:
         type: integer
     type: object
-  dblayer.PermissionsOfRolePage:
-    properties:
-      count:
-        type: integer
-      next:
-        type: string
-      previous:
-        type: string
-      results:
-        items:
-          $ref: '#/definitions/dblayer.PermissionOfRole'
-        type: array
-    type: object
   dblayer.PermissionsPage:
     properties:
       count:
@@ -697,34 +684,6 @@ paths:
           schema:
             $ref: '#/definitions/models.Role'
       summary: Role Update
-      tags:
-      - RBAC role
-  /rbac/role/{id}/permission:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: Role ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Page Number
-        in: query
-        name: page
-        type: integer
-      - description: Page Size
-        in: query
-        name: pageSize
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dblayer.PermissionsOfRolePage'
-      summary: Role에 속하는 Permission들의 id 목록 조회
       tags:
       - RBAC role
   /rbac/role/{id}/subject:

@@ -755,49 +755,6 @@
                 }
             }
         },
-        "/rbac/role/{id}/permission": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RBAC role"
-                ],
-                "summary": "Role에 속하는 Permission들의 id 목록 조회",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Role ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page Number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page Size",
-                        "name": "pageSize",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dblayer.PermissionsOfRolePage"
-                        }
-                    }
-                }
-            }
-        },
         "/rbac/role/{id}/subject": {
             "get": {
                 "consumes": [
@@ -1009,26 +966,6 @@
                 },
                 "role_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "dblayer.PermissionsOfRolePage": {
-            "type": "object",
-            "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "next": {
-                    "type": "string"
-                },
-                "previous": {
-                    "type": "string"
-                },
-                "results": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dblayer.PermissionOfRole"
-                    }
                 }
             }
         },

@@ -13,7 +13,6 @@ func AddRoutes(rg *gin.RouterGroup) {
 	router.PATCH("/role/:id", h.UpdateRole)
 	router.DELETE("/role/:id", h.DeleteRole)
 	router.GET("/role/:id/subject", h.GetSubjectsOfRolePage)
-	router.GET("/role/:id/permission", h.GetPermissionsOfRolePage)
 
 	router.GET("/permission/list", h.GetPermissionsPage)
 	router.POST("/permission/set", h.AddPermissionSets)
