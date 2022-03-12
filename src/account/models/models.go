@@ -19,12 +19,12 @@ type User struct {
 	ID       int            `gorm:"primaryKey;column:id;" json:"id"`
 	LoginID  string         `gorm:"column:login_id" json:"login_id"`
 	Password string         `gorm:"column:password" json:"password"`
-	Name     sql.NullString `gorm:"column:name"     json:"name"`
-	Email    sql.NullString `gorm:"column:email"    json:"email"`
+	Name     sql.NullString `gorm:"column:name"     json:"name" swaggertype:"string"`
+	Email    sql.NullString `gorm:"column:email"    json:"email" swaggertype:"string"`
 }
 
 func (User) TableName() string {
-	return "users"
+	return "user"
 }
 
 type AddUserData struct {

@@ -100,6 +100,57 @@ func (db *DBORM) GetPermissionsPage(
 	return permissionPage, err
 }
 
+type PermissionsStatus struct {
+	models.Permission
+	IsAllowed bool `json:"is_allowed"`
+}
+
+type PermissionsStatusPage struct {
+	Count        int                 `json:"count"`
+	NextPage     string              `json:"next"`
+	PreviousPage string              `json:"previous"`
+	List         []PermissionsStatus `json:"results"`
+}
+
+func (db *DBORM) GetPermissionsStatusPage(
+	roleID int, page int, pageSize int, hostUrl string,
+) (
+	permissionPage PermissionsStatusPage, err error,
+) {
+
+	var count int64
+	db.Model(&models.Permission{}).Count(&count)
+
+	page, pageSize, nextPage, previousPage :=
+		paginate.GetPageInfo(page, pageSize, hostUrl, count)
+	permissionPage.Count = int(count)
+	permissionPage.NextPage = nextPage
+	permissionPage.PreviousPage = previousPage
+
+	err = db.
+		Select("id", "service_name",
+			"name", "action", "object").
+		Order("id desc").
+		Scopes(paginate.Paginate(page, pageSize)).
+		Find(&permissionPage.List).
+		Error
+
+	var permissionIDList []int
+	for _, permission := range permissionPage.List {
+		permissionIDList = append(permissionIDList, permission.ID)
+	}
+	permissionOfRole := PermissionOfRole{
+		RoleID:           roleID,
+		PermissionIDList: permissionIDList,
+	}
+	permissionStatusOfRole, err := db.CheckPermissionIsAllowed(permissionOfRole)
+	for idx := 0; idx < len(permissionPage.List); idx++ {
+		permissionPage.List[idx].IsAllowed = permissionStatusOfRole.List[idx].IsAllowed
+	}
+
+	return permissionPage, err
+}
+
 type PermissionData struct {
 	ServiceName string `gorm:"column:service_name"  json:"service_name"`
 	Name        string `gorm:"column:name"          json:"name"`

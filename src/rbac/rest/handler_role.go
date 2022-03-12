@@ -28,44 +28,52 @@ func (h *Handler) GetRolesPage(c *gin.Context) {
 	c.JSON(http.StatusOK, roles)
 }
 
-// @Summary Permission의 유효성 검증
+// @Summary 특정 Role Permission 목록 조회
 // @Tags RBAC role
 // @Accept json
 // @Produce json
-// @Param data body dblayer.PermissionOfRole true "Data"
-// @Success 200 {object} dblayer.PermissionStatusOfRole
-// @Router /rbac/role/permission [post]
-func (h *Handler) CheckPermissionIsAllowed(c *gin.Context) {
-
-	var permissionOfRole dblayer.PermissionOfRole
-
-	err := c.ShouldBindJSON(&permissionOfRole)
-
-	permissionStatusOfRole, err := h.db.CheckPermissionIsAllowed(permissionOfRole)
+// @Param id path int true  "Role ID"
+// @Param page query int false  "Page Number"
+// @Param pageSize query int false  "Page Size"
+// @Success 200 {object} dblayer.PermissionsPage
+// @Router /rbac/role/{id}/permission [get]
+func (h *Handler) GetPermissionsStatusPage(c *gin.Context) {
+	p := c.Param("id")
+	roleId, err := strconv.Atoi(p)
 	if ce.GinError(c, err) {
 		return
 	}
-	c.JSON(http.StatusOK, permissionStatusOfRole)
+
+	page, pageSize, hostUrl := paginate.ParsePageUrl(c)
+	permissions, err := h.db.GetPermissionsStatusPage(roleId, page, pageSize, hostUrl)
+	if ce.GinError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, permissions)
 }
 
-// @Summary Subject의 유효성 검증
+// @Summary 특정 Role Subject 목록 조회
 // @Tags RBAC role
 // @Accept json
 // @Produce json
-// @Param data body dblayer.SubjectsOfRole true "Data"
-// @Success 200 {object} dblayer.SubjectStatusOfRole
-// @Router /rbac/role/subject [post]
-func (h *Handler) CheckSubjectIsAllowed(c *gin.Context) {
-
-	var subjectsOfRole dblayer.SubjectsOfRole
-
-	err := c.ShouldBindJSON(&subjectsOfRole)
-
-	subjectStatusOfRole, err := h.db.CheckSubjectIsAllowed(subjectsOfRole)
+// @Param id path int true  "Role ID"
+// @Param page query int false  "Page Number"
+// @Param pageSize query int false  "Page Size"
+// @Success 200 {object} dblayer.SubjectsStatusPage
+// @Router /rbac/role/{id}/subject [get]
+func (h *Handler) GetSubjectsStatusPage(c *gin.Context) {
+	p := c.Param("id")
+	roleId, err := strconv.Atoi(p)
 	if ce.GinError(c, err) {
 		return
 	}
-	c.JSON(http.StatusOK, subjectStatusOfRole)
+
+	page, pageSize, hostUrl := paginate.ParsePageUrl(c)
+	subjects, err := h.db.GetSubjectsStatusPage(roleId, page, pageSize, hostUrl)
+	if ce.GinError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, subjects)
 }
 
 // @Summary Role 생성

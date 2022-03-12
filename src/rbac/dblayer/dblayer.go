@@ -7,6 +7,7 @@ import (
 type DBLayer interface {
 	PermissionDBLayer
 	RoleDBLayer
+	SubjectDBLayer
 	SubjectAssignmentDBLayer
 	PermissionAssignmentDBLayer
 }
@@ -33,6 +34,17 @@ type PermissionDBLayer interface {
 		permissionsPage PermissionsPage,
 		err error,
 	)
+
+	GetPermissionsStatusPage(
+		roleID int,
+		page int,
+		pageSize int,
+		hostUrl string,
+	) (
+		permissionPage PermissionsStatusPage,
+		err error,
+	)
+
 	AddPermission(
 		permissionData PermissionData,
 	) (
@@ -54,6 +66,18 @@ type PermissionDBLayer interface {
 		id int,
 	) (
 		permission models.Permission,
+		err error,
+	)
+}
+
+type SubjectDBLayer interface {
+	GetSubjectsStatusPage(
+		roleID int,
+		page int,
+		pageSize int,
+		hostUrl string,
+	) (
+		subjectPage SubjectsStatusPage,
 		err error,
 	)
 }

@@ -19,11 +19,11 @@ type HandlerInterface interface {
 	AddRole(c *gin.Context)
 	UpdateRole(c *gin.Context)
 	DeleteRole(c *gin.Context)
-	CheckSubjectIsAllowed(c *gin.Context)
-	CheckPermissionIsAllowed(c *gin.Context)
 	GetAllowedObjects(c *gin.Context)
 
 	GetPermissionsPage(c *gin.Context)
+	GetPermissionsStatusPage(c *gin.Context)
+	GetSubjectsStatusPage(c *gin.Context)
 	AddPermission(c *gin.Context)
 	AddPermissionSets(c *gin.Context)
 	UpdatePermission(c *gin.Context)

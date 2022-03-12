@@ -662,72 +662,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/rbac/role/permission": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RBAC role"
-                ],
-                "summary": "Permission의 유효성 검증",
-                "parameters": [
-                    {
-                        "description": "Data",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dblayer.PermissionOfRole"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dblayer.PermissionStatusOfRole"
-                        }
-                    }
-                }
-            }
-        },
-        "/rbac/role/subject": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RBAC role"
-                ],
-                "summary": "Subject의 유효성 검증",
-                "parameters": [
-                    {
-                        "description": "Data",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dblayer.SubjectsOfRole"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dblayer.SubjectStatusOfRole"
-                        }
-                    }
-                }
-            }
-        },
         "/rbac/role/{id}": {
             "delete": {
                 "consumes": [
@@ -792,6 +726,92 @@ const docTemplate = `{
                         "description": "수정된 Role 데이터",
                         "schema": {
                             "$ref": "#/definitions/models.Role"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/role/{id}/permission": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC role"
+                ],
+                "summary": "특정 Role Permission 목록 조회",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Role ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionsPage"
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/role/{id}/subject": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC role"
+                ],
+                "summary": "특정 Role Subject 목록 조회",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Role ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page Size",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.SubjectsStatusPage"
                         }
                     }
                 }
@@ -929,45 +949,6 @@ const docTemplate = `{
                 }
             }
         },
-        "dblayer.PermissionOfRole": {
-            "type": "object",
-            "properties": {
-                "permission_id_list": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
-                    }
-                },
-                "role_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dblayer.PermissionStatus": {
-            "type": "object",
-            "properties": {
-                "is_allowed": {
-                    "type": "boolean"
-                },
-                "permission_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dblayer.PermissionStatusOfRole": {
-            "type": "object",
-            "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/dblayer.PermissionStatus"
-                    }
-                },
-                "role_id": {
-                    "type": "integer"
-                }
-            }
-        },
         "dblayer.PermissionsPage": {
             "type": "object",
             "properties": {
@@ -1041,30 +1022,22 @@ const docTemplate = `{
                 }
             }
         },
-        "dblayer.SubjectStatusOfRole": {
+        "dblayer.SubjectsStatusPage": {
             "type": "object",
             "properties": {
-                "list": {
+                "count": {
+                    "type": "integer"
+                },
+                "next": {
+                    "type": "string"
+                },
+                "previous": {
+                    "type": "string"
+                },
+                "results": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/dblayer.SubjectStatus"
-                    }
-                },
-                "role_id": {
-                    "type": "integer"
-                }
-            }
-        },
-        "dblayer.SubjectsOfRole": {
-            "type": "object",
-            "properties": {
-                "role_id": {
-                    "type": "integer"
-                },
-                "subject_id_list": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer"
                     }
                 }
             }

@@ -1,36 +1,11 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import { styled } from "@mui/system";
 import Checkbox from "@mui/material/Checkbox";
 import { API_URL } from "App";
-
-function createData(id, serviceName, name, action, object, checked) {
-  return { id, serviceName, name, action, object, checked };
-}
-
-const rows = [
-  createData("1", "bdg블로그", "게시판", "목록조회", "공지", true),
-  createData("2", "bdg블로그", "게시판", "목록조회", "비밀", true),
-  createData("3", "bdg블로그", "게시판", "목록조회", "자유", true),
-  createData("4", "bdg블로그", "게시판", "삭제", "공지", false),
-  createData("5", "bdg블로그", "게시판", "삭제", "비밀", false),
-  createData("6", "bdg블로그", "게시판", "삭제", "자유", true),
-  createData("7", "bdg블로그", "게시판", "상세조회", "공지", false),
-  createData("8", "bdg블로그", "게시판", "상세조회", "비밀", false),
-  createData("9", "bdg블로그", "게시판", "상세조회", "자유", false),
-  createData("10", "bdg블로그", "게시판", "수정", "공지", true),
-  createData("11", "bdg블로그", "게시판", "수정", "비밀", false),
-  createData("12", "bdg블로그", "게시판", "수정", "자유", false),
-  createData("12", "bdg블로그", "채팅", "목록조회", "VIP", false),
-  createData("13", "bdg블로그", "채팅", "목록조회", "도매", false),
-  createData("14", "bdg블로그", "채팅", "삭제", "VIP", true),
-  createData("15", "bdg블로그", "채팅", "삭제", "도매", false),
-  createData("16", "bdg블로그", "채팅", "상세조회", "VIP", false),
-  createData("17", "bdg블로그", "채팅", "상세조회", "도매", false),
-  createData("18", "bdg블로그", "채팅", "수정", "VIP", false),
-  createData("19", "bdg블로그", "채팅", "수정", "도매", false),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
 
 const grey = {
   50: "#F3F6F9",
@@ -69,12 +44,23 @@ const Root = styled("div")(
 
 function PermissionRow(props) {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
-  const [checked, setChecked] = React.useState(props.row.checked);
+  const [checked, setChecked] = React.useState(props.row.is_allowed);
 
-  const handleChange = (event, value) => {
-    console.log(value);
-    console.log(event.target.checked);
+  useEffect(() => {
+    setChecked(props.row.is_allowed);
+  }, [props]);
+
+  const handleChange = (event, roleID, permissionID) => {
     setChecked(event.target.checked);
+    addPermissionAssignment(roleID, permissionID);
+  };
+
+  const addPermissionAssignment = async (roleID, permissionID) => {
+    const data = {
+      permission_id: permissionID,
+      role_id: roleID,
+    };
+    await axios.post(`${API_URL}/rbac/permission-assignment`, data);
   };
 
   return (
@@ -91,7 +77,7 @@ function PermissionRow(props) {
           {props.row.object}
         </td>
         <td style={{ width: 45, textAlign: "center" }}>
-          <Checkbox checked={checked} onChange={(e) => handleChange(e, props.row.id)} {...label} />
+          <Checkbox checked={checked} onChange={(e) => handleChange(e, 31, props.row.id)} {...label} />
         </td>
       </tr>
     </>
@@ -99,13 +85,10 @@ function PermissionRow(props) {
 }
 
 export default function PermissionsOfRoleTable() {
-  const page = React.useState(0)[0];
-  // const setChecked = React.useState(0)[1];
-  const rowsPerPage = React.useState(-1)[0];
+  const [page, setPage] = React.useState(1);
   const [permissionsOfRolePage, setPermissionsOfRolePage] = useState();
 
   const getPermissionsOfRolePage = async (page) => {
-    console.log(`${API_URL}/rbac/role/list`);
     await axios
       .get(`${API_URL}/rbac/role/31/permission?page=${page}&pageSize=5`)
       .then((res) => setPermissionsOfRolePage(res.data));
@@ -114,6 +97,11 @@ export default function PermissionsOfRoleTable() {
   useEffect(() => {
     getPermissionsOfRolePage(1);
   }, []);
+
+  const handleChangePageNum = (event, value) => {
+    setPage(value);
+    getPermissionsOfRolePage(value);
+  };
 
   return (
     <Root sx={{ width: 500, maxWidth: "100%" }}>
@@ -132,6 +120,17 @@ export default function PermissionsOfRoleTable() {
             permissionsOfRolePage.results.map((row, idx) => <PermissionRow idx={idx} row={row}></PermissionRow>)}
         </tbody>
       </table>
+      {permissionsOfRolePage && (
+        <Stack spacing={3}>
+          <Pagination
+            sx={{ margin: "auto", marginTop: "10px" }}
+            count={parseInt(permissionsOfRolePage.count / 5)}
+            defaultPage={page}
+            onChange={handleChangePageNum}
+            shape="rounded"
+          />
+        </Stack>
+      )}
     </Root>
   );
 }
