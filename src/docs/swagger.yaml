@@ -82,22 +82,29 @@ definitions:
       subject_id:
         type: integer
     type: object
-  dblayer.SubjectsOfRole:
+  dblayer.SubjectStatus:
     properties:
+      is_allowed:
+        type: boolean
       subject_id:
         type: integer
     type: object
-  dblayer.SubjectsOfRolePage:
+  dblayer.SubjectStatusOfRole:
     properties:
-      count:
-        type: integer
-      next:
-        type: string
-      previous:
-        type: string
-      results:
+      list:
         items:
-          $ref: '#/definitions/dblayer.SubjectsOfRole'
+          $ref: '#/definitions/dblayer.SubjectStatus'
+        type: array
+      role_id:
+        type: integer
+    type: object
+  dblayer.SubjectsOfRole:
+    properties:
+      role_id:
+        type: integer
+      subject_id_list:
+        items:
+          type: integer
         type: array
     type: object
   models.AddUserData:
@@ -686,34 +693,6 @@ paths:
       summary: Role Update
       tags:
       - RBAC role
-  /rbac/role/{id}/subject:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: Role ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Page Number
-        in: query
-        name: page
-        type: integer
-      - description: Page Size
-        in: query
-        name: pageSize
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dblayer.SubjectsOfRolePage'
-      summary: Role에 속하는 Subject들의 id 목록 조회
-      tags:
-      - RBAC role
   /rbac/role/list:
     get:
       consumes:
@@ -756,6 +735,27 @@ paths:
           schema:
             $ref: '#/definitions/dblayer.PermissionStatusOfRole'
       summary: Permission의 유효성 검증
+      tags:
+      - RBAC role
+  /rbac/role/subject:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.SubjectsOfRole'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dblayer.SubjectStatusOfRole'
+      summary: Subject의 유효성 검증
       tags:
       - RBAC role
   /rbac/subject-assignment:

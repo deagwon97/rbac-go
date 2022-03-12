@@ -695,6 +695,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/rbac/role/subject": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC role"
+                ],
+                "summary": "Subject의 유효성 검증",
+                "parameters": [
+                    {
+                        "description": "Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.SubjectsOfRole"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.SubjectStatusOfRole"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/role/{id}": {
             "delete": {
                 "consumes": [
@@ -759,49 +792,6 @@ const docTemplate = `{
                         "description": "수정된 Role 데이터",
                         "schema": {
                             "$ref": "#/definitions/models.Role"
-                        }
-                    }
-                }
-            }
-        },
-        "/rbac/role/{id}/subject": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RBAC role"
-                ],
-                "summary": "Role에 속하는 Subject들의 id 목록 조회",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Role ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page Number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Page Size",
-                        "name": "pageSize",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dblayer.SubjectsOfRolePage"
                         }
                     }
                 }
@@ -1040,30 +1030,41 @@ const docTemplate = `{
                 }
             }
         },
-        "dblayer.SubjectsOfRole": {
+        "dblayer.SubjectStatus": {
             "type": "object",
             "properties": {
+                "is_allowed": {
+                    "type": "boolean"
+                },
                 "subject_id": {
                     "type": "integer"
                 }
             }
         },
-        "dblayer.SubjectsOfRolePage": {
+        "dblayer.SubjectStatusOfRole": {
             "type": "object",
             "properties": {
-                "count": {
-                    "type": "integer"
-                },
-                "next": {
-                    "type": "string"
-                },
-                "previous": {
-                    "type": "string"
-                },
-                "results": {
+                "list": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dblayer.SubjectsOfRole"
+                        "$ref": "#/definitions/dblayer.SubjectStatus"
+                    }
+                },
+                "role_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dblayer.SubjectsOfRole": {
+            "type": "object",
+            "properties": {
+                "role_id": {
+                    "type": "integer"
+                },
+                "subject_id_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
                     }
                 }
             }

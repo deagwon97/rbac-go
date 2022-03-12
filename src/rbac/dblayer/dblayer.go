@@ -33,12 +33,6 @@ type PermissionDBLayer interface {
 		permissionsPage PermissionsPage,
 		err error,
 	)
-	CheckPermissionIsAllowed(
-		permissionOfRole PermissionOfRole,
-	) (
-		permissionStatusOfRole PermissionStatusOfRole,
-		err error,
-	)
 	AddPermission(
 		permissionData PermissionData,
 	) (
@@ -95,13 +89,16 @@ type RoleDBLayer interface {
 		role models.Role,
 		err error,
 	)
-	GetSubjectsOfRolePage(
-		roleID int,
-		page int,
-		pageSize int,
-		hostUrl string,
+	CheckPermissionIsAllowed(
+		permissionOfRole PermissionOfRole,
 	) (
-		itemsPage SubjectsOfRolePage,
+		permissionStatusOfRole PermissionStatusOfRole,
+		err error,
+	)
+	CheckSubjectIsAllowed(
+		subjectOfRole SubjectsOfRole,
+	) (
+		subjectStatusOfRole SubjectStatusOfRole,
 		err error,
 	)
 }

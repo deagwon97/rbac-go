@@ -3,6 +3,8 @@ package dblayer
 import (
 	"errors"
 
+	"rbac-go/common/utils"
+
 	"rbac-go/common/paginate"
 	"rbac-go/rbac/models"
 )
@@ -99,58 +101,46 @@ func (db *DBORM) DeleteRole(
 }
 
 type SubjectsOfRole struct {
-	SubjectID int `json:"subject_id"`
+	RoleID        int   `gorm:"column:role_id"       json:"role_id"`
+	SubjectIDList []int `json:"subject_id_list"`
 }
 
-type SubjectsOfRolePage struct {
-	Count        int              `json:"count"`
-	NextPage     string           `json:"next"`
-	PreviousPage string           `json:"previous"`
-	Items        []SubjectsOfRole `json:"results"`
+type SubjectStatus struct {
+	SubjectID int  `gorm:"column:subject_id"   json:"subject_id"`
+	IsAllowed bool `json:"is_allowed"`
 }
 
-func (db *DBORM) GetSubjectsOfRolePage(
-	roleID int, page int, pageSize int, hostUrl string,
+type SubjectStatusOfRole struct {
+	RoleID int             `gorm:"column:role_id"       json:"role_id"`
+	List   []SubjectStatus `json:"list"`
+}
+
+func (db *DBORM) CheckSubjectIsAllowed(
+	subjectsOfRole SubjectsOfRole,
 ) (
-	itemsPage SubjectsOfRolePage, err error,
+	subjectStatusOfRole SubjectStatusOfRole, err error,
 ) {
-	var count int64
+	roleID := subjectsOfRole.RoleID
+	var allowedSubjectIDList []int
 	err = db.Table("subject_assignment").
 		Select("subject_id").
+		Where("subject_id IN ?", subjectsOfRole.SubjectIDList).
 		Where("role_id = ?", roleID).
-		Count(&count).
+		Scan(&allowedSubjectIDList).
 		Error
 
-	page, pageSize, nextPage, previousPage :=
-		paginate.GetPageInfo(page, pageSize, hostUrl, count)
-	itemsPage.Count = int(count)
-	itemsPage.NextPage = nextPage
-	itemsPage.PreviousPage = previousPage
-
-	err = db.Table("subject_assignment").
-		Select("subject_id").
-		Where("role_id = ?", roleID).
-		Scopes(paginate.Paginate(page, pageSize)).
-		Find(&itemsPage.Items).
-		Error
-	return itemsPage, err
-}
-
-// type PermissionOfRole struct {
-// 	PermissionID int    `gorm:"column:permission_id" json:"permission_id"`
-// 	ServiceName  string `gorm:"column:service_name"  json:"service_name"`
-// 	Name         string `gorm:"column:name"          json:"name"`
-// 	Action       string `gorm:"column:action"        json:"action"`
-// 	Object       string `gorm:"column:object"        json:"object"`
-// }
-
-type PermissionList struct {
-	PermissionID int `gorm:"column:permission_id"   json:"permission_id"`
-	RoleID       int `gorm:"column:role_id"   json:"role_id"`
-}
-
-func (PermissionList) TableName() string {
-	return "permission_assignment"
+	var subjectStatus SubjectStatus
+	subjectStatusOfRole.RoleID = roleID
+	for _, subjectID := range subjectsOfRole.SubjectIDList {
+		subjectStatus.SubjectID = subjectID
+		if utils.IsIn(subjectID, allowedSubjectIDList) == true {
+			subjectStatus.IsAllowed = true
+		} else {
+			subjectStatus.IsAllowed = false
+		}
+		subjectStatusOfRole.List = append(subjectStatusOfRole.List, subjectStatus)
+	}
+	return subjectStatusOfRole, err
 }
 
 type PermissionOfRole struct {
@@ -168,25 +158,12 @@ type PermissionStatusOfRole struct {
 	List   []PermissionStatus `json:"list"`
 }
 
-func isValidPermission(permissionID int, allowdPermiaaionIDList []int) bool {
-	for _, allowedPermissionId := range allowdPermiaaionIDList {
-		if permissionID == allowedPermissionId {
-			return true
-		}
-	}
-	return false
-}
-
 func (db *DBORM) CheckPermissionIsAllowed(
 	permissionOfRole PermissionOfRole,
 ) (
 	permissionStatusOfRole PermissionStatusOfRole, err error,
 ) {
-	var count int64
-	db.Model(&models.Permission{}).Count(&count)
-
 	roleID := permissionOfRole.RoleID
-
 	var allowedPermissionIDList []int
 
 	err = db.Table("permission_assignment").
@@ -200,7 +177,7 @@ func (db *DBORM) CheckPermissionIsAllowed(
 	permissionStatusOfRole.RoleID = roleID
 	for _, permissionID := range permissionOfRole.PermissionIDList {
 		permissionStatus.PermissionID = permissionID
-		if isValidPermission(permissionID, allowedPermissionIDList) == true {
+		if utils.IsIn(permissionID, allowedPermissionIDList) == true {
 			permissionStatus.IsAllowed = true
 		} else {
 			permissionStatus.IsAllowed = false
