@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
@@ -50,20 +49,22 @@ const StyledButton = styled(Button)({
   },
   border: 0,
   borderRadius: 3,
-  marginLeft: "5px",
-  float: "right",
+  float: "center",
   color: "white",
   height: "20px",
   fontSize: 12,
   textTransform: "none",
 });
 
-export default function RoleTable() {
-  const [page, setPage] = React.useState(1);
+export default function RoleTable(props) {
+  const [page, setPage] = useState(1);
   const [rolePage, setRolePage] = useState();
 
+  const handleChangePermission = (e, role) => {
+    props.onChange(role);
+  };
+
   const getRolePage = async (page) => {
-    console.log(`${API_URL}/rbac/role/list`);
     await axios.get(`${API_URL}/rbac/role/list?page=${page}&pageSize=5`).then((res) => setRolePage(res.data));
   };
 
@@ -94,11 +95,14 @@ export default function RoleTable() {
                   <td>{row.name}</td>
                   <td align="right">{row.description}</td>
                   <td style={{ width: "150px", textAlign: "center" }}>
-                    <StyledButton size="small" aria-label="fingerprint">
-                      Subject
-                    </StyledButton>
-                    <StyledButton size="small" color="secondary" aria-label="fingerprint">
-                      Permission
+                    <StyledButton
+                      size="small"
+                      aria-label="fingerprint"
+                      onClick={(e) => {
+                        handleChangePermission(e, row);
+                      }}
+                    >
+                      Assignment
                     </StyledButton>
                   </td>
                 </tr>

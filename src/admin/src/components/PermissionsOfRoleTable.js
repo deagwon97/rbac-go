@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
@@ -44,23 +43,31 @@ const Root = styled("div")(
 
 function PermissionRow(props) {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
-  const [checked, setChecked] = React.useState(props.row.is_allowed);
+  const [checked, setChecked] = useState(props.row.is_allowed);
 
   useEffect(() => {
     setChecked(props.row.is_allowed);
   }, [props]);
 
-  const handleChange = (event, roleID, permissionID) => {
-    setChecked(event.target.checked);
-    addPermissionAssignment(roleID, permissionID);
-  };
-
-  const addPermissionAssignment = async (roleID, permissionID) => {
+  const addPermissionAssignment = async (permissionID, roleID) => {
     const data = {
       permission_id: permissionID,
       role_id: roleID,
     };
     await axios.post(`${API_URL}/rbac/permission-assignment`, data);
+  };
+  const deletePermissionAssignment = async (permissionID, roleID) => {
+    await axios.delete(`${API_URL}/rbac/permission-assignment?permissionID=${permissionID}&roleID=${roleID}`);
+  };
+
+  const handleChange = (event, roleID, permissionID) => {
+    setChecked(event.target.checked);
+
+    if (event.target.checked === true) {
+      addPermissionAssignment(permissionID, roleID);
+    } else {
+      deletePermissionAssignment(permissionID, roleID);
+    }
   };
 
   return (
@@ -77,26 +84,33 @@ function PermissionRow(props) {
           {props.row.object}
         </td>
         <td style={{ width: 45, textAlign: "center" }}>
-          <Checkbox checked={checked} onChange={(e) => handleChange(e, 31, props.row.id)} {...label} />
+          <Checkbox checked={checked} onChange={(e) => handleChange(e, props.roleID, props.row.id)} {...label} />
         </td>
       </tr>
     </>
   );
 }
 
-export default function PermissionsOfRoleTable() {
-  const [page, setPage] = React.useState(1);
+export default function PermissionsOfRoleTable(props) {
+  const [page, setPage] = useState(1);
   const [permissionsOfRolePage, setPermissionsOfRolePage] = useState();
+  const [role, setRole] = useState(props.role);
 
   const getPermissionsOfRolePage = async (page) => {
-    await axios
-      .get(`${API_URL}/rbac/role/31/permission?page=${page}&pageSize=5`)
-      .then((res) => setPermissionsOfRolePage(res.data));
+    if (role !== null) {
+      await axios
+        .get(`${API_URL}/rbac/role/${role.id}/permission?page=${page}&pageSize=5`)
+        .then((res) => setPermissionsOfRolePage(res.data));
+    }
   };
 
   useEffect(() => {
+    setRole(props.role);
+  }, [props.role]);
+
+  useEffect(() => {
     getPermissionsOfRolePage(1);
-  }, []);
+  }, [role]);
 
   const handleChangePageNum = (event, value) => {
     setPage(value);
@@ -105,31 +119,41 @@ export default function PermissionsOfRoleTable() {
 
   return (
     <Root sx={{ width: 500, maxWidth: "100%" }}>
-      <table aria-label="custom pagination table">
-        <thead>
-          <tr>
-            <th style={{ textAlign: "center" }}>서비스</th>
-            <th style={{ textAlign: "center" }}>권한</th>
-            <th style={{ textAlign: "center" }}>행동</th>
-            <th style={{ textAlign: "center" }}>대상</th>
-            <th style={{ textAlign: "center" }}>확인</th>
-          </tr>
-        </thead>
-        <tbody>
-          {permissionsOfRolePage &&
-            permissionsOfRolePage.results.map((row, idx) => <PermissionRow idx={idx} row={row}></PermissionRow>)}
-        </tbody>
-      </table>
-      {permissionsOfRolePage && (
-        <Stack spacing={3}>
-          <Pagination
-            sx={{ margin: "auto", marginTop: "10px" }}
-            count={parseInt(permissionsOfRolePage.count / 5)}
-            defaultPage={page}
-            onChange={handleChangePageNum}
-            shape="rounded"
-          />
-        </Stack>
+      {role && (
+        <>
+          <h1>Permissions Of Role</h1>
+          <h3>
+            {role.name} : {role.description}
+          </h3>
+          <table aria-label="custom pagination table">
+            <thead>
+              <tr>
+                <th style={{ textAlign: "center" }}>서비스</th>
+                <th style={{ textAlign: "center" }}>권한</th>
+                <th style={{ textAlign: "center" }}>행동</th>
+                <th style={{ textAlign: "center" }}>대상</th>
+                <th style={{ textAlign: "center" }}>확인</th>
+              </tr>
+            </thead>
+            <tbody>
+              {permissionsOfRolePage &&
+                permissionsOfRolePage.results.map((row, idx) => (
+                  <PermissionRow key={idx} idx={idx} row={row} roleID={role.id}></PermissionRow>
+                ))}
+            </tbody>
+          </table>
+          {permissionsOfRolePage && (
+            <Stack spacing={3}>
+              <Pagination
+                sx={{ margin: "auto", marginTop: "10px" }}
+                count={parseInt(permissionsOfRolePage.count / 5)}
+                defaultPage={page}
+                onChange={handleChangePageNum}
+                shape="rounded"
+              />
+            </Stack>
+          )}
+        </>
       )}
     </Root>
   );

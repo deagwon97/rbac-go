@@ -4,6 +4,7 @@ import (
 	"net/http"
 	ce "rbac-go/common/error"
 	"rbac-go/rbac/dblayer"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,10 +41,11 @@ func (h *Handler) AddSubjectAssignment(c *gin.Context) {
 func (h *Handler) DeleteSubjectAssignment(c *gin.Context) {
 	var subjectAssignmentData dblayer.SubjectAssignmentData
 
-	err := c.ShouldBindJSON(&subjectAssignmentData)
-	if ce.GinError(c, err) {
-		return
-	}
+	subjectID, _ := strconv.Atoi(c.Query("subjectID"))
+	roleID, _ := strconv.Atoi(c.Query("roleID"))
+
+	subjectAssignmentData.SubjectID = subjectID
+	subjectAssignmentData.RoleID = roleID
 
 	item, err := h.db.DeleteSubjectAssignment(subjectAssignmentData)
 	if ce.GinError(c, err) {

@@ -46,5 +46,5 @@ func (db *DBORM) DeletePermissionAssignment(
 
 	err = db.Delete(&item).Error
 
-	return item, db.Delete(&item).Error
+	return item, err
 }

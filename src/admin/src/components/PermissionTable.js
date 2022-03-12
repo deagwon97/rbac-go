@@ -75,7 +75,7 @@ export default function PermissionTable() {
           {permissionPage &&
             permissionPage.results.map((row, idx) => (
               <tr key={idx}>
-                <td>{row.name}</td>
+                <td>{row.service_name}</td>
                 <td style={{ width: 120 }} align="right">
                   {row.name}
                 </td>
