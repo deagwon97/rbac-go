@@ -30,11 +30,9 @@ type HandlerInterface interface {
 	DeletePermission(c *gin.Context)
 
 	AddPermissionAssignment(c *gin.Context)
-	UpdatePermissionAssignment(c *gin.Context)
 	DeletePermissionAssignment(c *gin.Context)
 
 	AddSubjectAssignment(c *gin.Context)
-	UpdateSubjectAssignment(c *gin.Context)
 	DeleteSubjectAssignment(c *gin.Context)
 }
 

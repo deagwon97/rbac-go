@@ -441,6 +441,26 @@ paths:
       tags:
       - RBAC permission
   /rbac/permission-assignment:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.PermissionAssignmentData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 삭제된 PermissionAssignment 데이터
+          schema:
+            $ref: '#/definitions/models.PermissionAssignment'
+      summary: PermissionAssignment 삭제
+      tags:
+      - RBAC permissionAssignment
     post:
       consumes:
       - application/json
@@ -459,51 +479,6 @@ paths:
           schema:
             $ref: '#/definitions/models.PermissionAssignment'
       summary: PermissionAssignment 생성
-      tags:
-      - RBAC permissionAssignment
-  /rbac/permission-assignment/{id}:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: PermissionAssignment ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 삭제된 PermissionAssignment 데이터
-          schema:
-            $ref: '#/definitions/models.PermissionAssignment'
-      summary: PermissionAssignment 삭제
-      tags:
-      - RBAC permissionAssignment
-    patch:
-      consumes:
-      - application/json
-      parameters:
-      - description: PermissionAssignment ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Update에 사용할 Data
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dblayer.PermissionAssignmentData'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 수정된 PermissionAssignment 데이터
-          schema:
-            $ref: '#/definitions/models.PermissionAssignment'
-      summary: PermissionAssignment Update
       tags:
       - RBAC permissionAssignment
   /rbac/permission/{id}:
@@ -743,6 +718,26 @@ paths:
       tags:
       - RBAC role
   /rbac/subject-assignment:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.SubjectAssignmentData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 삭제된 SubjectAssignment 데이터
+          schema:
+            $ref: '#/definitions/models.SubjectAssignment'
+      summary: SubjectAssignment 삭제
+      tags:
+      - RBAC subjectAssignment
     post:
       consumes:
       - application/json
@@ -761,51 +756,6 @@ paths:
           schema:
             $ref: '#/definitions/models.SubjectAssignment'
       summary: SubjectAssignment 생성
-      tags:
-      - RBAC subjectAssignment
-  /rbac/subject-assignment/{id}:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: SubjectAssignment ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 삭제된 SubjectAssignment 데이터
-          schema:
-            $ref: '#/definitions/models.SubjectAssignment'
-      summary: SubjectAssignment 삭제
-      tags:
-      - RBAC subjectAssignment
-    patch:
-      consumes:
-      - application/json
-      parameters:
-      - description: SubjectAssignment ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Update에 사용할 Data
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/dblayer.SubjectAssignmentData'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 수정된 SubjectAssignment 데이터
-          schema:
-            $ref: '#/definitions/models.SubjectAssignment'
-      summary: SubjectAssignment Update
       tags:
       - RBAC subjectAssignment
 swagger: "2.0"

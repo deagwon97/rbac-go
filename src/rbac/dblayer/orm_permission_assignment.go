@@ -1,8 +1,6 @@
 package dblayer
 
 import (
-	"errors"
-
 	"rbac-go/rbac/models"
 )
 
@@ -28,44 +26,25 @@ func (db *DBORM) AddPermissionAssignment(
 		itemData.RoleID
 	item.PermissionID =
 		itemData.PermissionID
-
 	err = db.Create(&item).Error
 
 	return item, err
 }
 
-func (db *DBORM) UpdatePermissionAssignment(
-	id int,
+func (db *DBORM) DeletePermissionAssignment(
 	itemData PermissionAssignmentData,
 ) (
 	item models.PermissionAssignment,
 	err error,
 ) {
-	item.ID = id
-	item.RoleID =
-		itemData.RoleID
-	item.PermissionID =
-		itemData.PermissionID
+	err = db.Raw(`
+		SELECT * FROM permission_assignment 
+		WHERE permission_id = ? AND role_id = ?;`,
+		itemData.PermissionID,
+		itemData.RoleID,
+	).First(&item).Error
 
-	var count int64
-	db.Model(item).Where("id = ?", id).Count(&count)
-	if count == 0 {
-		return item, errors.New("item dosen't exist")
-	}
+	err = db.Delete(&item).Error
 
-	err = db.Model(item).Updates(item).Error
-	db.Save(&item)
-
-	db.Where("id = ?", id).First(&item)
-	return item, err
-}
-
-func (db *DBORM) DeletePermissionAssignment(
-	id int,
-) (
-	item models.PermissionAssignment,
-	err error,
-) {
-	db.Where("id = ?", id).First(&item)
 	return item, db.Delete(&item).Error
 }

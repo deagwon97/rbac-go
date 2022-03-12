@@ -381,9 +381,7 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/rbac/permission-assignment/{id}": {
+            },
             "delete": {
                 "consumes": [
                     "application/json"
@@ -397,43 +395,7 @@ const docTemplate = `{
                 "summary": "PermissionAssignment 삭제",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "PermissionAssignment ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "삭제된 PermissionAssignment 데이터",
-                        "schema": {
-                            "$ref": "#/definitions/models.PermissionAssignment"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RBAC permissionAssignment"
-                ],
-                "summary": "PermissionAssignment Update",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "PermissionAssignment ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Update에 사용할 Data",
+                        "description": "Data",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -444,7 +406,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "수정된 PermissionAssignment 데이터",
+                        "description": "삭제된 PermissionAssignment 데이터",
                         "schema": {
                             "$ref": "#/definitions/models.PermissionAssignment"
                         }
@@ -848,9 +810,7 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/rbac/subject-assignment/{id}": {
+            },
             "delete": {
                 "consumes": [
                     "application/json"
@@ -864,43 +824,7 @@ const docTemplate = `{
                 "summary": "SubjectAssignment 삭제",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "SubjectAssignment ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "삭제된 SubjectAssignment 데이터",
-                        "schema": {
-                            "$ref": "#/definitions/models.SubjectAssignment"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RBAC subjectAssignment"
-                ],
-                "summary": "SubjectAssignment Update",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "SubjectAssignment ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Update에 사용할 Data",
+                        "description": "Data",
                         "name": "data",
                         "in": "body",
                         "required": true,
@@ -911,7 +835,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "수정된 SubjectAssignment 데이터",
+                        "description": "삭제된 SubjectAssignment 데이터",
                         "schema": {
                             "$ref": "#/definitions/models.SubjectAssignment"
                         }

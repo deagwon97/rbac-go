@@ -1,8 +1,6 @@
 package dblayer
 
 import (
-	"errors"
-
 	"rbac-go/rbac/models"
 )
 
@@ -35,38 +33,20 @@ func (db *DBORM) AddSubjectAssignment(
 	return item, err
 }
 
-func (db *DBORM) UpdateSubjectAssignment(
-	id int,
+func (db *DBORM) DeleteSubjectAssignment(
 	itemData SubjectAssignmentData,
 ) (
 	item models.SubjectAssignment,
 	err error,
 ) {
-	item.ID = id
-	item.SubjectID =
-		itemData.SubjectID
-	item.RoleID =
-		itemData.RoleID
+	err = db.Raw(`
+		SELECT * FROM subject_assignment 
+		WHERE subject_id = ? AND role_id = ?`,
+		itemData.SubjectID,
+		itemData.RoleID,
+	).First(&item).Error
 
-	var count int64
-	db.Model(item).Where("id = ?", id).Count(&count)
-	if count == 0 {
-		return item, errors.New("item dosen't exist")
-	}
+	err = db.Delete(&item).Error
 
-	err = db.Model(item).Updates(item).Error
-	db.Save(&item)
-
-	db.Where("id = ?", id).First(&item)
 	return item, err
-}
-
-func (db *DBORM) DeleteSubjectAssignment(
-	id int,
-) (
-	item models.SubjectAssignment,
-	err error,
-) {
-	db.Where("id = ?", id).First(&item)
-	return item, db.Delete(&item).Error
 }

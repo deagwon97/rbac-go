@@ -133,15 +133,8 @@ type SubjectAssignmentDBLayer interface {
 	) (
 		models.SubjectAssignment, error,
 	)
-	UpdateSubjectAssignment(
-		int,
-		SubjectAssignmentData,
-	) (
-		models.SubjectAssignment,
-		error,
-	)
 	DeleteSubjectAssignment(
-		id int,
+		SubjectAssignmentData,
 	) (
 		models.SubjectAssignment,
 		error,
@@ -155,15 +148,8 @@ type PermissionAssignmentDBLayer interface {
 		models.PermissionAssignment,
 		error,
 	)
-	UpdatePermissionAssignment(
-		int,
-		PermissionAssignmentData,
-	) (
-		models.PermissionAssignment,
-		error,
-	)
 	DeletePermissionAssignment(
-		int,
+		PermissionAssignmentData,
 	) (
 		models.PermissionAssignment,
 		error,

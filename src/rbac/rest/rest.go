@@ -24,10 +24,8 @@ func AddRoutes(rg *gin.RouterGroup) {
 	router.POST("/permission/objects", h.GetAllowedObjects)
 
 	router.POST("/permission-assignment", h.AddPermissionAssignment)
-	router.PATCH("/permission-assignment/:id", h.UpdatePermissionAssignment)
-	router.DELETE("/permission-assignment/:id", h.DeletePermissionAssignment)
+	router.DELETE("/permission-assignment", h.DeletePermissionAssignment)
 
 	router.POST("/subject-assignment", h.AddSubjectAssignment)
-	router.PATCH("/subject-assignment/:id", h.UpdateSubjectAssignment)
-	router.DELETE("/subject-assignment/:id", h.DeleteSubjectAssignment)
+	router.DELETE("/subject-assignment", h.DeleteSubjectAssignment)
 }
