@@ -21,6 +21,7 @@ type HandlerInterface interface {
 	DeleteRole(c *gin.Context)
 	GetSubjectsOfRolePage(c *gin.Context)
 	GetPermissionsOfRolePage(c *gin.Context)
+	CheckPermissionIsAllowed(c *gin.Context)
 	GetAllowedObjects(c *gin.Context)
 
 	GetPermissionsPage(c *gin.Context)

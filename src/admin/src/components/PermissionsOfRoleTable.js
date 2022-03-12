@@ -1,6 +1,9 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { styled } from "@mui/system";
 import Checkbox from "@mui/material/Checkbox";
+import { API_URL } from "App";
 
 function createData(id, serviceName, name, action, object, checked) {
   return { id, serviceName, name, action, object, checked };
@@ -77,7 +80,7 @@ function PermissionRow(props) {
   return (
     <>
       <tr key={props.idx}>
-        <td>{props.row.serviceName}</td>
+        <td>{props.row.service_name}</td>
         <td style={{ width: 90 }} align="right">
           {props.row.name}
         </td>
@@ -99,6 +102,18 @@ export default function PermissionsOfRoleTable() {
   const page = React.useState(0)[0];
   // const setChecked = React.useState(0)[1];
   const rowsPerPage = React.useState(-1)[0];
+  const [permissionsOfRolePage, setPermissionsOfRolePage] = useState();
+
+  const getPermissionsOfRolePage = async (page) => {
+    console.log(`${API_URL}/rbac/role/list`);
+    await axios
+      .get(`${API_URL}/rbac/role/31/permission?page=${page}&pageSize=5`)
+      .then((res) => setPermissionsOfRolePage(res.data));
+  };
+
+  useEffect(() => {
+    getPermissionsOfRolePage(1);
+  }, []);
 
   return (
     <Root sx={{ width: 500, maxWidth: "100%" }}>
@@ -113,11 +128,8 @@ export default function PermissionsOfRoleTable() {
           </tr>
         </thead>
         <tbody>
-          {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
-            (row, idx) => (
-              <PermissionRow idx={idx} row={row}></PermissionRow>
-            ),
-          )}
+          {permissionsOfRolePage &&
+            permissionsOfRolePage.results.map((row, idx) => <PermissionRow idx={idx} row={row}></PermissionRow>)}
         </tbody>
       </table>
     </Root>

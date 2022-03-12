@@ -33,6 +33,12 @@ type PermissionDBLayer interface {
 		permissionsPage PermissionsPage,
 		err error,
 	)
+	CheckPermissionIsAllowed(
+		permissionOfRole PermissionOfRole,
+	) (
+		permissionStatusOfRole PermissionStatusOfRole,
+		err error,
+	)
 	AddPermission(
 		permissionData PermissionData,
 	) (

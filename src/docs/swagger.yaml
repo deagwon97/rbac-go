@@ -19,16 +19,28 @@ definitions:
     type: object
   dblayer.PermissionOfRole:
     properties:
-      action:
-        type: string
-      name:
-        type: string
-      object:
-        type: string
+      permission_id_list:
+        items:
+          type: integer
+        type: array
+      role_id:
+        type: integer
+    type: object
+  dblayer.PermissionStatus:
+    properties:
+      is_allowed:
+        type: boolean
       permission_id:
         type: integer
-      service_name:
-        type: string
+    type: object
+  dblayer.PermissionStatusOfRole:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/dblayer.PermissionStatus'
+        type: array
+      role_id:
+        type: integer
     type: object
   dblayer.PermissionsOfRolePage:
     properties:
@@ -764,6 +776,27 @@ paths:
           schema:
             $ref: '#/definitions/dblayer.RolesPage'
       summary: Role 목록 조회
+      tags:
+      - RBAC role
+  /rbac/role/permission:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.PermissionOfRole'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dblayer.PermissionStatusOfRole'
+      summary: Permission의 유효성 검증
       tags:
       - RBAC role
   /rbac/subject-assignment:

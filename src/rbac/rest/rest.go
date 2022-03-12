@@ -18,6 +18,7 @@ func AddRoutes(rg *gin.RouterGroup) {
 	router.GET("/permission/list", h.GetPermissionsPage)
 	router.POST("/permission/set", h.AddPermissionSets)
 	router.POST("/permission", h.AddPermission)
+	router.POST("/role/permission", h.CheckPermissionIsAllowed)
 	router.PATCH("/permission/:id", h.UpdatePermission)
 	router.DELETE("/permission/:id", h.DeletePermission)
 	router.POST("/permission/objects", h.GetAllowedObjects)

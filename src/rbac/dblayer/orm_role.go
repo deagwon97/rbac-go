@@ -136,12 +136,78 @@ func (db *DBORM) GetSubjectsOfRolePage(
 	return itemsPage, err
 }
 
+// type PermissionOfRole struct {
+// 	PermissionID int    `gorm:"column:permission_id" json:"permission_id"`
+// 	ServiceName  string `gorm:"column:service_name"  json:"service_name"`
+// 	Name         string `gorm:"column:name"          json:"name"`
+// 	Action       string `gorm:"column:action"        json:"action"`
+// 	Object       string `gorm:"column:object"        json:"object"`
+// }
+
+type PermissionList struct {
+	PermissionID int `gorm:"column:permission_id"   json:"permission_id"`
+	RoleID       int `gorm:"column:role_id"   json:"role_id"`
+}
+
+func (PermissionList) TableName() string {
+	return "permission_assignment"
+}
+
 type PermissionOfRole struct {
-	PermissionID int    `gorm:"column:permission_id"   json:"permission_id"`
-	ServiceName  string `gorm:"column:service_name"  json:"service_name"`
-	Name         string `gorm:"column:name"          json:"name"`
-	Action       string `gorm:"column:action"        json:"action"`
-	Object       string `gorm:"column:object"        json:"object"`
+	RoleID           int   `gorm:"column:role_id"       json:"role_id"`
+	PermissionIDList []int `json:"permission_id_list"`
+}
+
+type PermissionStatus struct {
+	PermissionID int  `gorm:"column:permission_id"   json:"permission_id"`
+	IsAllowed    bool `json:"is_allowed"`
+}
+
+type PermissionStatusOfRole struct {
+	RoleID int                `gorm:"column:role_id"       json:"role_id"`
+	List   []PermissionStatus `json:"list"`
+}
+
+func isValidPermission(permissionID int, allowdPermiaaionIDList []int) bool {
+	for _, allowedPermissionId := range allowdPermiaaionIDList {
+		if permissionID == allowedPermissionId {
+			return true
+		}
+	}
+	return false
+}
+
+func (db *DBORM) CheckPermissionIsAllowed(
+	permissionOfRole PermissionOfRole,
+) (
+	permissionStatusOfRole PermissionStatusOfRole, err error,
+) {
+	var count int64
+	db.Model(&models.Permission{}).Count(&count)
+
+	roleID := permissionOfRole.RoleID
+
+	var allowedPermissionIDList []int
+
+	err = db.Table("permission_assignment").
+		Select("permission_id").
+		Where("permission_id IN ?", permissionOfRole.PermissionIDList).
+		Where("role_id = ?", roleID).
+		Scan(&allowedPermissionIDList).
+		Error
+
+	var permissionStatus PermissionStatus
+	permissionStatusOfRole.RoleID = roleID
+	for _, permissionID := range permissionOfRole.PermissionIDList {
+		permissionStatus.PermissionID = permissionID
+		if isValidPermission(permissionID, allowedPermissionIDList) == true {
+			permissionStatus.IsAllowed = true
+		} else {
+			permissionStatus.IsAllowed = false
+		}
+		permissionStatusOfRole.List = append(permissionStatusOfRole.List, permissionStatus)
+	}
+	return permissionStatusOfRole, err
 }
 
 type PermissionsOfRolePage struct {

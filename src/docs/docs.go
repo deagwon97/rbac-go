@@ -662,6 +662,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/rbac/role/permission": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC role"
+                ],
+                "summary": "Permission의 유효성 검증",
+                "parameters": [
+                    {
+                        "description": "Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionOfRole"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionStatusOfRole"
+                        }
+                    }
+                }
+            }
+        },
         "/rbac/role/{id}": {
             "delete": {
                 "consumes": [
@@ -952,20 +985,39 @@ const docTemplate = `{
         "dblayer.PermissionOfRole": {
             "type": "object",
             "properties": {
-                "action": {
-                    "type": "string"
+                "permission_id_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 },
-                "name": {
-                    "type": "string"
-                },
-                "object": {
-                    "type": "string"
+                "role_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dblayer.PermissionStatus": {
+            "type": "object",
+            "properties": {
+                "is_allowed": {
+                    "type": "boolean"
                 },
                 "permission_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "dblayer.PermissionStatusOfRole": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dblayer.PermissionStatus"
+                    }
                 },
-                "service_name": {
-                    "type": "string"
+                "role_id": {
+                    "type": "integer"
                 }
             }
         },

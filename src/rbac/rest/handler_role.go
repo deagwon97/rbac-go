@@ -76,6 +76,26 @@ func (h *Handler) GetPermissionsOfRolePage(c *gin.Context) {
 	c.JSON(http.StatusOK, roles)
 }
 
+// @Summary Permission의 유효성 검증
+// @Tags RBAC role
+// @Accept json
+// @Produce json
+// @Param data body dblayer.PermissionOfRole true "Data"
+// @Success 200 {object} dblayer.PermissionStatusOfRole
+// @Router /rbac/role/permission [post]
+func (h *Handler) CheckPermissionIsAllowed(c *gin.Context) {
+
+	var permissionOfRole dblayer.PermissionOfRole
+
+	err := c.ShouldBindJSON(&permissionOfRole)
+
+	permissionStatusOfRole, err := h.db.CheckPermissionIsAllowed(permissionOfRole)
+	if ce.GinError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, permissionStatusOfRole)
+}
+
 // @Summary Role 생성
 // @Tags RBAC role
 // @Accept json
