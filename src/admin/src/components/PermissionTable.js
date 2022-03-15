@@ -42,7 +42,6 @@ const Root = styled("div")(
 );
 
 export default function PermissionTable() {
-  const [page, setPage] = React.useState(1);
   const [permissionPage, setPermissionPage] = useState();
 
   const getPermissionPage = async (page) => {
@@ -56,45 +55,46 @@ export default function PermissionTable() {
   }, []);
 
   const handleChangePageNum = (event, value) => {
-    setPage(value);
     getPermissionPage(value);
   };
 
   return (
     <Root sx={{ width: 500, maxWidth: "100%" }}>
-      <table aria-label="custom pagination table">
-        <thead>
-          <tr>
-            <th>서비스</th>
-            <th>권한</th>
-            <th>행동</th>
-            <th>대상</th>
-          </tr>
-        </thead>
-        <tbody>
-          {permissionPage &&
-            permissionPage.results.map((row, idx) => (
-              <tr key={idx}>
-                <td>{row.service_name}</td>
-                <td style={{ width: 120 }} align="right">
-                  {row.name}
-                </td>
-                <td style={{ width: 120 }} align="right">
-                  {row.action}
-                </td>
-                <td style={{ width: 120 }} align="right">
-                  {row.object}
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      <div style={{ height: "240px" }}>
+        <table aria-label="custom pagination table">
+          <thead>
+            <tr>
+              <th>서비스</th>
+              <th>권한</th>
+              <th>행동</th>
+              <th>대상</th>
+            </tr>
+          </thead>
+          <tbody>
+            {permissionPage &&
+              permissionPage.results.map((row, idx) => (
+                <tr key={idx}>
+                  <td style={{ height: "40px", boxSizing: "border-box" }}>{row.service_name}</td>
+                  <td style={{ width: "120px", height: "40px", boxSizing: "border-box" }} align="right">
+                    {row.name}
+                  </td>
+                  <td style={{ width: "120px", height: "40px", boxSizing: "border-box" }} align="right">
+                    {row.action}
+                  </td>
+                  <td style={{ width: "120px", height: "40px", boxSizing: "border-box" }} align="right">
+                    {row.object}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
       {permissionPage && (
         <Stack spacing={3}>
           <Pagination
             sx={{ margin: "auto", marginTop: "10px" }}
-            count={parseInt(permissionPage.count / 5)}
-            defaultPage={page}
+            count={parseInt((permissionPage.count + 1) / 5)}
+            defaultPage={1}
             onChange={handleChangePageNum}
             shape="rounded"
           />

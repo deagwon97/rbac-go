@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import { styled } from "@mui/system";
 import { API_URL } from "App";
 
@@ -41,28 +40,47 @@ const Root = styled("div")(
   `,
 );
 
-const StyledButton = styled(Button)({
-  background: "#1876D1",
-  "&:hover": {
-    background: "#F6FAFD",
-    color: "#1876D1",
-  },
-  border: 0,
-  borderRadius: 3,
-  float: "center",
-  color: "white",
-  height: "20px",
-  fontSize: 12,
-  textTransform: "none",
-});
+function RoleRow(props) {
+  const handleChangePermission = (e, role) => {
+    props.onChange(role.id, role);
+  };
+  const StyledTr = styled("tr")(
+    () => `
+    &:hover {
+      background-color: rgba(201, 76, 76, 0.1);
+    }
+  `,
+  );
+
+  return (
+    <>
+      {props.roleID == props.row.id ? (
+        <tr style={{ backgroundColor: "rgba(201, 76, 76, 0.3)" }}>
+          <td>{props.row.name}</td>
+          <td align="right">{props.row.description}</td>
+        </tr>
+      ) : (
+        <StyledTr
+          onClick={(e) => {
+            handleChangePermission(e, props.row);
+          }}
+        >
+          <td>{props.row.name}</td>
+          <td align="right">{props.row.description}</td>
+        </StyledTr>
+      )}
+    </>
+  );
+}
 
 export default function RoleTable(props) {
-  const [page, setPage] = useState(1);
-  const [rolePage, setRolePage] = useState();
-
-  const handleChangePermission = (e, role) => {
+  const [roleID, setRoleID] = useState();
+  function handleRoleID(roleID, role) {
+    setRoleID(roleID);
     props.onChange(role);
-  };
+  }
+
+  const [rolePage, setRolePage] = useState();
 
   const getRolePage = async (page) => {
     await axios.get(`${API_URL}/rbac/role/list?page=${page}&pageSize=5`).then((res) => setRolePage(res.data));
@@ -73,54 +91,38 @@ export default function RoleTable(props) {
   }, []);
 
   const handleChangePageNum = (event, value) => {
-    setPage(value);
     getRolePage(value);
   };
 
   return (
     <Root sx={{ width: 500, maxWidth: "100%" }}>
-      <div>
+      <div style={{ height: "200px" }}>
         <table aria-label="custom pagination table">
           <thead>
             <tr>
               <th>역할</th>
               <th>설명</th>
-              <th> </th>
             </tr>
           </thead>
           <tbody>
             {rolePage &&
               rolePage.results.map((row, idx) => (
-                <tr key={idx}>
-                  <td>{row.name}</td>
-                  <td align="right">{row.description}</td>
-                  <td style={{ width: "150px", textAlign: "center" }}>
-                    <StyledButton
-                      size="small"
-                      aria-label="fingerprint"
-                      onClick={(e) => {
-                        handleChangePermission(e, row);
-                      }}
-                    >
-                      Assignment
-                    </StyledButton>
-                  </td>
-                </tr>
+                <RoleRow key={idx} roleID={roleID} row={row} onChange={handleRoleID}></RoleRow>
               ))}
           </tbody>
         </table>
-        {rolePage && (
-          <Stack spacing={3}>
-            <Pagination
-              sx={{ margin: "auto", marginTop: "10px" }}
-              count={parseInt(rolePage.count / 5) + 1}
-              defaultPage={page}
-              onChange={handleChangePageNum}
-              shape="rounded"
-            />
-          </Stack>
-        )}
       </div>
+      {rolePage && (
+        <Stack spacing={2}>
+          <Pagination
+            sx={{ margin: "auto", marginTop: "10px" }}
+            count={parseInt(rolePage.count / 5) + 1}
+            defaultPage={1}
+            onChange={handleChangePageNum}
+            shape="rounded"
+          />
+        </Stack>
+      )}
     </Root>
   );
 }

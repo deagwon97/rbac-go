@@ -41,7 +41,7 @@ const Root = styled("div")(
   `,
 );
 
-function PermissionRow(props) {
+function SubjectRow(props) {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
   const [checked, setChecked] = useState(props.row.is_allowed);
 
@@ -49,40 +49,31 @@ function PermissionRow(props) {
     setChecked(props.row.is_allowed);
   }, [props]);
 
-  const addPermissionAssignment = async (permissionID, roleID) => {
+  const addSubjectAssignment = async (subjectID, roleID) => {
     const data = {
-      permission_id: permissionID,
+      subject_id: subjectID,
       role_id: roleID,
     };
-    await axios.post(`${API_URL}/rbac/permission-assignment`, data);
+    await axios.post(`${API_URL}/rbac/subject-assignment`, data);
   };
-  const deletePermissionAssignment = async (permissionID, roleID) => {
-    await axios.delete(`${API_URL}/rbac/permission-assignment?permissionID=${permissionID}&roleID=${roleID}`);
+  const deleteSubjectAssignment = async (subjectID, roleID) => {
+    await axios.delete(`${API_URL}/rbac/subject-assignment?subjectID=${subjectID}&roleID=${roleID}`);
   };
 
-  const handleChange = (event, roleID, permissionID) => {
+  const handleChange = (event, roleID, subjectID) => {
     setChecked(event.target.checked);
 
     if (event.target.checked === true) {
-      addPermissionAssignment(permissionID, roleID);
+      addSubjectAssignment(subjectID, roleID);
     } else {
-      deletePermissionAssignment(permissionID, roleID);
+      deleteSubjectAssignment(subjectID, roleID);
     }
   };
 
   return (
     <>
       <tr key={props.idx}>
-        <td>{props.row.service_name}</td>
-        <td style={{ width: 90 }} align="right">
-          {props.row.name}
-        </td>
-        <td style={{ width: 90 }} align="right">
-          {props.row.action}
-        </td>
-        <td style={{ width: 90 }} align="right">
-          {props.row.object}
-        </td>
+        <td>{props.row.subject_id}</td>
         <td style={{ width: 45, textAlign: "center" }}>
           <Checkbox checked={checked} onChange={(e) => handleChange(e, props.roleID, props.row.id)} {...label} />
         </td>
@@ -91,15 +82,15 @@ function PermissionRow(props) {
   );
 }
 
-export default function PermissionsOfRoleTable(props) {
-  const [permissionsOfRolePage, setPermissionsOfRolePage] = useState();
+export default function SubjectsOfRoleTable(props) {
+  const [subjectsOfRolePage, setSubjectsOfRolePage] = useState();
   const [role, setRole] = useState(props.role);
 
-  const getPermissionsOfRolePage = async (page) => {
+  const getSubjectsOfRolePage = async (page) => {
     if (role !== null) {
       await axios
-        .get(`${API_URL}/rbac/role/${role.id}/permission?page=${page}&pageSize=5`)
-        .then((res) => setPermissionsOfRolePage(res.data));
+        .get(`${API_URL}/rbac/role/${role.id}/subject?page=${page}&pageSize=5`)
+        .then((res) => setSubjectsOfRolePage(res.data));
     }
   };
 
@@ -108,18 +99,18 @@ export default function PermissionsOfRoleTable(props) {
   }, [props.role]);
 
   useEffect(() => {
-    getPermissionsOfRolePage(1);
+    getSubjectsOfRolePage(1);
   }, [role]);
 
   const handleChangePageNum = (event, value) => {
-    getPermissionsOfRolePage(value);
+    getSubjectsOfRolePage(value);
   };
 
   return (
     <Root sx={{ width: 500, maxWidth: "100%" }}>
       {role && (
         <>
-          <h1>Permissions Of Role</h1>
+          <h1>Subjects Of Role</h1>
           <h3>
             {role.name} : {role.description}
           </h3>
@@ -127,26 +118,23 @@ export default function PermissionsOfRoleTable(props) {
             <table aria-label="custom pagination table">
               <thead>
                 <tr>
-                  <th style={{ textAlign: "center" }}>서비스</th>
-                  <th style={{ textAlign: "center" }}>권한</th>
-                  <th style={{ textAlign: "center" }}>행동</th>
-                  <th style={{ textAlign: "center" }}>대상</th>
-                  <th style={{ textAlign: "center" }}>확인</th>
+                  <th style={{ textAlign: "center" }}>유저 인덱스</th>
+                  <th style={{ textAlign: "center" }}>할당</th>
                 </tr>
               </thead>
               <tbody>
-                {permissionsOfRolePage &&
-                  permissionsOfRolePage.results.map((row, idx) => (
-                    <PermissionRow key={idx} idx={idx} row={row} roleID={role.id}></PermissionRow>
+                {subjectsOfRolePage &&
+                  subjectsOfRolePage.results.map((row, idx) => (
+                    <SubjectRow key={idx} idx={idx} row={row} roleID={role.id}></SubjectRow>
                   ))}
               </tbody>
             </table>
           </div>
-          {permissionsOfRolePage && (
+          {subjectsOfRolePage && (
             <Stack spacing={3}>
               <Pagination
                 sx={{ margin: "auto", marginTop: "10px" }}
-                count={parseInt((permissionsOfRolePage.count + 1) / 5)}
+                count={parseInt((subjectsOfRolePage.count + 1) / 5)}
                 defaultPage={1}
                 onChange={handleChangePageNum}
                 shape="rounded"

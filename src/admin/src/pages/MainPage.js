@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PermissionsOfRoleTable from "components/PermissionsOfRoleTable";
+import SubjectsOfRoleTable from "components/SubjectsOfRoleTable";
 import RoleTable from "components/RoleTable";
 import PermissionTable from "components/PermissionTable";
 // import SubjectTable from "components/SubjectTable";
@@ -18,6 +19,14 @@ const MainPage = () => {
         <h1>Roles</h1>
         <RoleTable onChange={handleChange} />
         <PermissionsOfRoleTable role={role} />
+        <SubjectsOfRoleTable role={role} />
+      </div>
+      <div>
+        <br />
+        <br />
+        <p align="center">github.com/deagwon97/rbac-go</p>
+        <br />
+        <br />
       </div>
     </>
   );
