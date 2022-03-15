@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/system";
+import { TextField, Pagination } from "@mui/material";
 import { API_URL } from "App";
 
 const grey = {
@@ -47,7 +47,7 @@ function RoleRow(props) {
   const StyledTr = styled("tr")(
     () => `
     &:hover {
-      background-color: rgba(201, 76, 76, 0.1);
+      background-color: rgb(24, 118, 209, 0.2);
     }
   `,
   );
@@ -55,7 +55,7 @@ function RoleRow(props) {
   return (
     <>
       {props.roleID == props.row.id ? (
-        <tr style={{ backgroundColor: "rgba(201, 76, 76, 0.3)" }}>
+        <tr style={{ backgroundColor: "rgb(24, 118, 209, 0.6)" }}>
           <td>{props.row.name}</td>
           <td align="right">{props.row.description}</td>
         </tr>
@@ -95,8 +95,16 @@ export default function RoleTable(props) {
   };
 
   return (
-    <Root sx={{ width: 500, maxWidth: "100%" }}>
-      <div style={{ height: "200px" }}>
+    <Root sx={{ width: 350, maxWidth: "100%" }}>
+      <h1>Role</h1>
+      <TextField
+        style={{ width: "100%", marginBottom: "10px" }}
+        id="outlined-search"
+        size="small"
+        label="역할 검색"
+        type="search"
+      />
+      <div style={{ minHeight: "310px" }}>
         <table aria-label="custom pagination table">
           <thead>
             <tr>

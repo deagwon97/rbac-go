@@ -2,31 +2,47 @@ import { useState } from "react";
 import PermissionsOfRoleTable from "components/PermissionsOfRoleTable";
 import SubjectsOfRoleTable from "components/SubjectsOfRoleTable";
 import RoleTable from "components/RoleTable";
-import PermissionTable from "components/PermissionTable";
-// import SubjectTable from "components/SubjectTable";
+import Paper from "@mui/material/Paper";
+import Grow from "@mui/material/Grow";
 
 const MainPage = () => {
   const [role, setRole] = useState(null);
 
+  const [checked, setChecked] = useState(false);
+
   function handleChange(role) {
     setRole(role);
+    setChecked(true);
   }
+
   return (
     <>
-      <div style={{ width: "fit-content", marginLeft: "auto", marginRight: "auto", alignContent: "center" }}>
-        <h1>Permissions</h1>
-        <PermissionTable />
-        <h1>Roles</h1>
-        <RoleTable onChange={handleChange} />
-        <PermissionsOfRoleTable role={role} />
-        <SubjectsOfRoleTable role={role} />
-      </div>
-      <div>
-        <br />
-        <br />
-        <p align="center">github.com/deagwon97/rbac-go</p>
-        <br />
-        <br />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignSelf: "center",
+        }}
+      >
+        <Grow in={checked}>
+          <Paper elevation={0}>
+            <SubjectsOfRoleTable role={role} />
+          </Paper>
+        </Grow>
+        <div>
+          <RoleTable onChange={handleChange} />
+          <br />
+          <p style={{ marginTop: "30%" }} align="center">
+            github.com/deagwon97/rbac-go
+          </p>
+          <br />
+        </div>
+        <Grow in={checked}>
+          <Paper elevation={0}>
+            <PermissionsOfRoleTable role={role} />
+          </Paper>
+        </Grow>
       </div>
     </>
   );

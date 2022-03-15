@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/system";
-import Checkbox from "@mui/material/Checkbox";
+import { Checkbox, TextField, Pagination } from "@mui/material";
 import { API_URL } from "App";
 
 const grey = {
@@ -73,18 +72,18 @@ function PermissionRow(props) {
   return (
     <>
       <tr key={props.idx}>
+        <td style={{ width: 35, textAlign: "center" }}>
+          <Checkbox checked={checked} onChange={(e) => handleChange(e, props.roleID, props.row.id)} {...label} />
+        </td>
         <td>{props.row.service_name}</td>
-        <td style={{ width: 90 }} align="right">
+        <td style={{ width: 70 }} align="right">
           {props.row.name}
         </td>
-        <td style={{ width: 90 }} align="right">
+        <td style={{ width: 70 }} align="right">
           {props.row.action}
         </td>
-        <td style={{ width: 90 }} align="right">
+        <td style={{ width: 70 }} align="right">
           {props.row.object}
-        </td>
-        <td style={{ width: 45, textAlign: "center" }}>
-          <Checkbox checked={checked} onChange={(e) => handleChange(e, props.roleID, props.row.id)} {...label} />
         </td>
       </tr>
     </>
@@ -116,22 +115,28 @@ export default function PermissionsOfRoleTable(props) {
   };
 
   return (
-    <Root sx={{ width: 500, maxWidth: "100%" }}>
+    <Root sx={{ width: 400, maxWidth: "100%" }}>
       {role && (
         <>
           <h1>Permissions Of Role</h1>
-          <h3>
-            {role.name} : {role.description}
-          </h3>
-          <div style={{ height: "309px" }}>
+
+          <TextField
+            style={{ width: "100%", marginBottom: "10px" }}
+            id="outlined-search"
+            size="small"
+            label="권한 검색"
+            type="search"
+          />
+
+          <div style={{ minHeight: "310px" }}>
             <table aria-label="custom pagination table">
               <thead>
                 <tr>
+                  <th style={{ textAlign: "center" }}>할당</th>
                   <th style={{ textAlign: "center" }}>서비스</th>
                   <th style={{ textAlign: "center" }}>권한</th>
                   <th style={{ textAlign: "center" }}>행동</th>
                   <th style={{ textAlign: "center" }}>대상</th>
-                  <th style={{ textAlign: "center" }}>확인</th>
                 </tr>
               </thead>
               <tbody>
