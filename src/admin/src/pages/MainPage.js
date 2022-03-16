@@ -20,6 +20,9 @@ const MainPage = () => {
       <div
         style={{
           display: "flex",
+          maxWidth: "1300px",
+          marginLeft: "auto",
+          marginRight: "auto",
           flexDirection: "row",
           justifyContent: "space-around",
           alignSelf: "center",
@@ -33,7 +36,7 @@ const MainPage = () => {
         <div>
           <RoleTable onChange={handleChange} />
           <br />
-          <p style={{ marginTop: "30%" }} align="center">
+          <p style={{ marginTop: "10%" }} align="center">
             github.com/deagwon97/rbac-go
           </p>
           <br />

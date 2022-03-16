@@ -77,6 +77,13 @@ definitions:
           $ref: '#/definitions/dblayer.SubjectStatus'
         type: array
     type: object
+  dblayer.UserIDName:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   models.AddUserData:
     properties:
       email:
@@ -209,6 +216,13 @@ definitions:
       subject_id:
         type: integer
     type: object
+  rest.UserIDList:
+    properties:
+      id_list:
+        items:
+          type: integer
+        type: array
+    type: object
   rest.accessToken:
     properties:
       access_token:
@@ -265,6 +279,27 @@ paths:
           schema:
             $ref: '#/definitions/models.LoginResult'
       summary: 로그인
+      tags:
+      - Account
+  /account/name/list:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/rest.UserIDList'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dblayer.UserIDName'
+      summary: 사용자 이름 목록 조회
       tags:
       - Account
   /account/renew:
@@ -445,12 +480,16 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Data
-        in: body
-        name: data
+      - description: permission id
+        in: query
+        name: permissionID
         required: true
-        schema:
-          $ref: '#/definitions/dblayer.PermissionAssignmentData'
+        type: integer
+      - description: role id
+        in: query
+        name: roleID
+        required: true
+        type: integer
       produces:
       - application/json
       responses:

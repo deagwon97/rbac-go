@@ -82,6 +82,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/account/name/list": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "사용자 이름 목록 조회",
+                "parameters": [
+                    {
+                        "description": "Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rest.UserIDList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.UserIDName"
+                        }
+                    }
+                }
+            }
+        },
         "/account/renew": {
             "post": {
                 "consumes": [
@@ -395,13 +428,18 @@ const docTemplate = `{
                 "summary": "PermissionAssignment 삭제",
                 "parameters": [
                     {
-                        "description": "Data",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dblayer.PermissionAssignmentData"
-                        }
+                        "type": "integer",
+                        "description": "permission id",
+                        "name": "permissionID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "role id",
+                        "name": "roleID",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -966,6 +1004,17 @@ const docTemplate = `{
                 }
             }
         },
+        "dblayer.UserIDName": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.AddUserData": {
             "type": "object",
             "required": [
@@ -1166,6 +1215,17 @@ const docTemplate = `{
                 },
                 "subject_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "rest.UserIDList": {
+            "type": "object",
+            "properties": {
+                "id_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },

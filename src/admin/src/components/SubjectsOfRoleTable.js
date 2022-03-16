@@ -73,6 +73,7 @@ function SubjectRow(props) {
     <>
       <tr key={props.idx}>
         <td>{props.row.subject_id}</td>
+        <td>{props.row.name}</td>
         <td style={{ width: 45, textAlign: "center" }}>
           <Checkbox
             checked={checked}
@@ -88,13 +89,30 @@ function SubjectRow(props) {
 export default function SubjectsOfRoleTable(props) {
   const [subjectsOfRolePage, setSubjectsOfRolePage] = useState();
   const [role, setRole] = useState(props.role);
+  const [subjects, setSubjects] = useState();
+  const rowSize = 6;
 
   const getSubjectsOfRolePage = async (page) => {
     if (role !== null) {
       await axios
-        .get(`${API_URL}/rbac/role/${role.id}/subject?page=${page}&pageSize=5`)
+        .get(`${API_URL}/rbac/role/${role.id}/subject?page=${page}&pageSize=${rowSize}`)
         .then((res) => setSubjectsOfRolePage(res.data));
     }
+  };
+
+  const getSuibjectsName = async (IDList) => {
+    let data = {
+      id_list: [],
+    };
+
+    var i;
+    if (IDList.length > 0) {
+      for (i = 0; i < IDList.length; i++) {
+        data.id_list[i] = IDList[i].subject_id;
+      }
+    }
+
+    await axios.post(`${API_URL}/account/name/list`, data).then((res) => setSubjects(res.data));
   };
 
   useEffect(() => {
@@ -104,6 +122,12 @@ export default function SubjectsOfRoleTable(props) {
   useEffect(() => {
     getSubjectsOfRolePage(1);
   }, [role]);
+
+  useEffect(() => {
+    if (subjectsOfRolePage !== undefined) {
+      getSuibjectsName(subjectsOfRolePage.results);
+    }
+  }, [subjectsOfRolePage]);
 
   const handleChangePageNum = (event, value) => {
     getSubjectsOfRolePage(value);
@@ -123,19 +147,22 @@ export default function SubjectsOfRoleTable(props) {
             type="search"
           />
 
-          <div style={{ minHeight: "310px" }}>
+          <div style={{ minHeight: "585px" }}>
             <table aria-label="custom pagination table">
               <thead>
                 <tr>
-                  <th style={{ textAlign: "center" }}>유저 인덱스</th>
+                  <th style={{ textAlign: "center" }}>ID</th>
+                  <th style={{ textAlign: "center" }}>이름</th>
                   <th style={{ textAlign: "center" }}>할당</th>
                 </tr>
               </thead>
               <tbody>
                 {subjectsOfRolePage &&
-                  subjectsOfRolePage.results.map((row, idx) => (
-                    <SubjectRow key={idx} idx={idx} row={row} roleID={role.id}></SubjectRow>
-                  ))}
+                  subjects &&
+                  subjectsOfRolePage.results.map((row, idx) => {
+                    row.name = subjects[idx].name;
+                    return <SubjectRow key={idx} idx={idx} row={row} roleID={role.id}></SubjectRow>;
+                  })}
               </tbody>
             </table>
           </div>
@@ -143,7 +170,7 @@ export default function SubjectsOfRoleTable(props) {
             <Stack spacing={3}>
               <Pagination
                 sx={{ margin: "auto", marginTop: "10px" }}
-                count={parseInt((subjectsOfRolePage.count + 1) / 5)}
+                count={parseInt((subjectsOfRolePage.count + 1) / rowSize)}
                 defaultPage={1}
                 onChange={handleChangePageNum}
                 shape="rounded"

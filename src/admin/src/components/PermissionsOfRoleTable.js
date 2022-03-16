@@ -97,7 +97,7 @@ export default function PermissionsOfRoleTable(props) {
   const getPermissionsOfRolePage = async (page) => {
     if (role !== null) {
       await axios
-        .get(`${API_URL}/rbac/role/${role.id}/permission?page=${page}&pageSize=5`)
+        .get(`${API_URL}/rbac/role/${role.id}/permission?page=${page}&pageSize=10`)
         .then((res) => setPermissionsOfRolePage(res.data));
     }
   };
@@ -128,7 +128,7 @@ export default function PermissionsOfRoleTable(props) {
             type="search"
           />
 
-          <div style={{ minHeight: "310px" }}>
+          <div style={{ minHeight: "585px" }}>
             <table aria-label="custom pagination table">
               <thead>
                 <tr>
@@ -151,7 +151,7 @@ export default function PermissionsOfRoleTable(props) {
             <Stack spacing={3}>
               <Pagination
                 sx={{ margin: "auto", marginTop: "10px" }}
-                count={parseInt((permissionsOfRolePage.count + 1) / 5)}
+                count={parseInt((permissionsOfRolePage.count + 1) / 10)}
                 defaultPage={1}
                 onChange={handleChangePageNum}
                 shape="rounded"

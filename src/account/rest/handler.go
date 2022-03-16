@@ -8,6 +8,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
+	ce "rbac-go/common/error"
 	"time"
 
 	"net/http"
@@ -267,11 +268,38 @@ func (h *Handler) RenewToken(c *gin.Context) {
 	}
 }
 
+type UserIDList struct {
+	IDList []int `json:"id_list"`
+}
+
+// @Summary 사용자 이름 목록 조회
+// @Tags Account
+// @Accept json
+// @Produce json
+// @Param data body UserIDList true "Data"
+// @Success 200 {object} dblayer.UserIDName
+// @Router /account/name/list [post]
+func (h *Handler) GetUserListName(c *gin.Context) {
+	var userIDList UserIDList
+
+	err := c.ShouldBindJSON(&userIDList)
+	if ce.GinError(c, err) {
+		return
+	}
+
+	userIDName, err := h.db.GetUserListName(userIDList.IDList)
+	if ce.GinError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, userIDName)
+}
+
 type HandlerInterface interface {
 	AddUser(c *gin.Context)
 	Login(c *gin.Context)
 	IsValid(c *gin.Context)
 	RenewToken(c *gin.Context)
+	GetUserListName(c *gin.Context)
 }
 
 // HandlerInterface의 생성자

@@ -44,3 +44,21 @@ func (db *DBORM) GetPassword(
 		Error
 	return user, err
 }
+
+type UserIDName struct {
+	ID   int    `gorm:"id"    json:"id"`
+	Name string `gorm:"name"  json:"name"`
+}
+
+func (db *DBORM) GetUserListName(userIDList []int) (userIDName []UserIDName, err error) {
+
+	err = db.
+		Table("user").
+		Raw(`
+		SELECT id, name FROM user where id in ? ORDER BY id DESC;
+		`, userIDList).
+		Scan(&userIDName).
+		Error
+
+	return
+}

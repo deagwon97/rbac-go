@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/system";
-import { TextField, Pagination } from "@mui/material";
+import { TextField, Pagination, Button } from "@mui/material";
 import { API_URL } from "App";
 
 const grey = {
@@ -83,7 +83,7 @@ export default function RoleTable(props) {
   const [rolePage, setRolePage] = useState();
 
   const getRolePage = async (page) => {
-    await axios.get(`${API_URL}/rbac/role/list?page=${page}&pageSize=5`).then((res) => setRolePage(res.data));
+    await axios.get(`${API_URL}/rbac/role/list?page=${page}&pageSize=10`).then((res) => setRolePage(res.data));
   };
 
   useEffect(() => {
@@ -104,27 +104,46 @@ export default function RoleTable(props) {
         label="역할 검색"
         type="search"
       />
-      <div style={{ minHeight: "310px" }}>
-        <table aria-label="custom pagination table">
-          <thead>
-            <tr>
-              <th>역할</th>
-              <th>설명</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rolePage &&
-              rolePage.results.map((row, idx) => (
-                <RoleRow key={idx} roleID={roleID} row={row} onChange={handleRoleID}></RoleRow>
-              ))}
-          </tbody>
-        </table>
+
+      <div style={{ minHeight: "585px" }}>
+        <div style={{ minHeight: "400px" }}>
+          <table aria-label="custom pagination table">
+            <thead>
+              <tr>
+                <th>역할</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rolePage &&
+                rolePage.results.map((row, idx) => (
+                  <RoleRow key={idx} roleID={roleID} row={row} onChange={handleRoleID}></RoleRow>
+                ))}
+            </tbody>
+          </table>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            marginBottom: "10px",
+            alignSelf: "center",
+          }}
+        >
+          <TextField style={{ width: "40%" }} id="outlined-search" size="small" label="역할" type="search" />
+          <TextField style={{}} id="outlined-search" size="small" label="설명" type="search" />
+          <Button variant="outlined" style={{ width: "40px" }}>
+            추가
+          </Button>
+        </div>
       </div>
       {rolePage && (
         <Stack spacing={2}>
           <Pagination
             sx={{ margin: "auto", marginTop: "10px" }}
-            count={parseInt(rolePage.count / 5) + 1}
+            count={parseInt((rolePage.count + 1) / 10)}
             defaultPage={1}
             onChange={handleChangePageNum}
             shape="rounded"
