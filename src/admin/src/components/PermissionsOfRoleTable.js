@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/system";
-import { Checkbox, TextField, Pagination } from "@mui/material";
+import { Checkbox, TextField, Pagination, Button } from "@mui/material";
 import { API_URL } from "App";
 
 const grey = {
@@ -119,14 +119,21 @@ export default function PermissionsOfRoleTable(props) {
       {role && (
         <>
           <h1>Permissions Of Role</h1>
-
-          <TextField
-            style={{ width: "100%", marginBottom: "10px" }}
-            id="outlined-search"
-            size="small"
-            label="권한 검색"
-            type="search"
-          />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: "10px",
+              alignSelf: "center",
+            }}
+          >
+            <TextField style={{ width: "360px" }} id="outlined-search" size="small" label="권한 검색" type="search" />
+            <Button variant="outlined" sx={{ width: "20px" }}>
+              검색
+            </Button>
+          </div>
 
           <div style={{ minHeight: "585px" }}>
             <table aria-label="custom pagination table">

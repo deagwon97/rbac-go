@@ -97,13 +97,21 @@ export default function RoleTable(props) {
   return (
     <Root sx={{ width: 350, maxWidth: "100%" }}>
       <h1>Role</h1>
-      <TextField
-        style={{ width: "100%", marginBottom: "10px" }}
-        id="outlined-search"
-        size="small"
-        label="역할 검색"
-        type="search"
-      />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginBottom: "10px",
+          alignSelf: "center",
+        }}
+      >
+        <TextField style={{ width: "360px" }} id="outlined-search" size="small" label="역할 검색" type="search" />
+        <Button variant="outlined" sx={{ width: "20px" }}>
+          검색
+        </Button>
+      </div>
 
       <div style={{ minHeight: "585px" }}>
         <div style={{ minHeight: "400px" }}>
@@ -121,6 +129,24 @@ export default function RoleTable(props) {
                 ))}
             </tbody>
           </table>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            flexDirection: "row",
+            justifyContent: "left",
+            marginBottom: "10px",
+            alignSelf: "left",
+          }}
+        >
+          <Button variant="outlined" size="small">
+            삭제
+          </Button>
+          <Button variant="outlined" size="small">
+            수정
+          </Button>
         </div>
         <div
           style={{
