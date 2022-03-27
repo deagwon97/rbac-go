@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/system";
-import { Checkbox, TextField, Pagination, Button } from "@mui/material";
+import { Checkbox, Pagination } from "@mui/material";
 import { API_URL } from "App";
 
 const grey = {
@@ -71,7 +71,7 @@ function PermissionRow(props) {
 
   return (
     <>
-      <tr key={props.idx}>
+      <tr key={props.idx} style={{ height: "55px" }}>
         <td style={{ width: 35, textAlign: "center" }}>
           <Checkbox checked={checked} onChange={(e) => handleChange(e, props.roleID, props.row.id)} {...label} />
         </td>
@@ -93,11 +93,12 @@ function PermissionRow(props) {
 export default function PermissionsOfRoleTable(props) {
   const [permissionsOfRolePage, setPermissionsOfRolePage] = useState();
   const [role, setRole] = useState(props.role);
+  const rowSize = 6;
 
   const getPermissionsOfRolePage = async (page) => {
     if (role !== null) {
       await axios
-        .get(`${API_URL}/rbac/role/${role.id}/permission?page=${page}&pageSize=10`)
+        .get(`${API_URL}/rbac/role/${role.id}/permission?page=${page}&pageSize=${rowSize}`)
         .then((res) => setPermissionsOfRolePage(res.data));
     }
   };
@@ -119,23 +120,7 @@ export default function PermissionsOfRoleTable(props) {
       {role && (
         <>
           <h1>Permissions Of Role</h1>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginBottom: "10px",
-              alignSelf: "center",
-            }}
-          >
-            <TextField style={{ width: "360px" }} id="outlined-search" size="small" label="권한 검색" type="search" />
-            <Button variant="outlined" sx={{ width: "20px" }}>
-              검색
-            </Button>
-          </div>
-
-          <div style={{ minHeight: "585px" }}>
+          <div style={{ minHeight: "435px" }}>
             <table aria-label="custom pagination table">
               <thead>
                 <tr>
@@ -158,7 +143,7 @@ export default function PermissionsOfRoleTable(props) {
             <Stack spacing={3}>
               <Pagination
                 sx={{ margin: "auto", marginTop: "10px" }}
-                count={parseInt((permissionsOfRolePage.count + 1) / 10)}
+                count={parseInt((permissionsOfRolePage.count + 1) / rowSize)}
                 defaultPage={1}
                 onChange={handleChangePageNum}
                 shape="rounded"

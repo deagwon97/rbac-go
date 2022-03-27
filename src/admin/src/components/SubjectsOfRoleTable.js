@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/system";
-import { Checkbox, TextField, Pagination, Button } from "@mui/material";
+import { Checkbox, Pagination } from "@mui/material";
 import { API_URL } from "App";
 
 const grey = {
@@ -71,7 +71,7 @@ function SubjectRow(props) {
 
   return (
     <>
-      <tr key={props.idx}>
+      <tr key={props.idx} style={{ height: "55px" }}>
         <td>{props.row.subject_id}</td>
         <td>{props.row.name}</td>
         <td style={{ width: 45, textAlign: "center" }}>
@@ -134,28 +134,11 @@ export default function SubjectsOfRoleTable(props) {
   };
 
   return (
-    <Root sx={{ width: 300, maxWidth: "100%" }}>
+    <Root sx={{ width: 400, maxWidth: "100%" }}>
       {role && (
         <>
           <h1>Subjects Of Role</h1>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginBottom: "10px",
-              alignSelf: "center",
-            }}
-          >
-            <TextField style={{ width: "360px" }} id="outlined-search" size="small" label="사용자 검색" type="search" />
-            <Button variant="outlined" sx={{ width: "20px" }}>
-              검색
-            </Button>
-          </div>
-
-          <div style={{ minHeight: "585px" }}>
+          <div style={{ minHeight: "435px" }}>
             <table aria-label="custom pagination table">
               <thead>
                 <tr>
