@@ -134,7 +134,7 @@ type PermissionQuery struct {
 // @Accept json
 // @Produce json
 // @Param data body PermissionQuery true "Object를 구하는데 필요한 permission 정보"
-// @Success 200 {object} []string "허용된 object list"
+// @Success 200 {object} dblayer.PermissionAnswer "허용된 object list"
 // @Router /rbac/permission/objects [post]
 func (h *Handler) GetAllowedObjects(c *gin.Context) {
 

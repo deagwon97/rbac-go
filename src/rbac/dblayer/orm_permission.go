@@ -17,6 +17,18 @@ type PermissionAnswer struct {
 	IsAllowed bool     `json:"is_allowed"`
 }
 
+func removeDuplicateStr(strSlice []string) []string {
+	allKeys := make(map[string]bool)
+	list := []string{}
+	for _, item := range strSlice {
+		if _, value := allKeys[item]; !value {
+			allKeys[item] = true
+			list = append(list, item)
+		}
+	}
+	return list
+}
+
 func (db *DBORM) GetAllowedObjects(
 	subjectID int,
 	permissionServiceName string,
@@ -55,6 +67,7 @@ func (db *DBORM) GetAllowedObjects(
 				append(permissionAnswer.Objects, item.Object)
 		}
 	}
+	permissionAnswer.Objects = removeDuplicateStr(permissionAnswer.Objects)
 	return permissionAnswer, err
 }
 
@@ -187,7 +200,6 @@ type TempPermission struct {
 func (TempPermission) TableName() string {
 	return "temp_permission"
 }
-
 func (db *DBORM) AddPermissionSets(permissionSetData PermissionSetData) (
 	permissions []TempPermission, err error,
 ) {
