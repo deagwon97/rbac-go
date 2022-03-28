@@ -52,7 +52,6 @@ func Crud(
 	test.Delete(hostUrl + "/rbac/" + itemName + "/" + dataIDStr3)
 }
 
-
 func TestAddRoles(t *testing.T) {
 	hostUrl := "https://rbac.dev.deagwon.com"
 	itemName := "role"
@@ -83,9 +82,9 @@ func TestAddRoles(t *testing.T) {
 	}
 
 	test.Post(hostUrl+"/rbac/"+itemName, data1)
-	
+
 	test.Post(hostUrl+"/rbac/"+itemName, data2)
-	
+
 	test.Post(hostUrl+"/rbac/"+itemName, data3)
 
 	test.Post(hostUrl+"/rbac/"+itemName, data4)
@@ -93,7 +92,7 @@ func TestAddRoles(t *testing.T) {
 	test.Post(hostUrl+"/rbac/"+itemName, data5)
 
 	test.Post(hostUrl+"/rbac/"+itemName, data6)
-	
+
 }
 
 func TestRoleCrud(t *testing.T) {
@@ -273,7 +272,7 @@ func TestPermissionsOfRolePage(t *testing.T) {
 func TestAddPermissionSet(t *testing.T) {
 	hostUrl := "https://rbac.dev.deagwon.com"
 
-	// Role 생성
+	// Permission 생성
 	permissionSet1 := dblayer.PermissionSet{
 		Name:    "게시판",
 		Actions: []string{"상세조회", "목록조회", "수정", "삭제"},

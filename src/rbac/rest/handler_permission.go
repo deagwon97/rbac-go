@@ -54,9 +54,9 @@ func (h *Handler) AddPermission(c *gin.Context) {
 // @Tags RBAC permission
 // @Accept json
 // @Produce json
-// @Param data body dblayer.PermissionData true "Data"
-// @Success 200 {object} models.Permission
-// @Router /rbac/permission [post]
+// @Param data body dblayer.PermissionSetData true "Data"
+// @Success 200 {object} []models.Permission
+// @Router /rbac/permission/set [post]
 func (h *Handler) AddPermissionSets(c *gin.Context) {
 	var permissionSetData dblayer.PermissionSetData
 

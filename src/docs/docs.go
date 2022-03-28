@@ -361,7 +361,7 @@ const docTemplate = `{
                 "tags": [
                     "RBAC permission"
                 ],
-                "summary": "Permission Set 생성 및 동기화",
+                "summary": "Permission 생성",
                 "parameters": [
                     {
                         "description": "Data",
@@ -518,6 +518,42 @@ const docTemplate = `{
                             "type": "array",
                             "items": {
                                 "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rbac/permission/set": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RBAC permission"
+                ],
+                "summary": "Permission Set 생성 및 동기화",
+                "parameters": [
+                    {
+                        "description": "Data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dblayer.PermissionSetData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Permission"
                             }
                         }
                     }
@@ -905,6 +941,40 @@ const docTemplate = `{
                 },
                 "object": {
                     "type": "string"
+                },
+                "service_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dblayer.PermissionSet": {
+            "type": "object",
+            "properties": {
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "objects": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "dblayer.PermissionSetData": {
+            "type": "object",
+            "properties": {
+                "permission_sets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dblayer.PermissionSet"
+                    }
                 },
                 "service_name": {
                     "type": "string"

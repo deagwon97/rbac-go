@@ -17,6 +17,28 @@ definitions:
       service_name:
         type: string
     type: object
+  dblayer.PermissionSet:
+    properties:
+      actions:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      objects:
+        items:
+          type: string
+        type: array
+    type: object
+  dblayer.PermissionSetData:
+    properties:
+      permission_sets:
+        items:
+          $ref: '#/definitions/dblayer.PermissionSet'
+        type: array
+      service_name:
+        type: string
+    type: object
   dblayer.PermissionsPage:
     properties:
       count:
@@ -472,7 +494,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Permission'
-      summary: Permission Set 생성 및 동기화
+      summary: Permission 생성
       tags:
       - RBAC permission
   /rbac/permission-assignment:
@@ -609,6 +631,29 @@ paths:
               type: string
             type: array
       summary: Permission 에 해당하는 objects 조회
+      tags:
+      - RBAC permission
+  /rbac/permission/set:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dblayer.PermissionSetData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Permission'
+            type: array
+      summary: Permission Set 생성 및 동기화
       tags:
       - RBAC permission
   /rbac/role:
