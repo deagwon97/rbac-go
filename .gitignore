@@ -5,6 +5,7 @@
 */db-data/*
 !db-data
 build
+main
 yarn.lock
 node_modules
 
