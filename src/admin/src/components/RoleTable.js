@@ -106,7 +106,7 @@ function RoleRow(props) {
     <>
       <StyledTr
         className={trans}
-        style={{ height: "54px" }}
+        style={{ height: "54px", boxSizing: "border-box" }}
         onClick={(e) => {
           handleChangePermission(e, props.row);
         }}
@@ -115,7 +115,7 @@ function RoleRow(props) {
         <td align="right">{props.row.description}</td>
       </StyledTr>
 
-      <div style={{ width: "0px" }}>
+      <div style={{ width: "0px", border: "none" }}>
         <div style={{ width: "350px", overflow: "visible", display: "flex" }}>
           <div className={trans} style={{ marginLeft: "auto" }}>
             <Button variant="outlined" size="small" onClick={handleOpen}>
