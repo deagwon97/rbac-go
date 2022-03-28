@@ -515,10 +515,7 @@ const docTemplate = `{
                     "200": {
                         "description": "허용된 object list",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/dblayer.PermissionAnswer"
                         }
                     }
                 }
@@ -919,6 +916,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dblayer.PermissionAnswer": {
+            "type": "object",
+            "properties": {
+                "is_allowed": {
+                    "type": "boolean"
+                },
+                "objects": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "dblayer.PermissionAssignmentData": {
             "type": "object",
             "properties": {

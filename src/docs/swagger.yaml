@@ -1,4 +1,13 @@
 definitions:
+  dblayer.PermissionAnswer:
+    properties:
+      is_allowed:
+        type: boolean
+      objects:
+        items:
+          type: string
+        type: array
+    type: object
   dblayer.PermissionAssignmentData:
     properties:
       permission_id:
@@ -627,9 +636,7 @@ paths:
         "200":
           description: 허용된 object list
           schema:
-            items:
-              type: string
-            type: array
+            $ref: '#/definitions/dblayer.PermissionAnswer'
       summary: Permission 에 해당하는 objects 조회
       tags:
       - RBAC permission
