@@ -26,6 +26,6 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
       - ./db-data/conf.d:/etc/mysql/conf.d
-volumes:
-  mariadb:
+volumes: 
+  mariadb: 
     driver: local
