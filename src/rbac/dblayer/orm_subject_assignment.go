@@ -4,7 +4,6 @@ import (
 	"rbac-go/rbac/models"
 )
 
-// SubjectAssignment
 func (db *DBORM) GetSubjectAssignments() (
 	items []models.SubjectAssignment, err error,
 ) {

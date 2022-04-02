@@ -25,7 +25,6 @@ func (db *DBORM) GetSubjectsStatusPage(
 
 	var count int64
 	db.Model(&accountModels.User{}).Count(&count)
-
 	page, pageSize, nextPage, previousPage :=
 		paginate.GetPageInfo(page, pageSize, hostUrl, count)
 	subjectPage.Count = int(count)
