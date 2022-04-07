@@ -72,5 +72,6 @@ $ sh create-docs.sh
   - https://unknownpgr.com/posts/rbac/
     - 권준호님의 rbac에 관한 포스트를 읽고 본 프로젝트를 시작하였습니다.
   - Hands-On Full-Stack Development with Go
+    - rbac-go project의 model-dblayer-rest 구조는 Hands-On Full-Stack Development with Go를 참고하여 구성하였습니다.
   - https://github.com/gin-gonic/gin
   - https://github.com/golang-jwt/jwt
