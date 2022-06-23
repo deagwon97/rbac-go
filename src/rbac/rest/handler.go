@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"rbac-go/database"
+	// "rbac-go/database"
 
 	"rbac-go/rbac/checker"
 )
@@ -42,8 +42,8 @@ func NewHandler() (h HandlerInterface, err error) {
 	// RBAC 초기화
 	checker.NewRBAC()
 	// DBORM 초기화
-	dsn := database.DataSource
-	db, err := dblayer.NewORM("mysql", dsn)
+
+	db, err := dblayer.NewORM()
 	if err != nil {
 		return
 	}

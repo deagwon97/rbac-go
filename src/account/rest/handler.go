@@ -14,7 +14,6 @@ import (
 	"net/http"
 	"rbac-go/account/dblayer"
 	"rbac-go/account/models"
-	"rbac-go/database"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
@@ -304,9 +303,9 @@ type HandlerInterface interface {
 
 // HandlerInterface의 생성자
 func NewHandler() (HandlerInterface, error) {
-	dsn := database.DataSource
+
 	// DBORM 초기화
-	db, err := dblayer.NewORM("mysql", dsn)
+	db, err := dblayer.NewORM()
 	if err != nil {
 		return nil, err
 	}

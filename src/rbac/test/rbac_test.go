@@ -2,7 +2,6 @@ package test
 
 import (
 	"fmt"
-	"rbac-go/database"
 	"strconv"
 	"testing"
 
@@ -170,8 +169,8 @@ func TestGetRoleList(t *testing.T) {
 }
 
 func TestDeleteData(t *testing.T) {
-	dsn := database.DataSource
-	db, _ := dblayer.NewORM("mysql", dsn)
+
+	db, _ := dblayer.NewORM()
 
 	result := map[string]interface{}{}
 
@@ -195,19 +194,19 @@ func TestAddRole(t *testing.T) {
 		Name:        "관리자",
 		Description: "관리자 그룹",
 	}
-	roleRes = test.Post(hostUrl+"/rbac/role/", roleData)
+	roleRes = test.Post(hostUrl+"/rbac/role", roleData)
 	roleID := parseId(roleRes)
 	roleIDInt, _ := strconv.Atoi(roleID)
 
 	// Permission 생성
 	var permissionRes interface{}
 	permissionData := dblayer.PermissionData{
-		ServiceName: "로그인",
+		ServiceName: "bdg-blog",
 		Name:        "관리2자",
 		Action:      "조회asdf2",
-		// Object:      "asdf일반 사용자4",
+		Object:      "asdf일반 사용자4",
 	}
-	permissionRes = test.Post(hostUrl+"/rbac/permission/", permissionData)
+	permissionRes = test.Post(hostUrl+"/rbac/permission", permissionData)
 	permissionID := parseId(permissionRes)
 	permissionIDInt, _ := strconv.Atoi(permissionID)
 
@@ -233,7 +232,7 @@ func TestAddRole(t *testing.T) {
 
 	permissionQeury := rest.PermissionQuery{
 		SubjectID:   0,
-		ServiceName: "로그인",
+		ServiceName: "bdg-blog",
 		Name:        "관리2자",
 		Action:      "조회asdf2",
 	}
@@ -296,8 +295,7 @@ func TestAddPermissionSet(t *testing.T) {
 	res := test.Post(hostUrl+"/rbac/permission/set", permissionSetData)
 	fmt.Println(res)
 
-	dsn := database.DataSource
-	db, _ := dblayer.NewORM("mysql", dsn)
+	db, _ := dblayer.NewORM()
 
 	result := map[string]interface{}{}
 	db.Raw("DELETE FROM permission").Scan(&result)

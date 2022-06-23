@@ -1,7 +1,6 @@
 package checker
 
 import (
-	"rbac-go/database"
 	"rbac-go/rbac/dblayer"
 	"rbac-go/rbac/models"
 	// "github.com/gin-gonic/gin"
@@ -33,8 +32,8 @@ type RBACInterface interface {
 // 생성자
 func NewRBAC() *RBAC {
 	// DBORM 초기화
-	dsn := database.DataSource
-	db, _ := dblayer.NewORM("mysql", dsn)
+
+	db, _ := dblayer.NewORM()
 	// permission list 초기화
 	var permissions []models.Permission
 	rbac := &RBAC{

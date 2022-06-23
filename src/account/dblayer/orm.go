@@ -1,11 +1,9 @@
 package dblayer
 
 import (
-	"database/sql"
-
 	"rbac-go/account/models"
+	"rbac-go/database"
 
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -14,16 +12,16 @@ type DBORM struct {
 }
 
 // DBORM의 생성자
-func NewORM(dbengine string, dsn string) (*DBORM, error) {
-	sqlDB, err := sql.Open(dbengine, dsn)
-	// gorm.Open은 *gorm.DB 타입을 초기화한다.
-	gormDB, err := gorm.Open(
-		mysql.New(mysql.Config{Conn: sqlDB}),
-		&gorm.Config{},
-	)
-	return &DBORM{
-		DB: gormDB,
-	}, err
+func NewORM() (db *DBORM, err error) {
+	gormDB, err := database.CreateGormDB()
+	db = &DBORM{DB: gormDB}
+
+	if err := db.AutoMigrate(
+		&models.User{},
+	); err != nil {
+		return nil, err
+	}
+	return db, err
 }
 
 func (db *DBORM) AddUser(
