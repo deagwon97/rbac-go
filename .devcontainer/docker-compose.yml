@@ -1,18 +1,6 @@
 version: "3.7"
 
 services:
-  # database:
-  #   image: mariadb
-  #   container_name: database
-  #   ports:
-  #     - 3306:3306
-  #   restart: always
-  #   env_file:
-  #     - .env.db
-  # volumes:
-  # - rbac-db:/var/lib/mysql
-  # - ./db-data/conf.d:/etc/mysql/conf.d
-
   rbac-go:
     build:
       context: ../
@@ -26,7 +14,3 @@ services:
       - 8000:8000
     stdin_open: true
     tty: true
-
-# volumes:
-#   mariadb-rbac:
-#     driver: local
