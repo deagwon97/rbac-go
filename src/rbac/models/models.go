@@ -4,43 +4,43 @@ package models
 // RBAC system is dependent on User service that is Subject to this system.
 
 type SubjectAssignment struct {
-	ID        int `gorm:"primaryKey;column:id" json:"id"`
-	SubjectID int `gorm:"column:subject_id"    json:"subject_id"`
-	RoleID    int `gorm:"column:role_id"       json:"role_id"`
+	ID        int `gorm:"primaryKey;column:ID" json:"ID"`
+	SubjectID int `gorm:"column:SubjectID"    json:"SubjectID"`
+	RoleID    int `gorm:"column:RoleID"       json:"RoleID"`
 }
 
 func (SubjectAssignment) TableName() string {
-	return "subject_assignment"
+	return "SubjectAssignment"
 }
 
 type Role struct {
-	ID          int    `gorm:"primaryKey;column:id"  json:"id"`
-	Name        string `gorm:"column:name"           json:"name"`
-	Description string `gorm:"column:description"    json:"description"`
+	ID          int    `gorm:"primaryKey;column:ID"  json:"ID"`
+	Name        string `gorm:"column:Name"           json:"Name"`
+	Description string `gorm:"column:Description"    json:"Description"`
 }
 
 func (Role) TableName() string {
-	return "role"
+	return "Role"
 }
 
 type PermissionAssignment struct {
-	ID           int `gorm:"primaryKey;column:id"   json:"id"`
-	RoleID       int `gorm:"column:role_id"         json:"role_id"`
-	PermissionID int `gorm:"column:permission_id"   json:"permission_id"`
+	ID           int `gorm:"primaryKey;column:ID"   json:"ID"`
+	RoleID       int `gorm:"column:RoleID"         json:"RoleID"`
+	PermissionID int `gorm:"column:PermissionID"   json:"PermissionID"`
 }
 
 func (PermissionAssignment) TableName() string {
-	return "permission_assignment"
+	return "PermissionAssignment"
 }
 
 type Permission struct {
-	ID          int    `gorm:"primaryKey;column:id" json:"id"`
-	ServiceName string `gorm:"column:service_name"  json:"service_name"`
-	Name        string `gorm:"column:name"          json:"name"`
-	Action      string `gorm:"column:action"        json:"action"`
-	Object      string `gorm:"column:object"        json:"object"`
+	ID          int    `gorm:"primaryKey;column:ID" json:"ID"`
+	ServiceName string `gorm:"column:ServiceName"  json:"ServiceName"`
+	Name        string `gorm:"column:Name"          json:"Name"`
+	Action      string `gorm:"column:Action"        json:"Action"`
+	Object      string `gorm:"column:Object"        json:"Object"`
 }
 
 func (Permission) TableName() string {
-	return "permission"
+	return "Permission"
 }

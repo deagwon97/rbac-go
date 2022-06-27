@@ -59,7 +59,7 @@ const Root = styled("div")(
 function RoleRow(props) {
   const [trans, setTrans] = useState("normal");
   const handleChangePermission = (e, role) => {
-    props.onChange(role.id, role);
+    props.onChange(role.ID, role);
     setTrans("transition");
   };
   const [open, setOpen] = useState(false);
@@ -71,8 +71,8 @@ function RoleRow(props) {
 
   const updateRole = async (roleID, name, desc) => {
     const data = {
-      name: name,
-      description: desc,
+      Name: name,
+      Description: desc,
     };
     await axios.patch(`${API_URL}/rbac/role/${roleID}`, data);
     props.getRolePage(props.rolePage);
@@ -90,12 +90,12 @@ function RoleRow(props) {
   `,
   );
   useEffect(() => {
-    setRoleName(props.row.name);
-    setRoleDesc(props.row.description);
+    setRoleName(props.row.Name);
+    setRoleDesc(props.row.Description);
   }, [props.row]);
 
   useEffect(() => {
-    if (props.roleID == props.row.id) {
+    if (props.roleID == props.row.ID) {
       setTrans("transition");
     } else {
       setTrans("normal");
@@ -111,8 +111,8 @@ function RoleRow(props) {
           handleChangePermission(e, props.row);
         }}
       >
-        <td>{props.row.name}</td>
-        <td align="right">{props.row.description}</td>
+        <td>{props.row.Name}</td>
+        <td align="right">{props.row.Description}</td>
       </StyledTr>
 
       <div style={{ width: "0px", border: "none" }}>
@@ -211,13 +211,13 @@ export default function RoleTable(props) {
 
   const addRole = async (name, desc) => {
     const data = {
-      name: name,
-      description: desc,
+      Name: name,
+      Description: desc,
     };
     if (name !== null) {
       console.log(name);
       const res = await axios.post(`${API_URL}/rbac/role`, data);
-      setRoleID(res.data.id);
+      setRoleID(res.data.ID);
       getRolePage(rolePage);
       props.onChange(res.data);
     }
@@ -259,7 +259,7 @@ export default function RoleTable(props) {
             </thead>
             <tbody>
               {rolePage &&
-                rolePage.results.map((row, idx) => (
+                rolePage.Results.map((row, idx) => (
                   <RoleRow
                     key={idx}
                     roleID={roleID}
@@ -282,7 +282,7 @@ export default function RoleTable(props) {
         <Stack spacing={2}>
           <Pagination
             sx={{ margin: "auto", marginTop: "10px" }}
-            count={parseInt((rolePage.count + 1) / rowSize)}
+            count={parseInt((rolePage.Count + 1) / rowSize)}
             defaultPage={1}
             onChange={handleChangePageNum}
             shape="rounded"

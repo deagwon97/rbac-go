@@ -22,9 +22,9 @@ import (
 func CreateToken(userID int, exp int64, secret string) (string, error) {
 	var err error
 	atClaims := jwt.MapClaims{}
-	atClaims["authorized"] = true
-	atClaims["user_id"] = userID
-	atClaims["exp"] = exp
+	atClaims["Authorized"] = true
+	atClaims["UserID"] = userID
+	atClaims["Exp"] = exp
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
 	token, err := at.SignedString([]byte(secret))
 	if err != nil {
@@ -38,7 +38,7 @@ func CreateTokens(userID int) (string, string, error) {
 	os.Setenv("SECRET", "you need to set secret")
 	accessSecret := "access" + os.Getenv("SECRET")
 	exp = time.Now().Add(time.Hour * 2).Unix()
-	accessToken, err := CreateToken(userID, exp, accessSecret)
+	accessToken, _ := CreateToken(userID, exp, accessSecret)
 
 	refreshSecret := "refresh" + os.Getenv("SECRET")
 	exp = time.Now().Add(time.Hour * 24 * 14).Unix()
@@ -107,14 +107,13 @@ func (h *Handler) AddUser(c *gin.Context) {
 
 	// login
 	// token 생성
-	accessToken, refreshToken, err := CreateTokens(user.ID)
+	accessToken, refreshToken, _ := CreateTokens(user.ID)
 	var loginResult models.LoginResult
 	loginResult.UserID = user.ID
 	loginResult.AccessToken = accessToken
 	loginResult.RefreshToken = refreshToken
 
 	c.JSON(http.StatusOK, loginResult)
-	return
 }
 
 // Go API godoc
@@ -148,7 +147,7 @@ func (h *Handler) Login(c *gin.Context) {
 		// token 생성
 		var accessToken string
 		var refreshToken string
-		accessToken, refreshToken, err = CreateTokens(user.ID)
+		accessToken, refreshToken, _ = CreateTokens(user.ID)
 		var loginResult models.LoginResult
 		loginResult.UserID = user.ID
 		loginResult.AccessToken = accessToken
@@ -175,13 +174,13 @@ func DecodeToken(tokenString string, secret string) (bool, jwt.MapClaims, error)
 	}
 
 	token, err := jwt.ParseWithClaims(tokenString, Claims, key)
-	var valid bool
-	valid = token.Valid
+
+	valid := token.Valid
 	return valid, Claims, err
 }
 
-type accessToken struct {
-	AccessToken string `json:"access_token"`
+type AccessToken struct {
+	AccessToken string `json:"AccessToken"`
 }
 
 // Go API godoc
@@ -190,7 +189,7 @@ type accessToken struct {
 // @Tags Account
 // @Accept json
 // @Produce json
-// @Param data body accessToken true  "Access Token"
+// @Param data body AccessToken true  "Access Token"
 // @Success 200 {object} bool "유효성 검증 결과"
 // @Router /account/valid [post]
 func (h *Handler) IsValid(c *gin.Context) {
@@ -201,17 +200,16 @@ func (h *Handler) IsValid(c *gin.Context) {
 	var data map[string]string
 	json.Unmarshal([]byte(value), &data)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "access_token 항목은 필수입니다."})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "AccessToken 항목은 필수입니다."})
 		return
 	}
 
-	var accesToken string
-	accesToken = data["access_token"]
+	accesToken := data["accesToken"]
 	var valid bool
 	accessSecret := "access" + os.Getenv("SECRET")
-	valid, _, err = DecodeToken(accesToken, accessSecret)
+	valid, _, _ = DecodeToken(accesToken, accessSecret)
 
-	if valid == true {
+	if valid {
 		c.JSON(http.StatusOK, valid)
 		return
 	} else {
@@ -220,8 +218,8 @@ func (h *Handler) IsValid(c *gin.Context) {
 	}
 }
 
-type refreshToken struct {
-	RefreshToken string `json:"refresh_token"`
+type RefreshToken struct {
+	RefreshToken string `json:"refreshToken"`
 }
 
 // Go API godoc
@@ -230,7 +228,7 @@ type refreshToken struct {
 // @Tags Account
 // @Accept json
 // @Produce json
-// @Param data body refreshToken true  "Refresh Token"
+// @Param data body RefreshToken true  "Refresh Token"
 // @Success 200 {object} string "access token"
 // @Router /account/renew [post]
 func (h *Handler) RenewToken(c *gin.Context) {
@@ -245,16 +243,13 @@ func (h *Handler) RenewToken(c *gin.Context) {
 		return
 	}
 
-	var refreshToken string
-	refreshToken = data["refresh_token"]
-	var valid bool
-	var atClaims jwt.MapClaims
+	refreshToken := data["refreshToken"]
 	refreshSecret := "refresh" + os.Getenv("SECRET")
-	valid, atClaims, err = DecodeToken(refreshToken, refreshSecret)
+	valid, atClaims, _ := DecodeToken(refreshToken, refreshSecret)
 
 	userID, _ := atClaims["user_id"].(int)
 
-	if valid == true {
+	if valid {
 		var exp int64
 		accessSecret := "refresh" + os.Getenv("SECRET")
 		exp = time.Now().Add(time.Hour * 2).Unix()
@@ -262,13 +257,13 @@ func (h *Handler) RenewToken(c *gin.Context) {
 		c.JSON(http.StatusOK, accessToken)
 		return
 	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "유효하지 않은 refresh_token 입니다."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "유효하지 않은 refreshToken 입니다."})
 		return
 	}
 }
 
 type UserIDList struct {
-	IDList []int `json:"id_list"`
+	IDList []int `json:"IDList"`
 }
 
 // @Summary 사용자 이름 목록 조회
@@ -301,7 +296,6 @@ type HandlerInterface interface {
 	GetUserListName(c *gin.Context)
 }
 
-// HandlerInterface의 생성자
 func NewHandler() (HandlerInterface, error) {
 
 	// DBORM 초기화

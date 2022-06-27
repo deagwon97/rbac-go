@@ -14,8 +14,8 @@ func (db *DBORM) GetPermissionAssignments() (
 }
 
 type PermissionAssignmentData struct {
-	RoleID       int `gorm:"column:role_id"         json:"role_id"`
-	PermissionID int `gorm:"column:permission_id"   json:"permission_id"`
+	RoleID       int `gorm:"column:RoleID"         json:"RoleID"`
+	PermissionID int `gorm:"column:PermissionID"   json:"PermissionID"`
 }
 
 func (db *DBORM) AddPermissionAssignment(
@@ -38,13 +38,21 @@ func (db *DBORM) DeletePermissionAssignment(
 	err error,
 ) {
 	err = db.Raw(`
-		SELECT * FROM permission_assignment 
-		WHERE permission_id = ? AND role_id = ?;`,
+		SELECT * FROM PermissionAssignment 
+		WHERE PermissionID = ? AND RoleID = ?;`,
 		itemData.PermissionID,
 		itemData.RoleID,
 	).First(&item).Error
 
+	if err != nil {
+		return
+	}
+
 	err = db.Delete(&item).Error
+
+	if err != nil {
+		return
+	}
 
 	return item, err
 }

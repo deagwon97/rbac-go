@@ -20,10 +20,10 @@ func (db *DBORM) GetRoles() (
 }
 
 type RolesPage struct {
-	Count        int           `json:"count"`
-	NextPage     string        `json:"next"`
-	PreviousPage string        `json:"previous"`
-	Roles        []models.Role `json:"results"`
+	Count        int           `json:"Count"`
+	NextPage     string        `json:"NextPage"`
+	PreviousPage string        `json:"PreviousPage"`
+	Roles        []models.Role `json:"Results"`
 }
 
 func (db *DBORM) GetRolesPage(
@@ -42,8 +42,8 @@ func (db *DBORM) GetRolesPage(
 	rolesPage.PreviousPage = previousPage
 
 	err = db.
-		Select("id", "name", "description").
-		Order("id desc").
+		Select("ID", "Name", "Description").
+		Order("ID desc").
 		Scopes(paginate.Paginate(page, pageSize)).
 		Find(&rolesPage.Roles).
 		Error
@@ -52,8 +52,8 @@ func (db *DBORM) GetRolesPage(
 }
 
 type RoleData struct {
-	Name        string `gorm:"column:name"           json:"name"`
-	Description string `gorm:"column:description"    json:"description"`
+	Name        string `gorm:"column:Name"           json:"Name"`
+	Description string `gorm:"column:Description"    json:"Description"`
 }
 
 func (db *DBORM) AddRole(roleData RoleData) (
@@ -78,7 +78,7 @@ func (db *DBORM) UpdateRole(
 	role.Description = roleData.Description
 
 	var count int64
-	db.Model(&models.Role{}).Where("id = ?", id).Count(&count)
+	db.Model(&models.Role{}).Where("ID = ?", id).Count(&count)
 	if count == 0 {
 		return role, errors.New("item dosen't exist")
 	}
@@ -86,7 +86,7 @@ func (db *DBORM) UpdateRole(
 	err = db.Model(role).Updates(role).Error
 	db.Save(&role)
 
-	db.Where("id = ?", id).First(&role)
+	db.Where("ID = ?", id).First(&role)
 	return role, err
 }
 
@@ -96,23 +96,23 @@ func (db *DBORM) DeleteRole(
 	role models.Role,
 	err error,
 ) {
-	db.Where("id = ?", id).First(&role)
+	db.Where("ID = ?", id).First(&role)
 	return role, db.Delete(&role).Error
 }
 
 type SubjectsOfRole struct {
-	RoleID        int   `gorm:"column:role_id"       json:"role_id"`
-	SubjectIDList []int `json:"subject_id_list"`
+	RoleID        int   `gorm:"column:RoleID"       json:"RoleID"`
+	SubjectIDList []int `json:"SubjectIDList"`
 }
 
 type SubjectStatus struct {
-	SubjectID int  `gorm:"column:subject_id"   json:"subject_id"`
-	IsAllowed bool `json:"is_allowed"`
+	SubjectID int  `gorm:"column:SubjectID"   json:"SubjectID"`
+	IsAllowed bool `json:"IsAllowed"`
 }
 
 type SubjectStatusOfRole struct {
-	RoleID int             `gorm:"column:role_id"       json:"role_id"`
-	List   []SubjectStatus `json:"list"`
+	RoleID int             `gorm:"column:RoleID"       json:"RoleID"`
+	List   []SubjectStatus `json:"List"`
 }
 
 func (db *DBORM) CheckSubjectIsAllowed(
@@ -122,10 +122,10 @@ func (db *DBORM) CheckSubjectIsAllowed(
 ) {
 	roleID := subjectsOfRole.RoleID
 	var allowedSubjectIDList []int
-	err = db.Table("subject_assignment").
-		Select("subject_id").
-		Where("subject_id IN ?", subjectsOfRole.SubjectIDList).
-		Where("role_id = ?", roleID).
+	err = db.Table("SubjectAssignment").
+		Select("SubjectID").
+		Where("SubjectID IN ?", subjectsOfRole.SubjectIDList).
+		Where("RoleID = ?", roleID).
 		Scan(&allowedSubjectIDList).
 		Error
 
@@ -133,7 +133,7 @@ func (db *DBORM) CheckSubjectIsAllowed(
 	subjectStatusOfRole.RoleID = roleID
 	for _, subjectID := range subjectsOfRole.SubjectIDList {
 		subjectStatus.SubjectID = subjectID
-		if utils.IsIn(subjectID, allowedSubjectIDList) == true {
+		if utils.IsIn(subjectID, allowedSubjectIDList) {
 			subjectStatus.IsAllowed = true
 		} else {
 			subjectStatus.IsAllowed = false
@@ -144,18 +144,18 @@ func (db *DBORM) CheckSubjectIsAllowed(
 }
 
 type PermissionOfRole struct {
-	RoleID           int   `gorm:"column:role_id"       json:"role_id"`
-	PermissionIDList []int `json:"permission_id_list"`
+	RoleID           int   `gorm:"column:RoleID"       json:"RoleID"`
+	PermissionIDList []int `json:"PermissionIDList"`
 }
 
 type PermissionStatus struct {
-	PermissionID int  `gorm:"column:permission_id"   json:"permission_id"`
-	IsAllowed    bool `json:"is_allowed"`
+	PermissionID int  `gorm:"column:PermissionID"   json:"PermissionID"`
+	IsAllowed    bool `json:"IsAllowed"`
 }
 
 type PermissionStatusOfRole struct {
-	RoleID int                `gorm:"column:role_id"       json:"role_id"`
-	List   []PermissionStatus `json:"list"`
+	RoleID int                `gorm:"column:RoleID"       json:"RoleID"`
+	List   []PermissionStatus `json:"List"`
 }
 
 func (db *DBORM) CheckPermissionIsAllowed(
@@ -166,10 +166,10 @@ func (db *DBORM) CheckPermissionIsAllowed(
 	roleID := permissionOfRole.RoleID
 	var allowedPermissionIDList []int
 
-	err = db.Table("permission_assignment").
-		Select("permission_id").
-		Where("permission_id IN ?", permissionOfRole.PermissionIDList).
-		Where("role_id = ?", roleID).
+	err = db.Table("PermissionAssignment").
+		Select("PermissionID").
+		Where("PermissionID IN ?", permissionOfRole.PermissionIDList).
+		Where("RoleID = ?", roleID).
 		Scan(&allowedPermissionIDList).
 		Error
 
@@ -177,7 +177,7 @@ func (db *DBORM) CheckPermissionIsAllowed(
 	permissionStatusOfRole.RoleID = roleID
 	for _, permissionID := range permissionOfRole.PermissionIDList {
 		permissionStatus.PermissionID = permissionID
-		if utils.IsIn(permissionID, allowedPermissionIDList) == true {
+		if utils.IsIn(permissionID, allowedPermissionIDList) {
 			permissionStatus.IsAllowed = true
 		} else {
 			permissionStatus.IsAllowed = false

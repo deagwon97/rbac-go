@@ -5,31 +5,31 @@ import (
 )
 
 type User struct {
-	ID       int            `gorm:"primaryKey;column:id;" json:"id"`
-	LoginID  string         `gorm:"column:login_id" json:"login_id"`
-	Password string         `gorm:"column:password" json:"password"`
-	Name     sql.NullString `gorm:"column:name"     json:"name" swaggertype:"string"`
-	Email    sql.NullString `gorm:"column:email"    json:"email" swaggertype:"string"`
+	ID       int            `gorm:"primaryKey;column:ID;" json:"ID"`
+	LoginID  string         `gorm:"column:LoginID" json:"LoginID"`
+	Password string         `gorm:"column:Password" json:"Password"`
+	Name     sql.NullString `gorm:"column:Name"     json:"Name" swaggertype:"string"`
+	Email    sql.NullString `gorm:"column:Email"    json:"Email" swaggertype:"string"`
 }
 
 func (User) TableName() string {
-	return "user"
+	return "User"
 }
 
 type AddUserData struct {
-	LoginID  string `json:"login_id" validate:"required"`
-	Password string `json:"password" validate:"required"`
-	Email    string `json:"email"`
-	Name     string `json:"name"`
+	LoginID  string `json:"LoginID" validate:"required"`
+	Password string `json:"Password" validate:"required"`
+	Email    string `json:"Email"`
+	Name     string `json:"Name"`
 }
 
 type LoginRequest struct {
-	LoginID  string `json:"login_id" validate:"required"`
-	Password string `json:"password" validate:"required"`
+	LoginID  string `json:"LoginID" validate:"required"`
+	Password string `json:"Password" validate:"required"`
 }
 
 type LoginResult struct {
-	UserID       int    `json:"user_id"`
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	UserID       int    `json:"UserID"`
+	AccessToken  string `json:"AccessToken"`
+	RefreshToken string `json:"RefreshToken"`
 }

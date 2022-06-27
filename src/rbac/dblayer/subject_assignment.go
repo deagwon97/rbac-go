@@ -14,8 +14,8 @@ func (db *DBORM) GetSubjectAssignments() (
 }
 
 type SubjectAssignmentData struct {
-	SubjectID int `gorm:"column:subject_id"    json:"subject_id"`
-	RoleID    int `gorm:"column:role_id"       json:"role_id"`
+	SubjectID int `gorm:"column:SubjectID"    json:"SubjectID"`
+	RoleID    int `gorm:"column:RoleID"       json:"RoleID"`
 }
 
 func (db *DBORM) AddSubjectAssignment(
@@ -39,13 +39,19 @@ func (db *DBORM) DeleteSubjectAssignment(
 	err error,
 ) {
 	err = db.Raw(`
-		SELECT * FROM subject_assignment 
-		WHERE subject_id = ? AND role_id = ?`,
+		SELECT * FROM SubjectAssignment 
+		WHERE SubjectID = ? AND RoleID = ?`,
 		itemData.SubjectID,
 		itemData.RoleID,
 	).First(&item).Error
+	if err != nil {
+		return
+	}
 
 	err = db.Delete(&item).Error
+	if err != nil {
+		return
+	}
 
 	return item, err
 }

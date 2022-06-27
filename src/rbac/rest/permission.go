@@ -82,7 +82,7 @@ func (h *Handler) AddPermissionSets(c *gin.Context) {
 // @Router /rbac/permission/{id} [patch]
 func (h *Handler) UpdatePermission(c *gin.Context) {
 
-	p := c.Param("id")
+	p := c.Param("ID")
 	id, err := strconv.Atoi(p)
 	if ce.GinError(c, err) {
 		return
@@ -109,7 +109,7 @@ func (h *Handler) UpdatePermission(c *gin.Context) {
 // @Success 200 {object} models.Permission "삭제된 Permission 데이터"
 // @Router /rbac/permission/{id} [delete]
 func (h *Handler) DeletePermission(c *gin.Context) {
-	p := c.Param("id")
+	p := c.Param("ID")
 	id, err := strconv.Atoi(p)
 	if ce.GinError(c, err) {
 		return
@@ -123,10 +123,10 @@ func (h *Handler) DeletePermission(c *gin.Context) {
 }
 
 type PermissionQuery struct {
-	SubjectID   int    `gorm:"column:subject_id"    json:"subject_id"`
-	ServiceName string `gorm:"column:permission_service_name"  json:"service_name"`
-	Name        string `gorm:"column:permission_name"          json:"name"`
-	Action      string `gorm:"column:permission_action"        json:"action"`
+	SubjectID   int    `gorm:"column:SubjectID"    json:"SubjectID"`
+	ServiceName string `gorm:"column:PermissionServiceName"  json:"ServiceName"`
+	Name        string `gorm:"column:PermissionName"          json:"Name"`
+	Action      string `gorm:"column:PermissionAction"        json:"Action"`
 }
 
 // @Summary Permission 에 해당하는 objects 조회

@@ -42,16 +42,16 @@ const Root = styled("div")(
 
 function SubjectRow(props) {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
-  const [checked, setChecked] = useState(props.row.is_allowed);
+  const [checked, setChecked] = useState(props.row.IsAllowed);
 
   useEffect(() => {
-    setChecked(props.row.is_allowed);
+    setChecked(props.row.IsAllowed);
   }, [props]);
 
   const addSubjectAssignment = async (subjectID, roleID) => {
     const data = {
-      subject_id: subjectID,
-      role_id: roleID,
+      SubjectID: subjectID,
+      RoleID: roleID,
     };
     await axios.post(`${API_URL}/rbac/subject-assignment`, data);
   };
@@ -72,14 +72,10 @@ function SubjectRow(props) {
   return (
     <>
       <tr key={props.idx} style={{ height: "55px" }}>
-        <td>{props.row.subject_id}</td>
-        <td>{props.row.name}</td>
+        <td>{props.row.SubjectID}</td>
+        <td>{props.row.Name}</td>
         <td style={{ width: 45, textAlign: "center" }}>
-          <Checkbox
-            checked={checked}
-            onChange={(e) => handleChange(e, props.roleID, props.row.subject_id)}
-            {...label}
-          />
+          <Checkbox checked={checked} onChange={(e) => handleChange(e, props.roleID, props.row.SubjectID)} {...label} />
         </td>
       </tr>
     </>
@@ -95,23 +91,22 @@ export default function SubjectsOfRoleTable(props) {
   const getSubjectsOfRolePage = async (page) => {
     if (role !== null) {
       await axios
-        .get(`${API_URL}/rbac/role/${role.id}/subject?page=${page}&pageSize=${rowSize}`)
+        .get(`${API_URL}/rbac/role/${role.ID}/subject?page=${page}&pageSize=${rowSize}`)
         .then((res) => setSubjectsOfRolePage(res.data));
     }
   };
 
   const getSuibjectsName = async (IDList) => {
     let data = {
-      id_list: [],
+      IDList: [],
     };
 
     var i;
     if (IDList.length > 0) {
       for (i = 0; i < IDList.length; i++) {
-        data.id_list[i] = IDList[i].subject_id;
+        data.IDList[i] = IDList[i].SubjectID;
       }
     }
-
     await axios.post(`${API_URL}/account/name/list`, data).then((res) => setSubjects(res.data));
   };
 
@@ -125,7 +120,7 @@ export default function SubjectsOfRoleTable(props) {
 
   useEffect(() => {
     if (subjectsOfRolePage !== undefined) {
-      getSuibjectsName(subjectsOfRolePage.results);
+      getSuibjectsName(subjectsOfRolePage.Results);
     }
   }, [subjectsOfRolePage]);
 
@@ -150,9 +145,9 @@ export default function SubjectsOfRoleTable(props) {
               <tbody>
                 {subjectsOfRolePage &&
                   subjects &&
-                  subjectsOfRolePage.results.map((row, idx) => {
-                    row.name = subjects[idx].name;
-                    return <SubjectRow key={idx} idx={idx} row={row} roleID={role.id}></SubjectRow>;
+                  subjectsOfRolePage.Results.map((row, idx) => {
+                    row.Name = subjects[idx].Name;
+                    return <SubjectRow key={idx} idx={idx} row={row} roleID={role.ID}></SubjectRow>;
                   })}
               </tbody>
             </table>
@@ -161,7 +156,7 @@ export default function SubjectsOfRoleTable(props) {
             <Stack spacing={3}>
               <Pagination
                 sx={{ margin: "auto", marginTop: "10px" }}
-                count={parseInt((subjectsOfRolePage.count + 1) / rowSize)}
+                count={parseInt((subjectsOfRolePage.Count + 1) / rowSize)}
                 defaultPage={1}
                 onChange={handleChangePageNum}
                 shape="rounded"

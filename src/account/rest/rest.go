@@ -10,7 +10,4 @@ func AddRoutes(rg *gin.RouterGroup) {
 	router.POST("/valid", h.IsValid)
 	router.POST("/renew", h.RenewToken)
 	router.POST("/name/list", h.GetUserListName)
-	// router.GET("/list", )
-	// router.PATCH("/:id", )
-	// router.DELETE("/:id", )
 }

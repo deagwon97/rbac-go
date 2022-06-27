@@ -37,15 +37,15 @@ func (db *DBORM) GetPassword(
 	loginID string) (models.User, error) {
 	var user models.User
 	err := db.Model(&models.User{}).
-		Select("id", "login_id", "password").
-		Where("login_id = ?", loginID).Scan(&user).
+		Select("ID", "LoginID", "Password").
+		Where("LoginID = ?", loginID).Scan(&user).
 		Error
 	return user, err
 }
 
 type UserIDName struct {
-	ID   int    `gorm:"id"    json:"id"`
-	Name string `gorm:"name"  json:"name"`
+	ID   int    `gorm:"ID"    json:"ID"`
+	Name string `gorm:"Name"  json:"Name"`
 }
 
 func (db *DBORM) GetUserListName(userIDList []int) (userIDName []UserIDName, err error) {
@@ -53,7 +53,7 @@ func (db *DBORM) GetUserListName(userIDList []int) (userIDName []UserIDName, err
 	err = db.
 		Table("user").
 		Raw(`
-		SELECT id, name FROM user where id in ? ORDER BY id DESC;
+		SELECT ID, Name FROM User where ID in ? ORDER BY ID DESC;
 		`, userIDList).
 		Scan(&userIDName).
 		Error

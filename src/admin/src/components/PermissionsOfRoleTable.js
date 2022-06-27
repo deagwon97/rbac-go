@@ -42,16 +42,16 @@ const Root = styled("div")(
 
 function PermissionRow(props) {
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
-  const [checked, setChecked] = useState(props.row.is_allowed);
+  const [checked, setChecked] = useState(props.row.IsAllowed);
 
   useEffect(() => {
-    setChecked(props.row.is_allowed);
+    setChecked(props.row.IsAllowed);
   }, [props]);
 
   const addPermissionAssignment = async (permissionID, roleID) => {
     const data = {
-      permission_id: permissionID,
-      role_id: roleID,
+      PermissionID: permissionID,
+      RoleID: roleID,
     };
     await axios.post(`${API_URL}/rbac/permission-assignment`, data);
   };
@@ -73,17 +73,17 @@ function PermissionRow(props) {
     <>
       <tr key={props.idx} style={{ height: "55px" }}>
         <td style={{ width: 35, textAlign: "center" }}>
-          <Checkbox checked={checked} onChange={(e) => handleChange(e, props.roleID, props.row.id)} {...label} />
+          <Checkbox checked={checked} onChange={(e) => handleChange(e, props.roleID, props.row.ID)} {...label} />
         </td>
-        <td>{props.row.service_name}</td>
+        <td>{props.row.ServiceName}</td>
         <td style={{ width: 70 }} align="right">
-          {props.row.name}
-        </td>
-        <td style={{ width: 70 }} align="right">
-          {props.row.action}
+          {props.row.Name}
         </td>
         <td style={{ width: 70 }} align="right">
-          {props.row.object}
+          {props.row.Action}
+        </td>
+        <td style={{ width: 70 }} align="right">
+          {props.row.Object}
         </td>
       </tr>
     </>
@@ -98,7 +98,7 @@ export default function PermissionsOfRoleTable(props) {
   const getPermissionsOfRolePage = async (page) => {
     if (role !== null) {
       await axios
-        .get(`${API_URL}/rbac/role/${role.id}/permission?page=${page}&pageSize=${rowSize}`)
+        .get(`${API_URL}/rbac/role/${role.ID}/permission?page=${page}&pageSize=${rowSize}`)
         .then((res) => setPermissionsOfRolePage(res.data));
     }
   };
@@ -133,8 +133,8 @@ export default function PermissionsOfRoleTable(props) {
               </thead>
               <tbody>
                 {permissionsOfRolePage &&
-                  permissionsOfRolePage.results.map((row, idx) => (
-                    <PermissionRow key={idx} idx={idx} row={row} roleID={role.id}></PermissionRow>
+                  permissionsOfRolePage.Results.map((row, idx) => (
+                    <PermissionRow key={idx} idx={idx} row={row} roleID={role.ID}></PermissionRow>
                   ))}
               </tbody>
             </table>
@@ -143,7 +143,7 @@ export default function PermissionsOfRoleTable(props) {
             <Stack spacing={3}>
               <Pagination
                 sx={{ margin: "auto", marginTop: "10px" }}
-                count={parseInt((permissionsOfRolePage.count + 1) / rowSize)}
+                count={parseInt((permissionsOfRolePage.Count + 1) / rowSize)}
                 defaultPage={1}
                 onChange={handleChangePageNum}
                 shape="rounded"

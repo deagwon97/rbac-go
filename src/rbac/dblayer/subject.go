@@ -6,15 +6,15 @@ import (
 )
 
 type SubjectsStatus struct {
-	UserID    int  `json:"id"`
-	IsAllowed bool `json:"is_allowed"`
+	UserID    int  `json:"ID"`
+	IsAllowed bool `json:"IsAllowed"`
 }
 
 type SubjectsStatusPage struct {
-	Count        int             `json:"count"`
-	NextPage     string          `json:"next"`
-	PreviousPage string          `json:"previous"`
-	List         []SubjectStatus `json:"results"`
+	Count        int             `json:"Count"`
+	NextPage     string          `json:"NextPage"`
+	PreviousPage string          `json:"PreviousPage"`
+	Results      []SubjectStatus `json:"Results"`
 }
 
 func (db *DBORM) GetSubjectsStatusPage(
@@ -33,19 +33,22 @@ func (db *DBORM) GetSubjectsStatusPage(
 
 	var subjectIDList []int
 	err = db.
-		Table("user").
-		Select("id").
-		Order("id desc").
+		Table("User").
+		Select("ID").
+		Order("ID desc").
 		Scopes(paginate.Paginate(page, pageSize)).
 		Find(&subjectIDList).
 		Error
+	if err != nil {
+		return
+	}
 
 	subjectOfRole := SubjectsOfRole{
 		RoleID:        roleID,
 		SubjectIDList: subjectIDList,
 	}
 	subjectStatusOfRole, err := db.CheckSubjectIsAllowed(subjectOfRole)
-	subjectPage.List = subjectStatusOfRole.List
+	subjectPage.Results = subjectStatusOfRole.List
 
 	return subjectPage, err
 }

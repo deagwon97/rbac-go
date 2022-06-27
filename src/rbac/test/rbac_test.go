@@ -12,7 +12,7 @@ import (
 
 func parseId(data interface{}) (IDstring string) {
 	roleMap1, _ := data.(map[string]interface{})
-	IDfloat64 := roleMap1["id"]
+	IDfloat64 := roleMap1["ID"]
 	IDint := int(IDfloat64.(float64))
 	IDstring = strconv.Itoa(IDint)
 	return IDstring
@@ -174,13 +174,13 @@ func TestDeleteData(t *testing.T) {
 
 	result := map[string]interface{}{}
 
-	db.Raw("DELETE FROM permission_assignment").Scan(&result)
+	db.Raw("DELETE FROM PermissionAssignment").Scan(&result)
 	fmt.Println(result)
-	db.Raw("DELETE FROM subject_assignment").Scan(&result)
+	db.Raw("DELETE FROM SubjectAssignment").Scan(&result)
 	fmt.Println(result)
-	db.Raw("DELETE FROM role").Scan(&result)
+	db.Raw("DELETE FROM Role").Scan(&result)
 	fmt.Println(result)
-	db.Raw("DELETE FROM permission").Scan(&result)
+	db.Raw("DELETE FROM Permission").Scan(&result)
 	fmt.Println(result)
 
 }
