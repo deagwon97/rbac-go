@@ -2,18 +2,7 @@ package models
 
 import (
 	"database/sql"
-	// "github.com/golang-jwt/jwt"
 )
-
-// CREATE TABLE `users` (
-// 	`id` bigint NOT NULL AUTO_INCREMENT,
-// 	`password` varchar(256) NOT NULL,
-// 	`login_id` varchar(32) NOT NULL,
-// 	`name` varchar(32) DEFAULT NULL,
-// 	`email` varchar(128) DEFAULT NULL,
-// 	PRIMARY KEY (`id`),
-// 	UNIQUE KEY `email` (`email`)
-//   ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 type User struct {
 	ID       int            `gorm:"primaryKey;column:id;" json:"id"`
