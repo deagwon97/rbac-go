@@ -5,6 +5,7 @@ import (
 
 	docs "rbac-go/docs"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/contrib/static"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -16,8 +17,14 @@ import (
 func Run(address string) error {
 
 	router := gin.New()
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{
+		"http://localhost:8000",
+		"http://localhost:3000",
+		"http://localhost:3001",
+		"http://rbac.dev.deagwon.com"}
+	router.Use(cors.New(config))
 
-	router.Use(CORSMiddleware())
 	router.Use(static.Serve("/admin", static.LocalFile("./admin/build", true)))
 
 	docs.SwaggerInfo.BasePath = "/"
@@ -27,20 +34,4 @@ func Run(address string) error {
 	accountRest.AddRoutes(v1)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return router.Run(address)
-}
-
-func CORSMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization, Origin")
-		c.Header("Access-Control-Allow-Credentials", "true")
-		c.Header("Access-Control-Allow-Origin", "http://localhost:8000")
-		c.Header("Access-Control-Allow-Methods", "GET, DELETE, POST, PATCH")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-
-		c.Next()
-	}
 }
