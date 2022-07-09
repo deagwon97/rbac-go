@@ -90,13 +90,13 @@ export default function SubjectsOfRoleTable(props) {
 
   const getSubjectsOfRolePage = async (page) => {
     if (role !== null) {
-      await axios
-        .get(`${API_URL}/rbac/role/${role.ID}/subject?page=${page}&pageSize=${rowSize}`)
-        .then((res) => setSubjectsOfRolePage(res.data));
+      await axios.get(`${API_URL}/rbac/role/${role.ID}/subject?page=${page}&pageSize=${rowSize}`).then((res) => {
+        setSubjectsOfRolePage(res.data);
+      });
     }
   };
 
-  const getSuibjectsName = async (IDList) => {
+  const getSubjectsName = async (IDList) => {
     let data = {
       IDList: [],
     };
@@ -107,7 +107,9 @@ export default function SubjectsOfRoleTable(props) {
         data.IDList[i] = IDList[i].SubjectID;
       }
     }
-    await axios.post(`${API_URL}/account/name/list`, data).then((res) => setSubjects(res.data));
+    await axios.post(`${API_URL}/account/name/list`, data).then((res) => {
+      setSubjects(res.data);
+    });
   };
 
   useEffect(() => {
@@ -120,7 +122,7 @@ export default function SubjectsOfRoleTable(props) {
 
   useEffect(() => {
     if (subjectsOfRolePage !== undefined) {
-      getSuibjectsName(subjectsOfRolePage.Results);
+      getSubjectsName(subjectsOfRolePage.Results);
     }
   }, [subjectsOfRolePage]);
 
@@ -145,6 +147,7 @@ export default function SubjectsOfRoleTable(props) {
               <tbody>
                 {subjectsOfRolePage &&
                   subjects &&
+                  subjects.length === subjectsOfRolePage.Results.length &&
                   subjectsOfRolePage.Results.map((row, idx) => {
                     row.Name = subjects[idx].Name;
                     return <SubjectRow key={idx} idx={idx} row={row} roleID={role.ID}></SubjectRow>;
