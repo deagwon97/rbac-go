@@ -17,6 +17,7 @@ const MainPage = () => {
 
   return (
     <>
+    
       <div
         style={{
           display: "flex",

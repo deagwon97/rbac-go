@@ -72,9 +72,9 @@ function SubjectRow(props) {
   return (
     <>
       <tr key={props.idx} style={{ height: "55px" }}>
-        <td>{props.row.SubjectID}</td>
-        <td>{props.row.Name}</td>
-        <td style={{ width: 45, textAlign: "center" }}>
+        <td style={{ textAlign: "center" }}>{props.row.SubjectID}</td>
+        <td style={{ textAlign: "center" }}>{props.row.Name}</td>
+        <td style={{ textAlign: "center" }}>
           <Checkbox checked={checked} onChange={(e) => handleChange(e, props.roleID, props.row.SubjectID)} {...label} />
         </td>
       </tr>
@@ -85,6 +85,8 @@ function SubjectRow(props) {
 export default function SubjectsOfRoleTable(props) {
   const [subjectsOfRolePage, setSubjectsOfRolePage] = useState();
   const [role, setRole] = useState(props.role);
+  const [pageNum, setPageNum] = useState(1);
+  const [pageCount, setPageCount] = useState(1);
   const [subjects, setSubjects] = useState();
   const rowSize = 6;
 
@@ -92,6 +94,7 @@ export default function SubjectsOfRoleTable(props) {
     if (role !== null) {
       await axios.get(`${API_URL}/rbac/role/${role.ID}/subject?page=${page}&pageSize=${rowSize}`).then((res) => {
         setSubjectsOfRolePage(res.data);
+        setPageCount(parseInt((res.data.Count + 1) / rowSize));
       });
     }
   };
@@ -126,27 +129,29 @@ export default function SubjectsOfRoleTable(props) {
     }
   }, [subjectsOfRolePage]);
 
-  const handleChangePageNum = (event, value) => {
+  const handleChangePageNum = (_, value) => {
+    setPageNum(value);
     getSubjectsOfRolePage(value);
   };
 
   return (
-    <Root sx={{ width: 400, maxWidth: "100%" }}>
+    <Root sx={{ width: 200, maxWidth: "100%" }}>
+      <h1>Subjects</h1>
       {role && (
         <>
-          <h1>Subjects Of Role</h1>
           <div style={{ minHeight: "435px" }}>
             <table aria-label="custom pagination table">
               <thead>
                 <tr>
-                  <th style={{ textAlign: "center" }}>ID</th>
+                  <th style={{ width: 45, textAlign: "center" }}>ID</th>
                   <th style={{ textAlign: "center" }}>이름</th>
-                  <th style={{ textAlign: "center" }}>할당</th>
+                  <th style={{ width: 45, textAlign: "center" }}>할당</th>
                 </tr>
               </thead>
               <tbody>
                 {subjectsOfRolePage &&
                   subjects &&
+                  // subjectsOfRolePage와 subjects가 일치하지 않는 경우 에러
                   subjects.length === subjectsOfRolePage.Results.length &&
                   subjectsOfRolePage.Results.map((row, idx) => {
                     row.Name = subjects[idx].Name;
@@ -155,17 +160,15 @@ export default function SubjectsOfRoleTable(props) {
               </tbody>
             </table>
           </div>
-          {subjectsOfRolePage && (
-            <Stack spacing={3}>
-              <Pagination
-                sx={{ margin: "auto", marginTop: "10px" }}
-                count={parseInt((subjectsOfRolePage.Count + 1) / rowSize)}
-                defaultPage={1}
-                onChange={handleChangePageNum}
-                shape="rounded"
-              />
-            </Stack>
-          )}
+          <Stack spacing={3}>
+            <Pagination
+              sx={{ margin: "auto", marginTop: "10px" }}
+              count={pageCount}
+              defaultPage={pageNum}
+              onChange={handleChangePageNum}
+              shape="rounded"
+            />
+          </Stack>
         </>
       )}
     </Root>
