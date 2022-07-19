@@ -1,0 +1,16 @@
+$font-stack: Helvetica, sans-serif;
+$primary-color: #333;
+$box-width: 200px;
+$box-height: 200px;
+$start-left: 200px;
+$start-top: 200px;
+
+div.background {
+    display: flex;
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: row;
+    justify-content: space-around;
+    align-self: center;
+}

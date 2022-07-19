@@ -1,0 +1,9 @@
+tr.check {
+    background-color: rgb(24, 118, 209, 0.5);
+}
+
+tr.no-check {
+    &:hover {
+        background-color: rgb(24, 118, 209, 0.2);
+    }
+}

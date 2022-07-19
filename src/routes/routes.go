@@ -20,9 +20,10 @@ func Run(address string) error {
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{
 		"http://localhost:8000",
+		"http://localhost:8001",
 		"http://localhost:3000",
 		"http://localhost:3001",
-		"http://rbac.dev.deagwon.com"}
+		"https://rbac.dev.deagwon.com"}
 	router.Use(cors.New(config))
 
 	router.Use(static.Serve("/admin", static.LocalFile("./admin/build", true)))

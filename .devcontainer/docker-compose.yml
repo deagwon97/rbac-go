@@ -7,10 +7,19 @@ services:
       dockerfile: ./Dockerfile
       target: builder
     volumes:
-      - ../:/root/workdir
+      - ../:/home/rbac/workdir
+    env_file:
+      - ../.env
+    ports:
+      - 8001:8000
+    stdin_open: true
+    tty: true
+  rbac-go-prod:
+    build:
+      context: ../
+      dockerfile: ./Dockerfile
+      target: production
     env_file:
       - ../.env
     ports:
       - 8000:8000
-    stdin_open: true
-    tty: true

@@ -1,28 +1,32 @@
 FROM golang:latest AS builder
 
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux
+
 RUN apt-get update -y &&\
     apt-get upgrade -y &&\
     curl -sL https://deb.nodesource.com/setup_16.x | bash - &&\
     apt-get install nodejs -y
 
-ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    GOOS=linux
+RUN useradd -ms /bin/bash rbac
 
-WORKDIR /root/workdir/src
+COPY ./src /home/rbac/workdir/src
 
-COPY ./src /root/workdir/src
+USER root
+WORKDIR /home/rbac/workdir/src/admin
+RUN npm install
+RUN npm run build
 
-RUN go mod download
-
+WORKDIR /home/rbac/workdir/src
+RUN go mod tidy
 RUN go build -o main ./
 
 WORKDIR /dist
+RUN cp /home/rbac/workdir/src/main /dist/main
+RUN mkdir -p /dist/admin/build
+RUN cp -r /home/rbac/workdir/src/admin/build /dist/admin
 
-RUN cp /root/workdir/src/main .
-
-FROM scratch
-
-COPY --from=builder /dist/main .
-
+FROM scratch AS production
+COPY --from=builder /dist .
 ENTRYPOINT ["/main"]
