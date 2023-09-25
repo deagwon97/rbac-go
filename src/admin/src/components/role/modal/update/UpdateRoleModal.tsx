@@ -48,16 +48,18 @@ export default function UpdateRoleModal({
       Name: name,
       Description: desc,
     };
-    const res = await axios.patch(`${API_URL}/rbac/role/${roleID}`, data);
-    onChange(res.data);
+    alert('권한이 없습니다.');
+    // const res = await axios.patch(`${API_URL}/rbac/role/${roleID}`, data);
+    // onChange(res.data);
     reloadList();
   };
 
   const deleteRole = async (roleID: number) => {
-    const res = await axios.delete(`${API_URL}/rbac/role/${roleID}`);
-    if (res !== undefined) {
-      reloadList();
-    }
+    alert('권한이 없습니다.');
+    // const res = await axios.delete(`${API_URL}/rbac/role/${roleID}`);
+    // if (res !== undefined) {
+    //   reloadList();
+    // }
   };
 
   return (

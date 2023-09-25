@@ -101,13 +101,13 @@ export default function SubjectTable({ role }: SubjectTableProps) {
   }, [role]);
 
   useEffect(() => {
-    if (subjectArray !== []) {
+    if (subjectArray !== ([] as Subject[])) {
       setPageCount(parseInt(`${(count + 1) / rowSize}`, 10));
     }
   }, [subjectArray]);
 
   useEffect(() => {
-    if (userArray !== []) {
+    if (userArray !== ([] as User[])) {
       getSubjectsName(subjectArray);
     }
   }, [subjectArray]);

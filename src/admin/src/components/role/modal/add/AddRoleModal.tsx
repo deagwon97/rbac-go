@@ -42,8 +42,9 @@ export default function AddRoleModal({
       Description: desc,
     };
     if (name !== '') {
-      const res = await axios.post(`${API_URL}/rbac/role`, data);
-      onChange(res.data);
+      alert('권한이 없습니다.');
+      // const res = await axios.post(`${API_URL}/rbac/role`, data);
+      // onChange(res.data);
       reloadList();
     }
     setRoleName('');

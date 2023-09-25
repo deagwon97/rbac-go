@@ -1,8 +1,6 @@
 package database
 
-import (
-	"os"
-)
+import "os"
 
 type dbInfo struct {
 	user     string

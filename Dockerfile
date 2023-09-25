@@ -8,7 +8,7 @@ RUN apt-get update -y &&\
     apt-get upgrade -y &&\
     curl -sL https://deb.nodesource.com/setup_16.x | bash - &&\
     apt-get install nodejs -y
-
+RUN apt-get install -y npm
 RUN useradd -ms /bin/bash rbac
 
 COPY ./src /home/rbac/workdir/src

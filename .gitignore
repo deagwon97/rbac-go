@@ -6,8 +6,9 @@
 !db-data
 build
 main
-yarn.lock
+pkg
 node_modules
+bin
 
 __debug_bin
 .DS_Store

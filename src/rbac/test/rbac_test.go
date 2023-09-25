@@ -52,32 +52,32 @@ func Crud(
 }
 
 func TestAddRoles(t *testing.T) {
-	hostUrl := "https://rbac.dev.deagwon.com"
+	hostUrl := "http://localhost:8000"
 	itemName := "role"
 
 	data1 := dblayer.RoleData{
-		Name:        "관리자1",
-		Description: "관리자 그룹",
+		Name:        "최고 관리자",
+		Description: "최고 관리자 그룹",
 	}
 	data2 := dblayer.RoleData{
-		Name:        "중간관리자2",
+		Name:        "중간관리자",
 		Description: "중간관리자 그룹",
 	}
 	data3 := dblayer.RoleData{
-		Name:        "일반사용3",
+		Name:        "일반사용자",
 		Description: "일반사용자 그룹",
 	}
 	data4 := dblayer.RoleData{
-		Name:        "일반사용자14",
+		Name:        "다른 일반 사용자",
 		Description: "일반사용자 그룹",
 	}
 	data5 := dblayer.RoleData{
-		Name:        "일반사용자25",
-		Description: "일반사용자 그룹",
+		Name:        "외부인",
+		Description: "외부인 그룹",
 	}
 	data6 := dblayer.RoleData{
-		Name:        "일반사용자35",
-		Description: "일반사용자 그룹",
+		Name:        "차단 그룹",
+		Description: "차단 그룹",
 	}
 
 	test.Post(hostUrl+"/rbac/"+itemName, data1)
@@ -95,7 +95,7 @@ func TestAddRoles(t *testing.T) {
 }
 
 func TestRoleCrud(t *testing.T) {
-	hostUrl := "https://rbac.dev.deagwon.com"
+	hostUrl := "http://localhost:8000"
 	itemName := "role"
 
 	data1 := dblayer.RoleData{
@@ -122,7 +122,7 @@ func TestRoleCrud(t *testing.T) {
 }
 
 func TestPermissionCrud(t *testing.T) {
-	hostUrl := "https://rbac.dev.deagwon.com"
+	hostUrl := "http://localhost:8000"
 	itemName := "permission"
 
 	data1 := dblayer.PermissionData{
@@ -157,13 +157,13 @@ func TestPermissionCrud(t *testing.T) {
 }
 
 func TestGetPermissionList(t *testing.T) {
-	hostUrl := "https://rbac.dev.deagwon.com"
+	hostUrl := "http://localhost:8000"
 	itemName := "permission"
 	test.Get(hostUrl + "/rbac/" + itemName + "/list")
 }
 
 func TestGetRoleList(t *testing.T) {
-	hostUrl := "https://rbac.dev.deagwon.com"
+	hostUrl := "http://localhost:8000"
 	itemName := "role"
 	test.Get(hostUrl + "/rbac/" + itemName + "/list")
 }
@@ -186,7 +186,7 @@ func TestDeleteData(t *testing.T) {
 }
 
 func TestAddRole(t *testing.T) {
-	hostUrl := "https://rbac.dev.deagwon.com"
+	hostUrl := "http://localhost:8000"
 
 	// Role 생성
 	var roleRes interface{}
@@ -253,7 +253,7 @@ func TestAddRole(t *testing.T) {
 }
 
 func TestGetSubjectsOfRolePage(t *testing.T) {
-	hostUrl := "https://rbac.dev.deagwon.com"
+	hostUrl := "http://localhost:8000"
 	roleID := 339
 	fullUrl := fmt.Sprintf(
 		"%s/rbac/role/%d/subject", hostUrl, roleID)
@@ -261,7 +261,7 @@ func TestGetSubjectsOfRolePage(t *testing.T) {
 }
 
 func TestPermissionsOfRolePage(t *testing.T) {
-	hostUrl := "https://rbac.dev.deagwon.com"
+	hostUrl := "http://localhost:8000"
 	roleID := 339
 	fullUrl := fmt.Sprintf(
 		"%s/rbac/role/%d/permission", hostUrl, roleID)
@@ -269,7 +269,7 @@ func TestPermissionsOfRolePage(t *testing.T) {
 }
 
 func TestAddPermissionSet(t *testing.T) {
-	hostUrl := "https://rbac.dev.deagwon.com"
+	hostUrl := "http://localhost:8000"
 
 	// Permission 생성
 	permissionSet1 := dblayer.PermissionSet{
@@ -281,7 +281,8 @@ func TestAddPermissionSet(t *testing.T) {
 	permissionSet2 := dblayer.PermissionSet{
 		Name:    "채팅",
 		Actions: []string{"상세조회", "목록조회", "수정", "삭제"},
-		Objects: []string{"VIP", "도매"},
+
+		Objects: []string{"VIP", "일반"},
 	}
 
 	permissionSetData := dblayer.PermissionSetData{
@@ -303,7 +304,7 @@ func TestAddPermissionSet(t *testing.T) {
 }
 
 func TestGetObjectList(t *testing.T) {
-	hostUrl := "https://rbac.dev.deagwon.com"
+	hostUrl := "http://localhost:8000"
 	itemName := "permission"
 
 	data := rest.PermissionQuery{

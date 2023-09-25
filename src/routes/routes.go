@@ -23,7 +23,7 @@ func Run(address string) error {
 		"http://localhost:8001",
 		"http://localhost:3000",
 		"http://localhost:3001",
-		"https://rbac.dev.deagwon.com"}
+		"https://rbac.deagwon.com"}
 	router.Use(cors.New(config))
 
 	router.Use(static.Serve("/admin", static.LocalFile("./admin/build", true)))

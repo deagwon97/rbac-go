@@ -10,8 +10,6 @@ services:
       - ../:/home/rbac/workdir
     env_file:
       - ../.env
-    ports:
-      - 8001:8000
     stdin_open: true
     tty: true
   rbac-go-prod:
@@ -23,3 +21,13 @@ services:
       - ../.env
     ports:
       - 8000:8000
+  database-dev:
+    image: mariadb:10.8.2
+    restart: always
+    volumes:
+      - dbdata-dev:/var/lib/mysql
+    env_file:
+      - .env.db
+  
+volumes:
+  dbdata-dev:
