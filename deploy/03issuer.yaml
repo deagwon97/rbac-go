@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: rbac-go-issuer
+spec:
+  acme:
+    # server: https://acme-staging-v02.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: azaz09112@naver.com
+    privateKeySecretRef:
+      name: rbac-go-issuer
+    solvers:
+      - http01:
+          ingress:
+            class: traefik-cert-manager

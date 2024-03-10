@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 
 	docs "rbac-go/docs"
 
@@ -27,12 +28,16 @@ func Run(address string) error {
 	router.Use(cors.New(config))
 
 	router.Use(static.Serve("/admin", static.LocalFile("./admin/build", true)))
-
 	docs.SwaggerInfo.BasePath = "/"
+
+	
 
 	v1 := router.Group("/")
 	rbacRest.AddRoutes(v1)
 	accountRest.AddRoutes(v1)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	router.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "https://rbac.deagwon.com/admin")
+	})
 	return router.Run(address)
 }

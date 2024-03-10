@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: rbac-go
+metadata:
+  name: rbac-go
+generatorOptions:
+  disableNameSuffixHash: true
+secretGenerator:
+  - name: rbac-go
+    envs:
+    - .env
+  - name: rbac-go-regcred
+    files:
+      - .dockerconfigjson=01dockerconfig.json
+    type: kubernetes.io/dockerconfigjson
+resources:
+  - 00namespace.yaml
+  - 01deployment.yaml
+  - 01serviceAccount.yaml
+  - 02service.yaml
+  - 03issuer.yaml
+  - 04certificate.yaml
+  - 04ingressRouter.yaml

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: rbac-go
+  name: rbac-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rbac-go
+  template:
+    metadata:
+      labels:
+        app: rbac-go
+    spec:
+      containers:
+        - name: rbac-go
+          image: harbor.deagwon.com/rbac-go/rbac-go:latest
+          imagePullPolicy: Always
+          ports:
+            - name: web
+              containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: rbac-go
+      serviceAccountName: rbac-go-regcred
+      imagePullSecrets:
+        - name: rbac-go-regcred

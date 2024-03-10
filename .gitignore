@@ -9,6 +9,6 @@ main
 pkg
 node_modules
 bin
-
+01dockerconfig.json
 __debug_bin
 .DS_Store

@@ -1,0 +1,17 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute-rbac-go
+  annotations:
+    cert-manager.io/issuer: rbac-go-issuer
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`rbac.deagwon.com`)
+      kind: Rule
+      services:
+        - name: rbac-go
+          port: 8000
+  tls:
+    secretName: rbac-go-crt-secret
